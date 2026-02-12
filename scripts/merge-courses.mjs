@@ -25,6 +25,18 @@ const OUTPUT_FILE = join(__dirname, '..', 'src', 'data', 'courses.json');
 
 const GENDER_MAP = { 'پسران': 'male', 'دختران': 'female', 'مخت': 'mixed' };
 
+/** Normalize Arabic character variants to their Persian equivalents */
+function normalizePersian(str) {
+  if (!str) return '';
+  return str
+    .replace(/ي/g, 'ی')   // Arabic yeh  → Persian yeh
+    .replace(/ك/g, 'ک')   // Arabic kaf  → Persian kaf
+    .replace(/أ/g, 'ا')   // Arabic alef with hamza above
+    .replace(/إ/g, 'ا')   // Arabic alef with hamza below
+    .replace(/ؤ/g, 'و')   // Arabic waw with hamza
+    .replace(/ة/g, 'ه');  // Arabic taa marbuta → heh
+}
+
 function parseSession(s) {
   // "0 13:00-15:00" → { dayOfWeek: 0, startTime: "13:00", endTime: "15:00" }
   const [day, times] = s.split(' ');
@@ -54,16 +66,16 @@ function expandCourse(c) {
   return {
     courseCode: c.code,
     group: c.group,
-    courseName: c.name,
+    courseName: normalizePersian(c.name),
     unitCount: c.units,
     gender: GENDER_MAP[c.gender] || 'mixed',
-    professor: c.professor,
+    professor: normalizePersian(c.professor),
     sessions: (c.sessions || []).map(parseSession),
     examDate: examDate || '',
     examTime: examTime || '',
-    location: c.location || '',
-    prerequisites: c.prereqs || '',
-    notes: cleanNotes(c.notes),
+    location: normalizePersian(c.location || ''),
+    prerequisites: normalizePersian(c.prereqs || ''),
+    notes: normalizePersian(cleanNotes(c.notes)),
     grade: '',
   };
 }
