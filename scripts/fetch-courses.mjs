@@ -53,8 +53,17 @@
     return str
       .replace(/ي/g, 'ی')   // Arabic yeh  → Persian yeh
       .replace(/ك/g, 'ک')   // Arabic kaf  → Persian kaf
-      .replace(/[\s\u200c]+/g, ' ') // collapse spaces & ZWNJ
+      .replace(/ؤ/g, 'و')   // Arabic waw with hamza
+      .replace(/أ/g, 'ا')   // Arabic alef with hamza
+      .replace(/إ/g, 'ا')   // Arabic alef with hamza below
+      .replace(/ة/g, 'ه')   // Arabic taa marbuta → heh
+      .replace(/[\s\u200c\u00a0]+/g, ' ') // collapse all whitespace, ZWNJ, NBSP
       .trim();
+  }
+
+  // Ensure "XYZشنبه" always becomes "XYZ شنبه" (space before شنبه)
+  function normalizeDayName(str) {
+    return normalizePersian(str).replace(/(\S)شنبه/, '$1 شنبه');
   }
 
   function parseSessionsText(text) {
@@ -76,8 +85,8 @@
 
     let match;
     while ((match = dayPattern.exec(normalized)) !== null) {
-      const rawDay = normalizePersian(match[1]);
-      const dayOfWeek = dayMap[rawDay] ?? dayMap[rawDay.replace(/ /g, ' ')];
+      const rawDay = normalizeDayName(match[1]);
+      const dayOfWeek = dayMap[rawDay];
 
       if (dayOfWeek !== undefined) {
         sessions.push(`${dayOfWeek} ${match[2].padStart(5, '0')}-${match[3].padStart(5, '0')}`);

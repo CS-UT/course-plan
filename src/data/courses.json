@@ -17,6 +17,11 @@
           "dayOfWeek": 6,
           "startTime": "13:00",
           "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "13:00",
+          "endTime": "15:00"
         }
       ],
       "examDate": "1405/04/20",
@@ -3160,6 +3165,11 @@
           "dayOfWeek": 6,
           "startTime": "15:00",
           "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "15:00",
+          "endTime": "17:00"
         }
       ],
       "examDate": "1405/04/25",
@@ -3181,6 +3191,11 @@
       "sessions": [
         {
           "dayOfWeek": 6,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 1,
           "startTime": "15:00",
           "endTime": "17:00"
         }
@@ -7321,6 +7336,11 @@
           "dayOfWeek": 6,
           "startTime": "15:00",
           "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "15:00",
+          "endTime": "17:00"
         }
       ],
       "examDate": "1405/04/23",
@@ -7457,6 +7477,11 @@
       "sessions": [
         {
           "dayOfWeek": 6,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 1,
           "startTime": "13:00",
           "endTime": "15:00"
         }
@@ -7600,6 +7625,11 @@
           "dayOfWeek": 6,
           "startTime": "13:00",
           "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "13:00",
+          "endTime": "15:00"
         }
       ],
       "examDate": "1405/04/13",
@@ -7679,6 +7709,11 @@
           "dayOfWeek": 6,
           "startTime": "13:00",
           "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "13:00",
+          "endTime": "15:00"
         }
       ],
       "examDate": "1405/04/20",
@@ -7700,6 +7735,11 @@
       "sessions": [
         {
           "dayOfWeek": 6,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        },
+        {
+          "dayOfWeek": 1,
           "startTime": "08:00",
           "endTime": "10:00"
         }
@@ -7798,6 +7838,11 @@
           "dayOfWeek": 6,
           "startTime": "10:00",
           "endTime": "12:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "10:00",
+          "endTime": "12:00"
         }
       ],
       "examDate": "1405/04/15",
@@ -7819,6 +7864,11 @@
       "sessions": [
         {
           "dayOfWeek": 6,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        },
+        {
+          "dayOfWeek": 1,
           "startTime": "10:00",
           "endTime": "12:00"
         }
@@ -8418,6 +8468,11 @@
           "dayOfWeek": 6,
           "startTime": "10:00",
           "endTime": "12:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "10:00",
+          "endTime": "12:00"
         }
       ],
       "examDate": "1405/04/15",
@@ -8495,6 +8550,11 @@
       "sessions": [
         {
           "dayOfWeek": 6,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        },
+        {
+          "dayOfWeek": 1,
           "startTime": "10:00",
           "endTime": "12:00"
         }
@@ -8621,6 +8681,11 @@
           "dayOfWeek": 6,
           "startTime": "08:00",
           "endTime": "10:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "08:00",
+          "endTime": "10:00"
         }
       ],
       "examDate": "1405/04/17",
@@ -8728,6 +8793,11 @@
           "dayOfWeek": 6,
           "startTime": "08:00",
           "endTime": "10:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "08:00",
+          "endTime": "10:00"
         }
       ],
       "examDate": "1405/04/17",
@@ -8749,6 +8819,11 @@
       "sessions": [
         {
           "dayOfWeek": 6,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 1,
           "startTime": "15:00",
           "endTime": "17:00"
         }
