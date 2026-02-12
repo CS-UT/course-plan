@@ -56,6 +56,7 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
 
   function handleEventClick(info: EventClickArg) {
     const { courseCode, group } = info.event.extendedProps;
+    setTooltip((t) => ({ ...t, visible: false }));
     removeCourse(courseCode, group);
   }
 
