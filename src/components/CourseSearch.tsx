@@ -13,14 +13,20 @@ interface Props {
 interface Filters {
   day: string;
   gender: string;
+  courseType: string;
   hideConflicts: boolean;
 }
 
 const defaultFilters: Filters = {
   day: '',
   gender: '',
+  courseType: '',
   hideConflicts: false,
 };
+
+function isGeneralCourse(course: Course): boolean {
+  return course.courseCode.startsWith('1120');
+}
 
 export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Props) {
   const [query, setQuery] = useState('');
@@ -28,7 +34,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   const [showFilters, setShowFilters] = useState(false);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
 
-  const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
+  const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.courseType ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
 
   const filtered = useMemo(() => {
     let result = courses;
@@ -49,6 +55,11 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
     }
     if (filters.gender) {
       result = result.filter((c) => c.gender === filters.gender);
+    }
+    if (filters.courseType) {
+      result = result.filter((c) =>
+        filters.courseType === 'general' ? isGeneralCourse(c) : !isGeneralCourse(c),
+      );
     }
     if (filters.hideConflicts) {
       result = result.filter((c) => {
@@ -131,6 +142,15 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
               <option value="male">پسران</option>
               <option value="female">دختران</option>
               <option value="mixed">مختلط</option>
+            </select>
+            <select
+              value={filters.courseType}
+              onChange={(e) => setFilters((f) => ({ ...f, courseType: e.target.value }))}
+              className={selectClass}
+            >
+              <option value="">نوع درس</option>
+              <option value="specialized">تخصصی</option>
+              <option value="general">عمومی</option>
             </select>
           </div>
 
