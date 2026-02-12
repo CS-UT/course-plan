@@ -140,14 +140,11 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
 }
 
 function renderEventContent(eventInfo: EventContentArg) {
-  const { courseName, professor, courseCode, group } = eventInfo.event.extendedProps;
+  const { courseName, professor } = eventInfo.event.extendedProps;
   return (
     <div className="flex flex-col h-full justify-center text-center leading-tight p-0.5">
-      <div className="font-bold text-[11px] truncate">{courseName}</div>
-      <div className="text-[10px] truncate opacity-80">{professor}</div>
-      <div className="text-[9px] truncate opacity-60">
-        {toPersianDigits(courseCode)}-{toPersianDigits(group)}
-      </div>
+      <div className="font-bold text-xs truncate">{courseName}</div>
+      <div className="text-[11px] truncate opacity-80">{professor}</div>
     </div>
   );
 }
