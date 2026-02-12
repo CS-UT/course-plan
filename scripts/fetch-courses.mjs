@@ -140,6 +140,8 @@
     const exam = parseExamText(scheduleText);
 
     const location = cells[8]?.textContent?.trim() || '';
+    const prerequisites = cells[9]?.textContent?.trim() || '';
+    const notes = cells[10]?.textContent?.trim() || '';
 
     const out = {
       code: courseCode, group, name: courseName, units: unitCount,
@@ -148,6 +150,8 @@
     if (exam) out.exam = exam;
     if (capacity) out.capacity = capacity;
     if (location) out.location = location;
+    if (prerequisites) out.prereqs = prerequisites;
+    if (notes) out.notes = notes;
 
     return out;
   }

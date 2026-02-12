@@ -51,8 +51,8 @@ function expandCourse(c) {
     examDate: examDate || '',
     examTime: examTime || '',
     location: c.location || '',
-    prerequisites: '',
-    notes: '',
+    prerequisites: c.prereqs || '',
+    notes: c.notes || '',
     grade: '',
   };
 }
