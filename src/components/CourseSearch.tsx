@@ -27,6 +27,7 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
   function handleToggle(course: Course) {
     if (isCourseSelected(course.courseCode, course.group)) {
       removeCourse(course.courseCode, course.group);
+      onHoverCourse(null);
     } else {
       addCourse(course);
     }
