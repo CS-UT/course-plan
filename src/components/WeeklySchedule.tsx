@@ -17,7 +17,6 @@ const DAY_HEADER_MAP: Record<string, string> = {
   Mon: 'دوشنبه',
   Tue: 'سه‌شنبه',
   Wed: 'چهارشنبه',
-  Thu: 'پنجشنبه',
 };
 
 const colorMap = new Map<string, number>();
@@ -98,7 +97,7 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
           const dayKey = arg.date.toLocaleDateString('en-US', { weekday: 'short' });
           return DAY_HEADER_MAP[dayKey] ?? dayKey;
         }}
-        hiddenDays={[5]} // Hide Friday (index 5 in FullCalendar)
+        hiddenDays={[4, 5]} // Hide Thursday & Friday
         events={events}
         eventClick={handleEventClick}
         eventMouseEnter={handleMouseEnter}

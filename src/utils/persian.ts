@@ -30,7 +30,7 @@ export const WEEK_DAYS: Record<number, string> = {
   5: 'جمعه',
 };
 
-export const WEEK_DAYS_ORDER = [6, 0, 1, 2, 3, 4];
+export const WEEK_DAYS_ORDER = [6, 0, 1, 2, 3];
 
 export function dayName(dayOfWeek: number): string {
   return WEEK_DAYS[dayOfWeek] ?? '';

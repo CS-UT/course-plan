@@ -71,3 +71,7 @@ export default defineConfig([
   },
 ])
 ```
+
+## Updating Course Data
+
+Report #212 only shows courses the logged-in student hasn't passed yet. To get the full list of all department courses, the scraper script should be run by a new student (e.g., a freshman who hasn't passed any courses yet).

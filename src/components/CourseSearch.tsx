@@ -11,11 +11,13 @@ interface Props {
 
 interface Filters {
   day: string;
+  gender: string;
   hideConflicts: boolean;
 }
 
 const defaultFilters: Filters = {
   day: '',
+  gender: '',
   hideConflicts: false,
 };
 
@@ -25,7 +27,7 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
   const [showFilters, setShowFilters] = useState(false);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
 
-  const activeFilterCount = (filters.day ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
+  const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
 
   const filtered = useMemo(() => {
     let result = courses;
@@ -43,6 +45,9 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
     if (filters.day) {
       const dayNum = Number(filters.day);
       result = result.filter((c) => c.sessions.some((s) => s.dayOfWeek === dayNum));
+    }
+    if (filters.gender) {
+      result = result.filter((c) => c.gender === filters.gender);
     }
     if (filters.hideConflicts) {
       result = result.filter((c) => {
@@ -108,6 +113,16 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
               {WEEK_DAYS_ORDER.map((d) => (
                 <option key={d} value={d}>{dayName(d)}</option>
               ))}
+            </select>
+            <select
+              value={filters.gender}
+              onChange={(e) => setFilters((f) => ({ ...f, gender: e.target.value }))}
+              className={selectClass}
+            >
+              <option value="">جنسیت</option>
+              <option value="male">پسران</option>
+              <option value="female">دختران</option>
+              <option value="mixed">مختلط</option>
             </select>
           </div>
 

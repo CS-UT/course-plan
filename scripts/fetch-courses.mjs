@@ -10,6 +10,7 @@
  * 5. Paste the entire contents of this script and press Enter
  * 6. Wait for it to iterate through all pages
  * 7. A courses.json file will be automatically downloaded
+ * 8. Copy it to src/data/gathered_data/ and run: node scripts/merge-courses.mjs
  *
  * NpGrid column layout (from EMS2 Beheshan report #212):
  *   col 0:  شماره و گروه درس   (90px)   — e.g. "8101234-01"
@@ -46,40 +47,40 @@
     return result;
   }
 
+  // Normalize Arabic ↔ Persian character variants so day-name matching is
+  // insensitive to the exact encoding EMS happens to use.
+  function normalizePersian(str) {
+    return str
+      .replace(/ي/g, 'ی')   // Arabic yeh  → Persian yeh
+      .replace(/ك/g, 'ک')   // Arabic kaf  → Persian kaf
+      .replace(/[\s\u200c]+/g, ' ') // collapse spaces & ZWNJ
+      .trim();
+  }
+
   function parseSessionsText(text) {
     const sessions = [];
     const dayMap = {
+      'پنج شنبه': 4,
+      'چهار شنبه': 3,
+      'سه شنبه': 2,
+      'دو شنبه': 1,
+      'یک شنبه': 0,
       'شنبه': 6,
-      'یکشنبه': 0, 'يكشنبه': 0, 'یک شنبه': 0, 'يک شنبه': 0,
-      'دوشنبه': 1, 'دو شنبه': 1,
-      'سه‌شنبه': 2, 'سه شنبه': 2, 'سهشنبه': 2,
-      'چهارشنبه': 3, 'چهار شنبه': 3,
-      'پنجشنبه': 4, 'پنج شنبه': 4,
       'جمعه': 5,
     };
 
+    const normalized = normalizePersian(persianToEnglish(text));
+
     // Match day + time patterns; longer day names first to avoid partial matches
-    const dayPattern = /(پنج\s?شنبه|پنجشنبه|چهار\s?شنبه|چهارشنبه|سه[\s‌]?شنبه|سهشنبه|دو\s?شنبه|دوشنبه|یک\s?شنبه|يک\s?شنبه|یکشنبه|يكشنبه|شنبه|جمعه)\s+(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/g;
+    const dayPattern = /(پنج\s?شنبه|چهار\s?شنبه|سه\s?شنبه|دو\s?شنبه|یک\s?شنبه|شنبه|جمعه)\s+(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/g;
 
     let match;
-    while ((match = dayPattern.exec(text)) !== null) {
-      const rawDay = match[1].trim();
-      let dayOfWeek = null;
+    while ((match = dayPattern.exec(normalized)) !== null) {
+      const rawDay = normalizePersian(match[1]);
+      const dayOfWeek = dayMap[rawDay] ?? dayMap[rawDay.replace(/ /g, ' ')];
 
-      const normalized = rawDay.replace(/[\s‌]+/g, '');
-      for (const [name, num] of Object.entries(dayMap)) {
-        if (name.replace(/[\s‌]+/g, '') === normalized) {
-          dayOfWeek = num;
-          break;
-        }
-      }
-
-      if (dayOfWeek !== null) {
-        sessions.push({
-          dayOfWeek,
-          startTime: match[2].padStart(5, '0'),
-          endTime: match[3].padStart(5, '0'),
-        });
+      if (dayOfWeek !== undefined) {
+        sessions.push(`${dayOfWeek} ${match[2].padStart(5, '0')}-${match[3].padStart(5, '0')}`);
       }
     }
     return sessions;
@@ -90,12 +91,9 @@
       /امتحان\s*\((\d{4})[./](\d{2})[./](\d{2})\)\s*ساعت\s*:\s*(\d{1,2}:\d{2})/
     );
     if (examMatch) {
-      return {
-        examDate: `${examMatch[1]}/${examMatch[2]}/${examMatch[3]}`,
-        examTime: examMatch[4].padStart(5, '0'),
-      };
+      return `${examMatch[1]}/${examMatch[2]}/${examMatch[3]} ${examMatch[4].padStart(5, '0')}`;
     }
-    return { examDate: '', examTime: '' };
+    return '';
   }
 
   function parseTableRow(row) {
@@ -122,34 +120,27 @@
     const capacity = capacityMatch ? parseInt(capacityMatch[1], 10) : 0;
 
     const genderText = cells[5]?.textContent?.trim() || '';
-    let gender = 'mixed';
-    if (genderText.includes('مرد') || genderText.includes('برادر')) gender = 'male';
-    else if (genderText.includes('زن') || genderText.includes('خواهر')) gender = 'female';
+    let gender = 'مخت';
+    if (genderText.includes('مرد') || genderText.includes('برادر')) gender = 'پسران';
+    else if (genderText.includes('زن') || genderText.includes('خواهر')) gender = 'دختران';
 
     const professor = cells[6]?.textContent?.trim() || '';
 
     const scheduleText = persianToEnglish(cells[7]?.textContent?.trim() || '');
     const sessions = parseSessionsText(scheduleText);
-    const { examDate, examTime } = parseExamText(scheduleText);
+    const exam = parseExamText(scheduleText);
 
     const location = cells[8]?.textContent?.trim() || '';
-    const prerequisites = cells[9]?.textContent?.trim() || '';
-    const notesRaw = cells[10]?.textContent?.trim() || '';
 
-    let grade = '';
-    if (notesRaw.includes('کارشناسی ارشد') || notesRaw.includes('ارشد')) {
-      grade = 'کارشناسی ارشد';
-    } else if (notesRaw.includes('دکتر') || notesRaw.includes('دکتری')) {
-      grade = 'دکتری';
-    } else if (notesRaw.includes('کارشناسی')) {
-      grade = 'کارشناسی';
-    }
-
-    return {
-      courseCode, group, courseName, unitCount, capacity,
-      enrolled: 0, gender, professor, sessions, examDate,
-      examTime, location, prerequisites, notes: notesRaw, grade,
+    const out = {
+      code: courseCode, group, name: courseName, units: unitCount,
+      professor, gender, sessions,
     };
+    if (exam) out.exam = exam;
+    if (capacity) out.capacity = capacity;
+    if (location) out.location = location;
+
+    return out;
   }
 
   // ---------- NpGrid helpers ----------
@@ -288,7 +279,7 @@
       try {
         const course = parseTableRow(row);
         if (course) {
-          const key = `${course.courseCode}-${course.group}`;
+          const key = `${course.code}-${course.group}`;
           if (!allCourses.has(key)) {
             allCourses.set(key, course);
             pageCount++;
@@ -305,13 +296,7 @@
   const coursesArray = Array.from(allCourses.values());
   console.log(`\nDone! Total unique courses: ${coursesArray.length}`);
 
-  const output = {
-    semester: '14042',
-    semesterLabel: 'نیمسال دوم ۱۴۰۴-۱۴۰۵',
-    fetchedAt: new Date().toISOString(),
-    department: 'دانشکده ریاضی، آمار و علوم کامپیوتر',
-    courses: coursesArray,
-  };
+  const output = coursesArray;
 
   const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -324,7 +309,7 @@
   URL.revokeObjectURL(url);
 
   console.log('Downloaded courses.json');
-  console.log('Copy the file to: src/data/courses.json in the project');
+  console.log('Copy the file to: src/data/gathered_data/ then run: node scripts/merge-courses.mjs');
 
   return output;
 })();
