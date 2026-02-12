@@ -5,59 +5,76 @@
  * 1. Open Chrome and navigate to:
  *    https://ems2.ut.ac.ir/browser/fa/#/pages?fid=212&ftype=1&seq=0&subfrm=&sguid=a14c4d27-9c7d-474d-a8fa-77ba71cb171e&TrmType=2#212
  * 2. Log in with your SSO credentials
- * 3. Wait for the first page of data to load
+ * 3. Wait for the first page of data to load (you should see the course table)
  * 4. Open Chrome DevTools (F12) → Console tab
  * 5. Paste the entire contents of this script and press Enter
  * 6. Wait for it to iterate through all pages
- * 7. A JSON file will be automatically downloaded
+ * 7. A courses.json file will be automatically downloaded
  *
- * The script will:
- * - Read the current page's table data
- * - Navigate through all pages
- * - Parse course info, sessions, exam dates
- * - Download a courses.json file
+ * NpGrid column layout (from EMS2 Beheshan report #212):
+ *   col 0:  شماره و گروه درس   (90px)   — e.g. "8101234-01"
+ *   col 1:  نام درس            (180px)
+ *   col 2:  واحد - کل          (30px)   — total units
+ *   col 3:  واحد - عملی        (30px)   — practical units
+ *   col 4:  ظرفیت              (35px)   — capacity
+ *   col 5:  جنسیت              (40px)
+ *   col 6:  نام استاد          (140px)
+ *   col 7:  ساعات ارائه و امتحان (250px)
+ *   col 8:  محل                (135px)
+ *   col 9:  دروس پیش‌نیاز/همنیاز (400px)
+ *   col 10: توضیحات / مقطع     (140px)
  */
 
 // ---- PASTE EVERYTHING BELOW INTO THE BROWSER CONSOLE ----
 
 (async function scrapeCourses() {
-  const DELAY = 2000; // ms between page navigations
+  const DELAY = 2500; // ms between page navigations
 
   function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  function persianToEnglish(str) {
+    if (!str) return '';
+    const persianNums = '۰۱۲۳۴۵۶۷۸۹';
+    const arabicNums = '٠١٢٣٤٥٦٧٨٩';
+    let result = str;
+    for (let i = 0; i < 10; i++) {
+      result = result.replace(new RegExp(persianNums[i], 'g'), String(i));
+      result = result.replace(new RegExp(arabicNums[i], 'g'), String(i));
+    }
+    return result;
+  }
+
   function parseSessionsText(text) {
     // Example: "درس(ت): شنبه 13:00-15:00، دوشنبه 13:00-15:00"
-    // Example: "درس(ت): یک شنبه 08:00-10:00"
+    // Example: "درس(ع): یک شنبه 08:00-10:00"
     const sessions = [];
     const dayMap = {
       'شنبه': 6,
-      'یک شنبه': 0, 'یکشنبه': 0,
+      'یکشنبه': 0, 'يكشنبه': 0, 'یک شنبه': 0, 'يک شنبه': 0,
       'دوشنبه': 1, 'دو شنبه': 1,
-      'سه شنبه': 2, 'سه‌شنبه': 2,
+      'سه‌شنبه': 2, 'سه شنبه': 2, 'سهشنبه': 2,
       'چهارشنبه': 3, 'چهار شنبه': 3,
       'پنجشنبه': 4, 'پنج شنبه': 4,
       'جمعه': 5,
     };
 
-    // Match patterns like "شنبه 13:00-15:00"
-    const dayPattern = /(شنبه|یک\s?شنبه|یکشنبه|دو\s?شنبه|دوشنبه|سه\s?شنبه|سه‌شنبه|چهار\s?شنبه|چهارشنبه|پنج\s?شنبه|پنجشنبه|جمعه)\s+(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/g;
+    // Match day + time patterns; use longer day names first to avoid partial matches
+    const dayPattern = /(پنج\s?شنبه|پنجشنبه|چهار\s?شنبه|چهارشنبه|سه[\s‌]?شنبه|سهشنبه|دو\s?شنبه|دوشنبه|یک\s?شنبه|يک\s?شنبه|یکشنبه|يكشنبه|شنبه|جمعه)\s+(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/g;
 
     let match;
     while ((match = dayPattern.exec(text)) !== null) {
-      const dayName = match[1].trim();
-      // Normalize: if it starts with a specific day but could match 'شنبه' alone, check longer patterns first
+      const rawDay = match[1].trim();
       let dayOfWeek = null;
+
+      // Normalize spaces and zero-width non-joiners for matching
+      const normalized = rawDay.replace(/[\s‌]+/g, '');
       for (const [name, num] of Object.entries(dayMap)) {
-        if (dayName === name || dayName.replace(/\s/g, '') === name.replace(/\s/g, '')) {
+        if (name.replace(/[\s‌]+/g, '') === normalized) {
           dayOfWeek = num;
           break;
         }
-      }
-      // Special case: plain "شنبه" should be 6, but we need to make sure it's not part of a compound day
-      if (dayOfWeek === null && dayName === 'شنبه') {
-        dayOfWeek = 6;
       }
 
       if (dayOfWeek !== null) {
@@ -72,8 +89,12 @@
   }
 
   function parseExamText(text) {
-    // Example: "امتحان(1405.04.20) ساعت : 10:00-10:00"
-    const examMatch = text.match(/امتحان\s*\((\d{4})[./](\d{2})[./](\d{2})\)\s*ساعت\s*:\s*(\d{1,2}:\d{2})/);
+    // Patterns seen in EMS:
+    // "امتحان(1405.04.20) ساعت : 10:00-12:00"
+    // "امتحان(1405/04/20) ساعت : 10:00"
+    const examMatch = text.match(
+      /امتحان\s*\((\d{4})[./](\d{2})[./](\d{2})\)\s*ساعت\s*:\s*(\d{1,2}:\d{2})/
+    );
     if (examMatch) {
       return {
         examDate: `${examMatch[1]}/${examMatch[2]}/${examMatch[3]}`,
@@ -83,72 +104,73 @@
     return { examDate: '', examTime: '' };
   }
 
-  function persianToEnglish(str) {
-    const persianNums = '۰۱۲۳۴۵۶۷۸۹';
-    const arabicNums = '٠١٢٣٤٥٦٧٨٩';
-    let result = str;
-    for (let i = 0; i < 10; i++) {
-      result = result.replace(new RegExp(persianNums[i], 'g'), String(i));
-      result = result.replace(new RegExp(arabicNums[i], 'g'), String(i));
-    }
-    return result;
-  }
-
   function parseTableRow(row) {
     const cells = row.querySelectorAll('td');
-    if (cells.length < 8) return null;
+    if (cells.length < 9) return null;
 
-    // Column mapping based on the screenshot:
-    // 0: شماره و گروه (courseCode_group)
-    // 1: نام درس
-    // 2: واحد (کل / ع / فیت)
-    // 3: جنسیت
-    // 4: نام استاد
-    // 5: ساعات ارائه و امتحان
-    // 6: محل
-    // 7: دروس پیش نیاز، همنیاز، متضاد و معادل
-    // 8: توضیحات
-
+    // --- col 0: شماره و گروه درس ---
     const codeGroupText = persianToEnglish(cells[0]?.textContent?.trim() || '');
-    const codeGroupMatch = codeGroupText.match(/(\d+)[_-](\d+)/);
+    const codeGroupMatch = codeGroupText.match(/(\d+)[_\-–](\d+)/);
     if (!codeGroupMatch) return null;
 
     const courseCode = codeGroupMatch[1];
     const group = parseInt(codeGroupMatch[2], 10);
-    const courseName = cells[1]?.textContent?.trim() || '';
 
-    // Parse units - try to get the total units
+    // --- col 1: نام درس ---
+    const courseName = cells[1]?.textContent?.trim() || '';
+    if (!courseName) return null;
+
+    // --- col 2: واحد کل ---
     const unitText = persianToEnglish(cells[2]?.textContent?.trim() || '0');
     const unitMatch = unitText.match(/(\d+)/);
     const unitCount = unitMatch ? parseInt(unitMatch[1], 10) : 0;
 
-    // Gender
-    const genderText = cells[3]?.textContent?.trim() || '';
+    // --- col 3: واحد عملی (skip, we only need total) ---
+
+    // --- col 4: ظرفیت ---
+    const capacityText = persianToEnglish(cells[4]?.textContent?.trim() || '0');
+    const capacityMatch = capacityText.match(/(\d+)/);
+    const capacity = capacityMatch ? parseInt(capacityMatch[1], 10) : 0;
+
+    // --- col 5: جنسیت ---
+    const genderText = cells[5]?.textContent?.trim() || '';
     let gender = 'mixed';
-    if (genderText.includes('مرد')) gender = 'male';
-    else if (genderText.includes('زن')) gender = 'female';
-    else gender = 'mixed';
+    if (genderText.includes('مرد') || genderText.includes('برادر')) gender = 'male';
+    else if (genderText.includes('زن') || genderText.includes('خواهر')) gender = 'female';
 
-    const professor = cells[4]?.textContent?.trim() || '';
+    // --- col 6: نام استاد ---
+    const professor = cells[6]?.textContent?.trim() || '';
 
-    // Sessions and exam
-    const scheduleText = persianToEnglish(cells[5]?.textContent?.trim() || '');
+    // --- col 7: ساعات ارائه و امتحان ---
+    const scheduleText = persianToEnglish(cells[7]?.textContent?.trim() || '');
     const sessions = parseSessionsText(scheduleText);
     const { examDate, examTime } = parseExamText(scheduleText);
 
-    const location = cells[6]?.textContent?.trim() || '';
-    const prerequisites = cells[7]?.textContent?.trim() || '';
-    const notes = cells[8]?.textContent?.trim() || '';
+    // --- col 8: محل ---
+    const location = cells[8]?.textContent?.trim() || '';
 
-    // Try to determine capacity from text (if available in UI)
-    // The screenshot shows ظرفیت column - adjust index if needed
+    // --- col 9: دروس پیش‌نیاز ---
+    const prerequisites = cells[9]?.textContent?.trim() || '';
+
+    // --- col 10: توضیحات / مقطع ---
+    const notesRaw = cells[10]?.textContent?.trim() || '';
+
+    // Try to extract grade from notes or default
+    let grade = '';
+    if (notesRaw.includes('کارشناسی ارشد') || notesRaw.includes('ارشد')) {
+      grade = 'کارشناسی ارشد';
+    } else if (notesRaw.includes('دکتر') || notesRaw.includes('دکتری')) {
+      grade = 'دکتری';
+    } else if (notesRaw.includes('کارشناسی')) {
+      grade = 'کارشناسی';
+    }
 
     return {
       courseCode,
       group,
       courseName,
       unitCount,
-      capacity: 0,
+      capacity,
       enrolled: 0,
       gender,
       professor,
@@ -157,122 +179,192 @@
       examTime,
       location,
       prerequisites,
-      notes,
-      grade: 'کارشناسی',
+      notes: notesRaw,
+      grade,
     };
   }
 
-  // Find the grid/table
+  // --- NpGrid-specific table row selector ---
   function getTableRows() {
-    // Try different selectors that the EMS system might use
-    const selectors = [
-      'table tbody tr',
-      '.smart-grid-row',
-      '[role="row"]',
-      '.data-row',
-    ];
-
-    for (const sel of selectors) {
-      const rows = document.querySelectorAll(sel);
-      if (rows.length > 0) return rows;
+    // NpGrid renders data rows inside .np-grid-content table tbody
+    const contentArea = document.querySelector('.np-grid-content, .ui-npgrid');
+    if (contentArea) {
+      // Get only data rows (not header rows)
+      const headerTable = contentArea.querySelector('.npgrid-table-header');
+      const allTables = contentArea.querySelectorAll('table');
+      for (const table of allTables) {
+        if (table === headerTable) continue;
+        const rows = table.querySelectorAll('tbody tr');
+        if (rows.length > 0) return rows;
+      }
     }
-    return [];
+
+    // Fallback: any table with enough columns
+    const allRows = document.querySelectorAll('table tbody tr');
+    const dataRows = [];
+    for (const row of allRows) {
+      const cells = row.querySelectorAll('td');
+      if (cells.length >= 9) dataRows.push(row);
+    }
+    return dataRows;
   }
 
+  // --- NpGrid pagination ---
   function getPageInfo() {
-    // Look for pagination info like "صفحه 1 از 22"
-    const pageText = document.body.innerText;
-    const match = pageText.match(/صفحه\s*(\d+)\s*از\s*(\d+)/);
+    const bodyText = persianToEnglish(document.body.innerText);
+
+    // Pattern: "صفحه X از Y" or just numbers in pagination area
+    const match = bodyText.match(/صفحه\s*(\d+)\s*از\s*(\d+)/);
     if (match) {
       return { current: parseInt(match[1]), total: parseInt(match[2]) };
     }
-    // Try English number patterns
-    const inputs = document.querySelectorAll('input[type="text"], input[type="number"]');
+
+    // NpGrid often uses an input for current page + "از N" label
+    const pagerArea = document.querySelector('.np-grid-pager, .npgrid-pager, [class*="pager"]');
+    if (pagerArea) {
+      const pagerText = persianToEnglish(pagerArea.textContent || '');
+      const totalMatch = pagerText.match(/از\s*(\d+)/);
+      const input = pagerArea.querySelector('input');
+      if (input && totalMatch) {
+        return {
+          current: parseInt(persianToEnglish(input.value)) || 1,
+          total: parseInt(totalMatch[1]),
+        };
+      }
+    }
+
+    // Try all inputs in the page
+    const inputs = document.querySelectorAll('input');
     for (const input of inputs) {
-      const val = persianToEnglish(input.value);
-      if (/^\d+$/.test(val)) {
-        const totalMatch = document.body.innerText.match(/از\s*(\d+)/);
-        if (totalMatch) {
-          return { current: parseInt(val), total: parseInt(persianToEnglish(totalMatch[1])) };
+      const parent = input.closest('div, span, td');
+      if (!parent) continue;
+      const parentText = persianToEnglish(parent.textContent || '');
+      const totalMatch = parentText.match(/از\s*(\d+)/);
+      if (totalMatch) {
+        const val = parseInt(persianToEnglish(input.value));
+        if (val > 0) {
+          return { current: val, total: parseInt(totalMatch[1]) };
         }
       }
     }
+
     return null;
   }
 
   function clickNextPage() {
-    // Look for next page button
+    // NpGrid navigation buttons
     const selectors = [
+      '.np-grid-pager button[title*="بعد"]',
+      '.np-grid-pager button[title*="next"]',
+      '.npgrid-pager button[title*="بعد"]',
+      '[class*="pager"] button[title*="بعد"]',
       'button[title*="بعد"]',
       'button[title*="next"]',
-      '.page-next',
-      '[aria-label*="next"]',
-      '[aria-label*="بعد"]',
+      'a[title*="بعد"]',
     ];
 
     for (const sel of selectors) {
       const btn = document.querySelector(sel);
-      if (btn) { btn.click(); return true; }
+      if (btn && !btn.disabled) { btn.click(); return true; }
     }
 
-    // Try finding by icon/text
-    const buttons = document.querySelectorAll('button, a, [role="button"]');
-    for (const btn of buttons) {
+    // Try NpGrid's KO-bound navigation; look for arrow icons/buttons
+    const allBtns = document.querySelectorAll('button, a, [role="button"], .np-btn, [class*="page"]');
+    for (const btn of allBtns) {
+      const title = (btn.getAttribute('title') || '').trim();
       const text = btn.textContent?.trim();
-      if (text === '>' || text === '›' || text === '▶') {
-        btn.click();
-        return true;
+      // Left arrow in RTL = next page
+      if (title.includes('بعد') || title.includes('Next') ||
+          text === '‹' || text === '<' || text === '\u25C0' ||
+          btn.querySelector('.fa-chevron-left, .fa-angle-left, [class*="left"]')) {
+        if (!btn.disabled && !btn.classList.contains('disabled')) {
+          btn.click();
+          return true;
+        }
       }
     }
 
     return false;
   }
 
-  console.log('🔍 Starting course scraper...');
-  console.log('📄 Reading page data...');
+  // --- Wait for table to be ready after page change ---
+  async function waitForTableLoad(previousFirstCell) {
+    for (let i = 0; i < 20; i++) {
+      await sleep(300);
+      const rows = getTableRows();
+      if (rows.length > 0) {
+        const firstCell = rows[0]?.querySelector('td')?.textContent?.trim();
+        // If the content changed or we don't have a reference, table has loaded
+        if (!previousFirstCell || firstCell !== previousFirstCell) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
-  const allCourses = [];
+  console.log('Starting course scraper for EMS Report #212...');
+  console.log('Reading page data...');
+
+  const allCourses = new Map(); // keyed by courseCode-group to avoid duplicates
   const pageInfo = getPageInfo();
   const totalPages = pageInfo?.total || 1;
 
-  console.log(`📊 Found ${totalPages} pages to scrape`);
+  console.log(`Found ${totalPages} page(s) to scrape`);
 
   for (let page = 1; page <= totalPages; page++) {
-    console.log(`📄 Scraping page ${page}/${totalPages}...`);
+    console.log(`Scraping page ${page}/${totalPages}...`);
 
-    await sleep(DELAY);
+    // Small initial delay for first page, longer for subsequent
+    if (page === 1) await sleep(500);
 
     const rows = getTableRows();
     let pageCount = 0;
 
     for (const row of rows) {
-      const course = parseTableRow(row);
-      if (course) {
-        allCourses.push(course);
-        pageCount++;
+      try {
+        const course = parseTableRow(row);
+        if (course) {
+          const key = `${course.courseCode}-${course.group}`;
+          if (!allCourses.has(key)) {
+            allCourses.set(key, course);
+            pageCount++;
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to parse row:', e);
       }
     }
 
-    console.log(`  ✅ Found ${pageCount} courses on this page`);
+    console.log(`  Found ${pageCount} new courses on page ${page} (total so far: ${allCourses.size})`);
 
     if (page < totalPages) {
+      // Remember first cell to detect page change
+      const firstCell = rows[0]?.querySelector('td')?.textContent?.trim();
       const navigated = clickNextPage();
       if (!navigated) {
-        console.warn(`  ⚠️ Could not navigate to next page. Stopping at page ${page}`);
+        console.warn(`Could not navigate to next page. Stopping at page ${page}`);
         break;
+      }
+      // Wait for the new page data to load
+      const loaded = await waitForTableLoad(firstCell);
+      if (!loaded) {
+        console.warn(`Page ${page + 1} did not load in time. Continuing anyway...`);
+        await sleep(DELAY);
       }
     }
   }
 
-  console.log(`\n🎉 Done! Total courses: ${allCourses.length}`);
+  const coursesArray = Array.from(allCourses.values());
+  console.log(`\nDone! Total unique courses: ${coursesArray.length}`);
 
   // Build the output JSON
   const output = {
-    semester: "14042",
-    semesterLabel: "نیمسال دوم ۱۴۰۴-۱۴۰۵",
+    semester: '14042',
+    semesterLabel: 'نیمسال دوم ۱۴۰۴-۱۴۰۵',
     fetchedAt: new Date().toISOString(),
-    department: "دانشکده ریاضی، آمار و علوم کامپیوتر",
-    courses: allCourses,
+    department: 'دانشکده ریاضی، آمار و علوم کامپیوتر',
+    courses: coursesArray,
   };
 
   // Download as JSON file
@@ -281,11 +373,13 @@
   const a = document.createElement('a');
   a.href = url;
   a.download = 'courses.json';
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(url);
 
-  console.log('💾 Downloaded courses.json');
-  console.log('📋 Copy the file to: src/data/courses.json');
+  console.log('Downloaded courses.json');
+  console.log('Copy the file to: src/data/courses.json in the project');
 
   return output;
 })();
