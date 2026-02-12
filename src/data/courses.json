@@ -7894,7 +7894,7 @@
       "examDate": "",
       "examTime": "",
       "location": "",
-      "prerequisites": "پيش نياز: 6103798 نگارش علمي",
+      "prerequisites": "",
       "notes": "",
       "grade": ""
     },
@@ -8102,7 +8102,7 @@
       "examDate": "1405/04/17",
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "پيش نياز: 6103829 رگرسيون 1",
+      "prerequisites": "پيش نياز: 6103780 طرح آزمايش ها 1",
       "notes": "",
       "grade": ""
     },
@@ -8154,7 +8154,7 @@
       "examDate": "1405/04/17",
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "پيش نياز: 6103779 احتمال 2",
+      "prerequisites": "پيش نياز: 6103779 احتمال 2 | معادل: 6103818 آمار رياضي 1",
       "notes": "",
       "grade": ""
     },
@@ -8331,8 +8331,8 @@
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "الهيات- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8352,8 +8352,8 @@
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "الهيات- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8373,8 +8373,8 @@
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "جغرافيا- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8394,8 +8394,8 @@
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "جغرافيا- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8405,12 +8405,18 @@
       "unitCount": 2,
       "gender": "female",
       "professor": "عابديني ليواري ابوالفضل",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "حقوق- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8420,12 +8426,18 @@
       "unitCount": 2,
       "gender": "male",
       "professor": "عابديني ليواري ابوالفضل",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "حقوق- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8435,12 +8447,18 @@
       "unitCount": 2,
       "gender": "male",
       "professor": "آقائي مصطفي",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 3,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "روانشناسي- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8450,12 +8468,18 @@
       "unitCount": 2,
       "gender": "female",
       "professor": "عليجاني محمدكاظم",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 3,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "روانشناسي- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8475,8 +8499,8 @@
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "زبانها- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8496,8 +8520,8 @@
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "زبانها- حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8507,12 +8531,18 @@
       "unitCount": 2,
       "gender": "male",
       "professor": "آل يمين حامد",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "علوم- زيست كلاس 273- - حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8522,12 +8552,18 @@
       "unitCount": 2,
       "gender": "male",
       "professor": "آل يمين حامد",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "علوم- زيست كلاس 273- - حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8537,12 +8573,18 @@
       "unitCount": 2,
       "gender": "male",
       "professor": "عليجاني محمدكاظم",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 3,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "علوم اجتماعي - حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8552,12 +8594,18 @@
       "unitCount": 2,
       "gender": "female",
       "professor": "عليجاني محمدكاظم",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 3,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "علوم اجتماعي - حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8577,8 +8625,8 @@
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "فني - حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8598,8 +8646,8 @@
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "فني - حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8609,12 +8657,18 @@
       "unitCount": 2,
       "gender": "male",
       "professor": "قهرماني نژاد شايق بها الدين",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 3,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "مديريت - حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8624,12 +8678,18 @@
       "unitCount": 2,
       "gender": "female",
       "professor": "قهرماني نژاد شايق بها الدين",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 3,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
       "examDate": "1405/04/18",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل8120134 تاريخ تحليلي صدر اسلام",
-      "notes": "",
+      "prerequisites": "معادل: 8120134 تاريخ تحليلي صدر اسلام",
+      "notes": "مديريت - حضور در جلسات درس الزامي است. در صورت غيبت بيش از سه جلسه نمره صفر منظور خواهد شد.",
       "grade": ""
     },
     {
@@ -8726,7 +8786,7 @@
       "examDate": "1405/04/21",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "پيش نياز6103386 مباني كامپيوتر و برنامه سازيمعادل6103582 اصول كامپيوتر 2",
+      "prerequisites": "پيش نياز: 6103386 مباني كامپيوتر و برنامه سازي | معادل: 6103582 اصول كامپيوتر 2",
       "notes": "",
       "grade": ""
     },
@@ -8752,7 +8812,7 @@
       "examDate": "1405/04/21",
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "پيش نياز6103384 مباني رياضياتمعادل6103083 مباني جبر",
+      "prerequisites": "پيش نياز: 6103384 مباني رياضيات | معادل: 6103083 مباني جبر",
       "notes": "",
       "grade": ""
     },
@@ -8778,7 +8838,7 @@
       "examDate": "1405/04/15",
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "پيش نياز6103262 رياضي عمومي 1",
+      "prerequisites": "پيش نياز: 6103262 رياضي عمومي 1",
       "notes": "",
       "grade": ""
     },
@@ -8804,7 +8864,7 @@
       "examDate": "1405/04/21",
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "پيش نياز6103262 رياضي عمومي 1",
+      "prerequisites": "پيش نياز: 6103262 رياضي عمومي 1",
       "notes": "",
       "grade": ""
     },
@@ -8830,8 +8890,8 @@
       "examDate": "1405/04/14",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "پيش نياز6103127 برنامه سازي پيشرفته",
-      "notes": "",
+      "prerequisites": "",
+      "notes": "مربوط به دانشجويان ورودي قبل400",
       "grade": ""
     },
     {
@@ -8882,7 +8942,7 @@
       "examDate": "1405/04/13",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "پيش نياز6103842 مباني منطق",
+      "prerequisites": "پيش نياز: 6103842 مباني منطق",
       "notes": "",
       "grade": ""
     },
@@ -8893,11 +8953,22 @@
       "unitCount": 4,
       "gender": "mixed",
       "professor": "كاظمي رامين",
-      "sessions": [],
+      "sessions": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 3,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
       "examDate": "1405/04/20",
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "معادل6103801 احتمال 1معادل6103071 آمار و احتمال 1",
+      "prerequisites": "معادل: 6103801 احتمال 1 | معادل: 6103071 آمار و احتمال 1",
       "notes": "",
       "grade": ""
     },
@@ -8923,7 +8994,7 @@
       "examDate": "1405/04/14",
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "پيش نياز6103384 مباني رياضياتمعادل6103246 مباني ماتريس ها و جبر خطي",
+      "prerequisites": "پيش نياز: 6103384 مباني رياضيات | معادل: 6103246 مباني ماتريس ها و جبر خطي",
       "notes": "",
       "grade": ""
     },
@@ -8949,7 +9020,7 @@
       "examDate": "1405/04/13",
       "examTime": "13:00",
       "location": "",
-      "prerequisites": "معادل6103269 رياضيات گسسته",
+      "prerequisites": "معادل: 6103269 رياضيات گسسته",
       "notes": "",
       "grade": ""
     },
@@ -8975,7 +9046,7 @@
       "examDate": "1405/04/17",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "پيش نياز6103127 برنامه سازي پيشرفته",
+      "prerequisites": "پيش نياز: 6103127 برنامه سازي پيشرفته",
       "notes": "",
       "grade": ""
     },
@@ -9001,7 +9072,7 @@
       "examDate": "1405/04/22",
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "پيش نياز6103777 احتمال 1",
+      "prerequisites": "پيش نياز: 6103777 احتمال 1",
       "notes": "",
       "grade": ""
     },
@@ -9027,7 +9098,7 @@
       "examDate": "1405/04/22",
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "پيش نياز6103384 مباني رياضيات",
+      "prerequisites": "پيش نياز: 6103384 مباني رياضيات",
       "notes": "",
       "grade": ""
     },
@@ -9053,7 +9124,7 @@
       "examDate": "1405/04/13",
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "پيش نياز6103778 جبر خطي",
+      "prerequisites": "پيش نياز: 6103778 جبر خطي",
       "notes": "",
       "grade": ""
     },
@@ -9104,6 +9175,105 @@
       ],
       "examDate": "1405/04/23",
       "examTime": "08:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "1110845",
+      "group": 8,
+      "courseName": "مباني مهندسي مالي",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "سارنج عليرضا",
+      "sessions": [
+        {
+          "dayOfWeek": 2,
+          "startTime": "13:00",
+          "endTime": "16:00"
+        }
+      ],
+      "examDate": "1405/04/15",
+      "examTime": "10:30",
+      "location": "",
+      "prerequisites": "پيش نياز: 6103777 احتمال 1",
+      "notes": "كارشناسي مديريت مالي 4021",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103384",
+      "group": 1,
+      "courseName": "مباني رياضيات",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "رضاوند رضا",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        }
+      ],
+      "examDate": "1405/04/23",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "معادل: 6103059 مباني علوم رياضي | معادل: 6103059 مباني علوم رياضي",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103641",
+      "group": 1,
+      "courseName": "كنترل كيفيت آماري",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "شجاعي علي آبادي سيدرحمت",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
+      "examDate": "1405/04/21",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "پيش نياز: 6103811 روش هاي آماري",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103822",
+      "group": 1,
+      "courseName": "مباني جمعيت شناسي",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "پروائي شيوا",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        }
+      ],
+      "examDate": "1405/04/23",
+      "examTime": "10:00",
       "location": "",
       "prerequisites": "",
       "notes": "",
