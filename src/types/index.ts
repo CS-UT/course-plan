@@ -39,16 +39,22 @@ export interface CoursesData {
 
 export interface TutorReview {
   courseName: string;
-  averageRating: number;
-  teachingRating: number;
-  gradingRating: number;
-  flags: Record<string, boolean>;
+  // Format A (structured ratings)
+  averageRating?: number;
+  teachingRating?: number;
+  gradingRating?: number;
+  flags?: Record<string, boolean>;
   comments: string[];
+  // Format B-F (prose reviews, may have sections)
+  sections?: Record<string, string>;
   date: string;
 }
 
 export interface TutorProfile {
   id: string;
   name: string;
+  rank?: string;       // درجه: استاد, دانشیار, etc.
+  workplace?: string;  // محل کار / دانشکده
+  profileUrl?: string; // profile.ut.ac.ir link
   reviews: TutorReview[];
 }

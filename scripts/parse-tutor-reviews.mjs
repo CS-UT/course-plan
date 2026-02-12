@@ -3,11 +3,15 @@
 /**
  * Parse tutor reviews from a Telegram channel export (JSON).
  *
- * Extracts tutor profiles (name, ratings, flags, comments, reactions)
- * and matches them to professors in courses.json.
+ * Handles multiple message formats:
+ *   A: «name» + میانگین امتیاز + hashtag (structured ratings)
+ *   B: 👤 name + 🧑🏻‍🏫 نام درس + ✍️ نظر (course-specific prose)
+ *   B+: Same as B with extra sections (📊بارم بندی, 🎲وضع نمره دهی, etc.)
+ *   C: 👤 name + 🎖 درجه + 🏢 محل کار + ✍️ نظر (profile + prose)
+ *   D: 👤 استاد: name + 🏢 دانشکده + ✍️ نظر
+ *   E: 👤 name + 🏢 محل کار + ✍️ نظر (simple)
  *
  * Usage: node scripts/parse-tutor-reviews.mjs [path-to-result.json]
- *        Defaults to ~/Downloads/result.json
  *
  * Outputs:
  *   src/data/tutors.json         — array of TutorProfile
@@ -47,12 +51,11 @@ function persianDigitToLatin(str) {
     .replace(/[٠-٩]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0x0660 + 48));
 }
 
-/** Get name parts as a Set for order-independent comparison */
 function nameParts(name) {
   return new Set(normalizePersian(name).split(' ').filter(Boolean));
 }
 
-// ── Extract text from Telegram message ─────────────────────────────
+// ── Extract text & links from Telegram message ─────────────────────
 
 function extractText(msg) {
   if (typeof msg.text === 'string') return msg.text;
@@ -60,6 +63,17 @@ function extractText(msg) {
   return msg.text
     .map((part) => (typeof part === 'string' ? part : part.text || ''))
     .join('');
+}
+
+/** Extract the first profile.ut.ac.ir URL from text_link entities */
+function extractProfileUrl(msg) {
+  if (!Array.isArray(msg.text)) return null;
+  for (const part of msg.text) {
+    if (typeof part === 'object' && part.type === 'text_link' && part.href) {
+      if (part.href.includes('profile.ut.ac.ir')) return part.href;
+    }
+  }
+  return null;
 }
 
 function extractHashtags(msg) {
@@ -70,7 +84,6 @@ function extractHashtags(msg) {
       tags.push(part.text);
     }
   }
-  // Also check text_entities
   if (Array.isArray(msg.text_entities)) {
     for (const ent of msg.text_entities) {
       if (ent.type === 'hashtag' && !tags.includes(ent.text)) {
@@ -81,28 +94,19 @@ function extractHashtags(msg) {
   return tags;
 }
 
-// ── Parse a single tutor review message ────────────────────────────
+// ── Format A: «name» + میانگین امتیاز ──────────────────────────────
 
-function parseReview(msg) {
-  const text = extractText(msg);
-  const hashtags = extractHashtags(msg);
-
-  // Must have a name in «» and a rating
+function parseFormatA(msg, text, hashtags) {
   const nameMatch = text.match(/«([^»]+)»/);
   if (!nameMatch) return null;
   if (!text.includes('میانگین امتیاز')) return null;
   if (hashtags.length === 0) return null;
 
   const rawName = nameMatch[1].trim();
-
-  // Skip compound entries (multiple tutors)
   if (rawName.includes('،') || rawName.includes(' - ') || rawName.includes(' و ')) return null;
 
-  const courseName = hashtags[0]
-    .replace(/^#/, '')
-    .replace(/_/g, ' ');
+  const courseName = hashtags[0].replace(/^#/, '').replace(/_/g, ' ');
 
-  // Parse ratings
   const parseRating = (label) => {
     const re = new RegExp(label + ':\\s*([\\d.۰-۹٠-٩]+)\\s*از\\s*10');
     const m = text.match(re);
@@ -110,45 +114,180 @@ function parseReview(msg) {
     return parseFloat(persianDigitToLatin(m[1])) || 0;
   };
 
-  const averageRating = parseRating('میانگین امتیاز');
-  const teachingRating = parseRating('اخلاق و تدریس');
-  const gradingRating = parseRating('نمره دهی استاد');
-
-  // Parse boolean flags
   const flags = {};
-  const flagLabels = ['نهاد', 'خلاصه نویسی', 'میان ترم', 'حضور و غیاب', 'تکلیف'];
-  for (const label of flagLabels) {
+  for (const label of ['نهاد', 'خلاصه نویسی', 'میان ترم', 'حضور و غیاب', 'تکلیف']) {
     const re = new RegExp(label + ':\\s*(✅|❌)');
     const m = text.match(re);
     if (m) flags[label] = m[1] === '✅';
   }
 
-  // Parse comments
   const comments = [];
   const commentsMatch = text.match(/✍️\s*نظرات\s*:\s*\n([\s\S]*?)(?:\n\n@|\n@|$)/);
   if (commentsMatch) {
-    const raw = commentsMatch[1];
-    for (const part of raw.split('●')) {
+    for (const part of commentsMatch[1].split('●')) {
       const c = part.trim();
       if (c) comments.push(c);
     }
   }
 
-  const date = msg.date ? msg.date.split('T')[0] : '';
-
   return {
     rawName,
+    profileUrl: null,
+    rank: null,
+    workplace: null,
     courseName,
     review: {
       courseName,
-      averageRating,
-      teachingRating,
-      gradingRating,
+      averageRating: parseRating('میانگین امتیاز'),
+      teachingRating: parseRating('اخلاق و تدریس'),
+      gradingRating: parseRating('نمره دهی استاد'),
       flags,
       comments,
-      date,
+      date: msg.date ? msg.date.split('T')[0] : '',
     },
   };
+}
+
+// ── Formats B-F: 👤 name based ─────────────────────────────────────
+
+/** Known section emoji markers for Format B Extended */
+const SECTION_MARKERS = [
+  ['📚', 'منبع تدریس'],
+  ['✅', 'حضور و غیاب'],
+  ['📊', 'بارم بندی'],
+  ['🎲', 'وضع نمره دهی'],
+  ['📝', 'سطح امتحان'],
+  ['📖', 'تمرین و کوییز'],
+  ['🗞', 'توضیحات بیشتر'],
+];
+
+function parseFormatBCDEF(msg, text) {
+  // Must start with 👤
+  if (!text.includes('👤')) return null;
+
+  // Extract name — multiple patterns
+  let rawName = null;
+
+  // "👤 استاد: name" (Format D)
+  const dMatch = text.match(/👤\s*استاد:\s*(.+)/);
+  if (dMatch) rawName = dMatch[1].trim();
+
+  // "👤 name" (Formats B, C, E) — name is on the same line
+  if (!rawName) {
+    const bMatch = text.match(/👤\s*(.+)/);
+    if (bMatch) rawName = bMatch[1].trim();
+  }
+
+  if (!rawName) return null;
+
+  // Clean name: remove trailing parenthetical URLs and profile links
+  rawName = rawName.replace(/\s*\(https?:\/\/[^)]+\)\s*$/, '').trim();
+  // Remove trailing newlines / other emoji markers that may have been captured
+  rawName = rawName.split('\n')[0].trim();
+
+  if (!rawName || rawName.length > 60) return null;
+
+  // Extract profile URL
+  const profileUrl = extractProfileUrl(msg);
+
+  // Extract rank: 🎖 درجه: استاد
+  const rankMatch = text.match(/🎖\s*درجه:\s*(.+)/);
+  const rank = rankMatch ? rankMatch[1].trim() : null;
+
+  // Extract workplace: 🏢 محل کار: ... or 🏢 دانشکده ...
+  const wpMatch = text.match(/🏢\s*(?:محل کار:|دانشکده)\s*(.+)/);
+  const workplace = wpMatch ? wpMatch[1].trim() : null;
+
+  // Extract course name: 🧑🏻‍🏫 نام درس: ...  (the emoji has ZWJ chars)
+  const courseMatch = text.match(/نام درس:\s*(.+)/);
+  const courseName = courseMatch ? courseMatch[1].trim() : '';
+
+  // Extract review text and sections
+  const comments = [];
+  const sections = {};
+
+  // Find where the review text starts (after ✍️ نظر:)
+  const reviewStart = text.match(/✍️\s*نظر(?:ات)?\s*:\s*\n?/);
+  if (reviewStart) {
+    const afterReview = text.slice(reviewStart.index + reviewStart[0].length);
+
+    // Check for structured sections (Format B Extended)
+    let hasSections = false;
+    for (const [emoji] of SECTION_MARKERS) {
+      if (afterReview.includes(emoji) && emoji !== '✅') {
+        hasSections = true;
+        break;
+      }
+    }
+
+    if (!hasSections) {
+      // Simple prose review — everything until @UTGroups or @UT400 or end
+      const prose = afterReview
+        .replace(/@UT(?:Groups|400)\s*$/, '')
+        .replace(/@UTGroups\s*$/, '')
+        .trim();
+      if (prose) comments.push(prose);
+    }
+  } else {
+    // No ✍️ marker — some messages have the review text directly after metadata
+    // Try to find text after all metadata lines
+    const lines = text.split('\n');
+    let collecting = false;
+    const proseLines = [];
+    for (const line of lines) {
+      if (collecting) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('@UT')) break;
+        proseLines.push(line);
+      } else if (line.includes('🏢') || line.includes('🎖')) {
+        // Skip metadata lines, start collecting after blank line
+      } else if (line.trim() === '' && proseLines.length === 0) {
+        collecting = true;
+      }
+    }
+    const prose = proseLines.join('\n').trim();
+    if (prose) comments.push(prose);
+  }
+
+  // Parse structured sections for Format B Extended
+  for (const [emoji, label] of SECTION_MARKERS) {
+    const re = new RegExp(emoji + '\\s*' + label.replace(/\s/g, '\\s*') + '\\s*\\n([\\s\\S]*?)(?=\\n(?:📚|✅|📊|🎲|📝|📖|🗞|@UT)|$)');
+    const m = text.match(re);
+    if (m) {
+      const content = m[1].replace(/@UT(?:Groups|400)\s*$/, '').trim();
+      if (content) sections[label] = content;
+    }
+  }
+
+  if (comments.length === 0 && Object.keys(sections).length === 0) return null;
+
+  return {
+    rawName,
+    profileUrl,
+    rank,
+    workplace,
+    courseName,
+    review: {
+      courseName,
+      comments,
+      ...(Object.keys(sections).length > 0 ? { sections } : {}),
+      date: msg.date ? msg.date.split('T')[0] : '',
+    },
+  };
+}
+
+// ── Combined parser ────────────────────────────────────────────────
+
+function parseReview(msg) {
+  const text = extractText(msg);
+  const hashtags = extractHashtags(msg);
+
+  // Try Format A first (most specific)
+  const a = parseFormatA(msg, text, hashtags);
+  if (a) return a;
+
+  // Try Formats B-F
+  return parseFormatBCDEF(msg, text);
 }
 
 // ── Match tutors to courses.json professors ────────────────────────
@@ -162,16 +301,15 @@ function matchTutorToProf(tutorName, professorNames) {
 
   for (const profName of professorNames) {
     const profSet = nameParts(profName);
-
     const common = new Set([...tutorSet].filter((p) => profSet.has(p)));
     if (common.size === 0) continue;
 
-    // Exact set equality (handles name order differences)
+    // Exact set equality
     if (common.size === tutorSet.size && common.size === profSet.size) {
-      return profName; // confident exact match
+      return profName;
     }
 
-    // Subset match: all parts of one set found in the other
+    // Subset match
     const tutorAllFound = [...tutorSet].every((p) => profSet.has(p));
     const profAllFound = [...profSet].every((p) => tutorSet.has(p));
 
@@ -215,14 +353,19 @@ async function main() {
   }
   console.log(`Parsed tutor reviews: ${parsed.length}`);
 
-  // Group by normalized name
-  const tutorMap = new Map(); // normalizedName → { displayName, reviews[] }
-  for (const { rawName, review } of parsed) {
+  // Group by normalized name, merge metadata
+  const tutorMap = new Map();
+  for (const { rawName, profileUrl, rank, workplace, courseName, review } of parsed) {
     const key = normalizePersian(rawName);
     if (!tutorMap.has(key)) {
-      tutorMap.set(key, { displayName: normalizePersian(rawName), reviews: [] });
+      tutorMap.set(key, { displayName: normalizePersian(rawName), profileUrl: null, rank: null, workplace: null, reviews: [] });
     }
-    tutorMap.get(key).reviews.push(review);
+    const entry = tutorMap.get(key);
+    entry.reviews.push(review);
+    // Keep the most informative metadata
+    if (profileUrl && !entry.profileUrl) entry.profileUrl = profileUrl;
+    if (rank && !entry.rank) entry.rank = rank;
+    if (workplace && !entry.workplace) entry.workplace = workplace;
   }
   console.log(`Unique tutors (after normalization): ${tutorMap.size}`);
 
@@ -234,7 +377,7 @@ async function main() {
 
   // Build tutor profiles and match
   const tutors = [];
-  const nameMap = {}; // professorName → tutorId
+  const nameMap = {};
   let matchCount = 0;
 
   let id = 0;
@@ -244,11 +387,13 @@ async function main() {
     const profile = {
       id: tutorId,
       name: tutor.displayName,
+      ...(tutor.rank ? { rank: tutor.rank } : {}),
+      ...(tutor.workplace ? { workplace: tutor.workplace } : {}),
+      ...(tutor.profileUrl ? { profileUrl: tutor.profileUrl } : {}),
       reviews: tutor.reviews,
     };
     tutors.push(profile);
 
-    // Try to match to courses.json
     const match = matchTutorToProf(tutor.displayName, professorNames);
     if (match) {
       nameMap[match] = tutorId;
@@ -258,13 +403,10 @@ async function main() {
   }
 
   console.log(`\nMatched ${matchCount}/${tutorMap.size} tutors to courses.json professors`);
-
-  // Unmatched professors (those in courses.json with no tutor profile)
   const matchedProfs = new Set(Object.keys(nameMap));
   const unmatchedProfs = professorNames.filter((p) => !matchedProfs.has(p));
   console.log(`Professors in courses.json without reviews: ${unmatchedProfs.length}`);
 
-  // Write outputs
   await writeFile(TUTORS_OUT, JSON.stringify(tutors, null, 2) + '\n', 'utf-8');
   console.log(`\nWrote ${tutors.length} tutor profiles → ${TUTORS_OUT}`);
 
