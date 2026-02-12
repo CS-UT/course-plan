@@ -44,8 +44,8 @@ export interface CalendarEvent {
     location: string;
     examDate: string;
     examTime: string;
-    capacity: number;
-    enrolled: number;
+    prerequisites: string;
+    notes: string;
   };
 }
 
@@ -91,8 +91,8 @@ export function coursesToEvents(
           location: course.location,
           examDate: course.examDate,
           examTime: course.examTime,
-          capacity: course.capacity,
-          enrolled: course.enrolled,
+          prerequisites: course.prerequisites,
+          notes: course.notes,
         },
       });
     }

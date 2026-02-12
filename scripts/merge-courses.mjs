@@ -36,6 +36,19 @@ function parseSession(s) {
   };
 }
 
+// Known prereq labels that leak into the notes field from older scrapes
+const PREREQ_LABELS = ['پيش نياز', 'پیش نیاز', 'همنياز', 'همنیاز', 'معادل', 'متضاد'];
+
+function cleanNotes(raw) {
+  if (!raw) return '';
+  let s = raw.trim();
+  // Strip bare label words that leaked from the prereqs column
+  for (const label of PREREQ_LABELS) {
+    if (s === label) return '';
+  }
+  return s;
+}
+
 function expandCourse(c) {
   const [examDate, examTime] = c.exam ? c.exam.split(' ') : ['', ''];
   return {
@@ -43,8 +56,6 @@ function expandCourse(c) {
     group: c.group,
     courseName: c.name,
     unitCount: c.units,
-    capacity: c.capacity || 0,
-    enrolled: 0,
     gender: GENDER_MAP[c.gender] || 'mixed',
     professor: c.professor,
     sessions: (c.sessions || []).map(parseSession),
@@ -52,7 +63,7 @@ function expandCourse(c) {
     examTime: examTime || '',
     location: c.location || '',
     prerequisites: c.prereqs || '',
-    notes: c.notes || '',
+    notes: cleanNotes(c.notes),
     grade: '',
   };
 }

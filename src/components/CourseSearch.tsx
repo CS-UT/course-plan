@@ -192,6 +192,7 @@ function CourseCard({
   onHover: () => void;
   onLeave: () => void;
 }) {
+  const [notesExpanded, setNotesExpanded] = useState(false);
   const genderLabel = course.gender === 'male' ? 'پسران' : course.gender === 'female' ? 'دختران' : '';
 
   return (
@@ -236,6 +237,42 @@ function CourseCard({
       {course.examDate && (
         <div className="mt-1.5 text-xs text-gray-400 dark:text-gray-500">
           امتحان: {toPersianDigits(course.examDate)} ساعت {toPersianDigits(course.examTime)}
+        </div>
+      )}
+
+      {course.prerequisites && (
+        <div className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+          پیش‌نیاز: {course.prerequisites}
+        </div>
+      )}
+
+      {course.notes && (
+        <div className="mt-1">
+          <button
+            onClick={(e) => { e.stopPropagation(); setNotesExpanded((v) => !v); }}
+            className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium cursor-pointer flex items-center gap-0.5"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={`transition-transform ${notesExpanded ? 'rotate-90' : ''}`}
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+            توضیحات
+          </button>
+          {notesExpanded && (
+            <div className="mt-1 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded px-2 py-1.5 leading-relaxed">
+              {course.notes}
+            </div>
+          )}
         </div>
       )}
 

@@ -124,9 +124,7 @@
 
     // col 3 = practical units (skip)
 
-    const capacityText = persianToEnglish(cells[4]?.textContent?.trim() || '0');
-    const capacityMatch = capacityText.match(/(\d+)/);
-    const capacity = capacityMatch ? parseInt(capacityMatch[1], 10) : 0;
+    // col 4 = capacity (not scraped — unreliable for planning)
 
     const genderText = cells[5]?.textContent?.trim() || '';
     let gender = 'مخت';
@@ -140,17 +138,69 @@
     const exam = parseExamText(scheduleText);
 
     const location = cells[8]?.textContent?.trim() || '';
-    const prerequisites = cells[9]?.textContent?.trim() || '';
-    const notes = cells[10]?.textContent?.trim() || '';
+
+    // Columns 9+ contain prereqs/equivalents and notes, but NpGrid may
+    // split the "دروس پيش‌نياز، همنياز، متضاد و معادل" visual column into
+    // multiple <td> sub-cells (one per label + data pair).  The real
+    // "توضيحات" column comes after all of them.
+    //
+    // Strategy: collect ALL text from cells[9..end], join them, then split
+    // by the known labels (پيش نياز, همنياز, معادل, متضاد) to get the
+    // structured prereq data.  Whatever remains after stripping those
+    // sections is the notes text.
+    const tailCells = Array.from(cells).slice(9).map(c => c.textContent?.trim() || '');
+    const tailText = tailCells.join(' ').replace(/\s+/g, ' ').trim();
+
+    // Known labels that indicate prereqs/equivalents sections
+    const PREREQ_LABELS = ['پيش نياز', 'پیش نیاز', 'همنياز', 'همنیاز', 'معادل', 'متضاد'];
+    const labelPattern = new RegExp(
+      '(' + PREREQ_LABELS.join('|') + ')\\s*', 'g'
+    );
+
+    // Extract prereqs: everything matching "label + courseCode courseName" patterns
+    let prereqs = '';
+    const prereqParts = [];
+    let remaining = tailText;
+
+    // Find all label positions
+    const matches = [...tailText.matchAll(labelPattern)];
+    if (matches.length > 0) {
+      const firstLabelStart = matches[0].index;
+      // Text before first label is potential notes prefix
+      const beforeLabels = tailText.slice(0, firstLabelStart).trim();
+
+      // Text from first label onward is prereqs data
+      let lastEnd = firstLabelStart;
+      for (const m of matches) {
+        const label = m[1];
+        const start = m.index + m[0].length;
+        // Find the next label or end of string
+        const nextMatch = matches.find(mm => mm.index > m.index);
+        const end = nextMatch ? nextMatch.index : tailText.length;
+        const data = tailText.slice(start, end).trim();
+        if (data) prereqParts.push(`${label}: ${data}`);
+        lastEnd = end;
+      }
+      prereqs = prereqParts.join(' | ');
+
+      // Notes is what's left: text before labels + text after last label section
+      const afterLabels = tailText.slice(lastEnd).trim();
+      remaining = [beforeLabels, afterLabels].filter(Boolean).join(' ').trim();
+    }
+
+    // Clean remaining: remove bare label words that leaked through
+    for (const label of PREREQ_LABELS) {
+      remaining = remaining.replace(new RegExp('^' + label + '$'), '').trim();
+    }
+    const notes = remaining;
 
     const out = {
       code: courseCode, group, name: courseName, units: unitCount,
       professor, gender, sessions,
     };
     if (exam) out.exam = exam;
-    if (capacity) out.capacity = capacity;
     if (location) out.location = location;
-    if (prerequisites) out.prereqs = prerequisites;
+    if (prereqs) out.prereqs = prereqs;
     if (notes) out.notes = notes;
 
     return out;

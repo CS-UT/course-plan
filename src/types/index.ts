@@ -9,8 +9,6 @@ export interface Course {
   group: number;
   courseName: string;
   unitCount: number;
-  capacity: number;
-  enrolled: number;
   gender: 'male' | 'female' | 'mixed';
   professor: string;
   sessions: CourseSession[];
