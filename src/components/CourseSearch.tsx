@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import type { Course } from '@/types';
-import { normalizeQuery, toPersianDigits, dayName } from '@/utils/persian';
+import { normalizeQuery, toPersianDigits, dayName, WEEK_DAYS_ORDER } from '@/utils/persian';
 import { useSchedule } from '@/hooks/useSchedule';
 import { findTimeConflicts, findExamConflicts } from '@/utils/conflicts';
 
@@ -9,20 +9,65 @@ interface Props {
   onHoverCourse: (course: Course | null) => void;
 }
 
+interface Filters {
+  grade: string;
+  gender: string;
+  day: string;
+  hideConflicts: boolean;
+}
+
+const defaultFilters: Filters = {
+  grade: '',
+  gender: '',
+  day: '',
+  hideConflicts: false,
+};
+
 export function CourseSearch({ courses, onHoverCourse }: Props) {
   const [query, setQuery] = useState('');
+  const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [showFilters, setShowFilters] = useState(false);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
 
+  const grades = useMemo(() => {
+    const set = new Set(courses.map((c) => c.grade).filter(Boolean));
+    return Array.from(set).sort();
+  }, [courses]);
+
+  const activeFilterCount = [filters.grade, filters.gender, filters.day].filter(Boolean).length + (filters.hideConflicts ? 1 : 0);
+
   const filtered = useMemo(() => {
+    let result = courses;
+
     const q = normalizeQuery(query);
-    if (!q) return courses;
-    return courses.filter(
-      (c) =>
-        normalizeQuery(c.courseName).includes(q) ||
-        normalizeQuery(c.courseCode).includes(q) ||
-        normalizeQuery(c.professor).includes(q),
-    );
-  }, [courses, query]);
+    if (q) {
+      result = result.filter(
+        (c) =>
+          normalizeQuery(c.courseName).includes(q) ||
+          normalizeQuery(c.courseCode).includes(q) ||
+          normalizeQuery(c.professor).includes(q),
+      );
+    }
+
+    if (filters.grade) {
+      result = result.filter((c) => c.grade === filters.grade);
+    }
+    if (filters.gender) {
+      result = result.filter((c) => c.gender === filters.gender);
+    }
+    if (filters.day) {
+      const dayNum = Number(filters.day);
+      result = result.filter((c) => c.sessions.some((s) => s.dayOfWeek === dayNum));
+    }
+    if (filters.hideConflicts) {
+      result = result.filter((c) => {
+        if (isCourseSelected(c.courseCode, c.group)) return true;
+        return findTimeConflicts(c, selectedCourses).length === 0 && findExamConflicts(c, selectedCourses).length === 0;
+      });
+    }
+
+    return result;
+  }, [courses, query, filters, selectedCourses, isCourseSelected]);
 
   function handleToggle(course: Course) {
     if (isCourseSelected(course.courseCode, course.group)) {
@@ -32,6 +77,13 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
       addCourse(course);
     }
   }
+
+  function clearFilters() {
+    setFilters(defaultFilters);
+  }
+
+  const selectClass =
+    'px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
 
   return (
     <div className="flex flex-col gap-3">
@@ -43,9 +95,79 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
         className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400"
       />
 
-      <div className="text-xs text-gray-500 dark:text-gray-400 flex justify-between">
+      <div className="text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center">
         <span>{toPersianDigits(filtered.length)} درس</span>
+        <button
+          onClick={() => setShowFilters((v) => !v)}
+          className="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium cursor-pointer flex items-center gap-1"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          فیلتر
+          {activeFilterCount > 0 && (
+            <span className="bg-primary-600 text-white text-[10px] w-4 h-4 rounded-full inline-flex items-center justify-center">
+              {toPersianDigits(activeFilterCount)}
+            </span>
+          )}
+        </button>
       </div>
+
+      {showFilters && (
+        <div className="flex flex-col gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+          <div className="flex flex-wrap gap-2">
+            <select
+              value={filters.grade}
+              onChange={(e) => setFilters((f) => ({ ...f, grade: e.target.value }))}
+              className={selectClass}
+            >
+              <option value="">مقطع</option>
+              {grades.map((g) => (
+                <option key={g} value={g}>{g}</option>
+              ))}
+            </select>
+
+            <select
+              value={filters.gender}
+              onChange={(e) => setFilters((f) => ({ ...f, gender: e.target.value }))}
+              className={selectClass}
+            >
+              <option value="">جنسیت</option>
+              <option value="male">مرد</option>
+              <option value="female">زن</option>
+              <option value="mixed">مختلط</option>
+            </select>
+
+            <select
+              value={filters.day}
+              onChange={(e) => setFilters((f) => ({ ...f, day: e.target.value }))}
+              className={selectClass}
+            >
+              <option value="">روز هفته</option>
+              {WEEK_DAYS_ORDER.map((d) => (
+                <option key={d} value={d}>{dayName(d)}</option>
+              ))}
+            </select>
+          </div>
+
+          <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={filters.hideConflicts}
+              onChange={(e) => setFilters((f) => ({ ...f, hideConflicts: e.target.checked }))}
+              className="rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-400"
+            />
+            فقط دروس بدون تداخل
+          </label>
+
+          {activeFilterCount > 0 && (
+            <button
+              onClick={clearFilters}
+              className="text-xs text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium cursor-pointer self-start"
+            >
+              پاک کردن فیلترها
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="flex flex-col gap-2 max-h-[calc(100vh-220px)] overflow-y-auto">
         {filtered.map((course) => {
