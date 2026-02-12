@@ -17,13 +17,14 @@
  *   col 1:  نام درس            (180px)
  *   col 2:  واحد - کل          (30px)   — total units
  *   col 3:  واحد - عملی        (30px)   — practical units
- *   col 4:  ظرفیت              (35px)   — capacity
+ *   col 4:  ظرفیت              (35px)   — capacity (not scraped)
  *   col 5:  جنسیت              (40px)
  *   col 6:  نام استاد          (140px)
  *   col 7:  ساعات ارائه و امتحان (250px)
  *   col 8:  محل                (135px)
- *   col 9:  دروس پیش‌نیاز/همنیاز (400px)
- *   col 10: توضیحات / مقطع     (140px)
+ *   col 9:  دروس پیش‌نیاز/همنیاز (400px)  — nested <table> with label+data rows
+ *           NpGrid leaks sub-cells as extra <td>s (2 per prereq row)
+ *   LAST:   توضیحات            (140px)  — always the final <td> in the row
  */
 
 // ---- PASTE EVERYTHING BELOW INTO THE BROWSER CONSOLE ----
@@ -139,60 +140,49 @@
 
     const location = cells[8]?.textContent?.trim() || '';
 
-    // Columns 9+ contain prereqs/equivalents and notes, but NpGrid may
-    // split the "دروس پيش‌نياز، همنياز، متضاد و معادل" visual column into
-    // multiple <td> sub-cells (one per label + data pair).  The real
-    // "توضيحات" column comes after all of them.
+    // Column 9 contains prereqs in a nested <table> (one <tr> per
+    // label: پيش نياز, همنياز, معادل, متضاد). NpGrid also "leaks" those
+    // sub-cells as extra <td> elements after cell 9, so cell count varies.
+    // The LAST cell is always the real "توضيحات" (notes) column.
     //
-    // Strategy: collect ALL text from cells[9..end], join them, then split
-    // by the known labels (پيش نياز, همنياز, معادل, متضاد) to get the
-    // structured prereq data.  Whatever remains after stripping those
-    // sections is the notes text.
-    const tailCells = Array.from(cells).slice(9).map(c => c.textContent?.trim() || '');
-    const tailText = tailCells.join(' ').replace(/\s+/g, ' ').trim();
-
-    // Known labels that indicate prereqs/equivalents sections
-    const PREREQ_LABELS = ['پيش نياز', 'پیش نیاز', 'همنياز', 'همنیاز', 'معادل', 'متضاد'];
-    const labelPattern = new RegExp(
-      '(' + PREREQ_LABELS.join('|') + ')\\s*', 'g'
-    );
-
-    // Extract prereqs: everything matching "label + courseCode courseName" patterns
+    // Strategy: read prereqs from cell 9's nested table, notes from the
+    // last cell (only if there are more than 10 cells, otherwise empty).
     let prereqs = '';
-    const prereqParts = [];
-    let remaining = tailText;
+    let notes = '';
 
-    // Find all label positions
-    const matches = [...tailText.matchAll(labelPattern)];
-    if (matches.length > 0) {
-      const firstLabelStart = matches[0].index;
-      // Text before first label is potential notes prefix
-      const beforeLabels = tailText.slice(0, firstLabelStart).trim();
-
-      // Text from first label onward is prereqs data
-      let lastEnd = firstLabelStart;
-      for (const m of matches) {
-        const label = m[1];
-        const start = m.index + m[0].length;
-        // Find the next label or end of string
-        const nextMatch = matches.find(mm => mm.index > m.index);
-        const end = nextMatch ? nextMatch.index : tailText.length;
-        const data = tailText.slice(start, end).trim();
-        if (data) prereqParts.push(`${label}: ${data}`);
-        lastEnd = end;
+    // Parse prereqs from cell 9's nested table
+    if (cells[9]) {
+      const nestedTable = cells[9].querySelector('table');
+      if (nestedTable) {
+        const prereqParts = [];
+        const nestedRows = nestedTable.querySelectorAll('tr');
+        for (const nRow of nestedRows) {
+          const nCells = nRow.querySelectorAll('td');
+          if (nCells.length >= 2) {
+            const label = nCells[0].textContent.trim();
+            const data = nCells[1].textContent.trim();
+            if (label && data) prereqParts.push(`${label}: ${data}`);
+          }
+        }
+        prereqs = prereqParts.join(' | ');
+      } else {
+        // No nested table — cell 9 text might still be a prereq label
+        const text = cells[9].textContent.trim();
+        const PREREQ_LABELS = ['پيش نياز', 'پیش نیاز', 'همنياز', 'همنیاز', 'معادل', 'متضاد'];
+        if (text && !PREREQ_LABELS.includes(text)) {
+          prereqs = text;
+        }
       }
-      prereqs = prereqParts.join(' | ');
-
-      // Notes is what's left: text before labels + text after last label section
-      const afterLabels = tailText.slice(lastEnd).trim();
-      remaining = [beforeLabels, afterLabels].filter(Boolean).join(' ').trim();
     }
 
-    // Clean remaining: remove bare label words that leaked through
-    for (const label of PREREQ_LABELS) {
-      remaining = remaining.replace(new RegExp('^' + label + '$'), '').trim();
+    // Notes is always the LAST cell (if there are more than the 10 base columns)
+    if (cells.length > 10) {
+      const lastCell = cells[cells.length - 1];
+      notes = lastCell.textContent.trim();
+      // Don't treat leaked prereq labels as notes
+      const PREREQ_LABELS = ['پيش نياز', 'پیش نیاز', 'همنياز', 'همنیاز', 'معادل', 'متضاد'];
+      if (PREREQ_LABELS.includes(notes)) notes = '';
     }
-    const notes = remaining;
 
     const out = {
       code: courseCode, group, name: courseName, units: unitCount,
