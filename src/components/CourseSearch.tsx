@@ -10,15 +10,11 @@ interface Props {
 }
 
 interface Filters {
-  grade: string;
-  gender: string;
   day: string;
   hideConflicts: boolean;
 }
 
 const defaultFilters: Filters = {
-  grade: '',
-  gender: '',
   day: '',
   hideConflicts: false,
 };
@@ -29,12 +25,7 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
   const [showFilters, setShowFilters] = useState(false);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
 
-  const grades = useMemo(() => {
-    const set = new Set(courses.map((c) => c.grade).filter(Boolean));
-    return Array.from(set).sort();
-  }, [courses]);
-
-  const activeFilterCount = [filters.grade, filters.gender, filters.day].filter(Boolean).length + (filters.hideConflicts ? 1 : 0);
+  const activeFilterCount = (filters.day ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
 
   const filtered = useMemo(() => {
     let result = courses;
@@ -49,12 +40,6 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
       );
     }
 
-    if (filters.grade) {
-      result = result.filter((c) => c.grade === filters.grade);
-    }
-    if (filters.gender) {
-      result = result.filter((c) => c.gender === filters.gender);
-    }
     if (filters.day) {
       const dayNum = Number(filters.day);
       result = result.filter((c) => c.sessions.some((s) => s.dayOfWeek === dayNum));
@@ -114,28 +99,6 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
       {showFilters && (
         <div className="flex flex-col gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
           <div className="flex flex-wrap gap-2">
-            <select
-              value={filters.grade}
-              onChange={(e) => setFilters((f) => ({ ...f, grade: e.target.value }))}
-              className={selectClass}
-            >
-              <option value="">مقطع</option>
-              {grades.map((g) => (
-                <option key={g} value={g}>{g}</option>
-              ))}
-            </select>
-
-            <select
-              value={filters.gender}
-              onChange={(e) => setFilters((f) => ({ ...f, gender: e.target.value }))}
-              className={selectClass}
-            >
-              <option value="">جنسیت</option>
-              <option value="male">مرد</option>
-              <option value="female">زن</option>
-              <option value="mixed">مختلط</option>
-            </select>
-
             <select
               value={filters.day}
               onChange={(e) => setFilters((f) => ({ ...f, day: e.target.value }))}
@@ -214,7 +177,7 @@ function CourseCard({
   onHover: () => void;
   onLeave: () => void;
 }) {
-  const genderLabel = course.gender === 'male' ? 'مرد' : course.gender === 'female' ? 'زن' : '';
+  const genderLabel = course.gender === 'male' ? 'پسران' : course.gender === 'female' ? 'دختران' : '';
 
   return (
     <div
