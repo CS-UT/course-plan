@@ -84,6 +84,19 @@ body {
   height: 2.5rem;
 }
 
+@media (max-width: 639px) {
+  .fc .fc-timegrid-slot {
+    height: 2rem;
+  }
+  .fc .fc-col-header-cell-cushion,
+  .fc .fc-timegrid-slot-label-cushion {
+    font-size: 0.7rem;
+  }
+  .fc .fc-timegrid-event .fc-event-main {
+    padding: 1px 3px;
+  }
+}
+
 /* Dark mode FullCalendar */
 .dark .fc .fc-scrollgrid {
   border-color: #374151;

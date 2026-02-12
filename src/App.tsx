@@ -63,14 +63,12 @@ function App() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 transition-colors">
-        <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:inline">
-              {data.semesterLabel} — {data.department}
-            </span>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <span className="text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-3 py-1 rounded-full">
+        <div className="max-w-[1600px] mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
+          <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:inline truncate">
+            {data.semesterLabel} — {data.department}
+          </span>
+          <div className="flex items-center gap-2 sm:gap-3 mr-auto sm:mr-0">
+            <span className="text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-3 py-1 rounded-full whitespace-nowrap">
               {toPersianDigits(schedule.totalUnits)} واحد
             </span>
             <button
@@ -94,16 +92,18 @@ function App() {
       {/* Mobile banner */}
       <MobileBanner />
 
-      {/* Schedule Tabs */}
-      <div className="max-w-[1600px] mx-auto px-4 pt-3 flex items-center justify-between">
-        <ScheduleTabs />
-        <div className="sm:hidden">
+      {/* Schedule Tabs & Mobile Export */}
+      <div className="max-w-[1600px] mx-auto px-4 pt-3 space-y-2 sm:space-y-0">
+        <div className="flex items-center justify-between">
+          <ScheduleTabs />
+        </div>
+        <div className="sm:hidden flex items-center gap-1.5 overflow-x-auto">
           <ExportButtons />
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-[1600px] mx-auto px-4 py-4 flex gap-4">
+      <div className="max-w-[1600px] mx-auto px-4 py-4 pb-20 lg:pb-4 flex gap-4">
         {/* Sidebar - Course Search */}
         <aside className="w-80 shrink-0 hidden lg:block">
           <CourseSearch
@@ -155,21 +155,29 @@ function MobileCourseSearch({ courses, onHoverCourse, onOpenManualEntry }: { cou
     <div className="lg:hidden">
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 left-4 bg-primary-600 text-white px-4 py-3 rounded-full shadow-lg z-50 font-medium cursor-pointer"
+        className="fixed bottom-5 right-4 bg-primary-600 text-white px-5 py-3.5 rounded-full shadow-lg z-50 font-medium cursor-pointer text-sm"
       >
         + افزودن درس
       </button>
       {open && (
         <div className="fixed inset-0 z-50 bg-black/30" onClick={() => setOpen(false)}>
           <div
-            className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl max-h-[80vh] overflow-y-auto p-4"
+            className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl max-h-[85vh] overflow-y-auto pb-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="font-bold text-lg">انتخاب درس</h3>
-              <button onClick={() => setOpen(false)} className="text-gray-500 text-xl cursor-pointer">✕</button>
+            {/* Drag handle */}
+            <div className="sticky top-0 bg-white dark:bg-gray-800 pt-3 pb-2 px-4 z-10 rounded-t-2xl">
+              <div className="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-3" />
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-lg">انتخاب درس</h3>
+                <button onClick={() => setOpen(false)} className="text-gray-400 dark:text-gray-500 p-1.5 -m-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
             </div>
-            <CourseSearch courses={courses} onHoverCourse={onHoverCourse} onOpenManualEntry={onOpenManualEntry} />
+            <div className="px-4">
+              <CourseSearch courses={courses} onHoverCourse={onHoverCourse} onOpenManualEntry={onOpenManualEntry} />
+            </div>
           </div>
         </div>
       )}

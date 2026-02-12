@@ -36,7 +36,8 @@ export function ExamsTable() {
 
   return (
     <div className="mt-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
-      <div className="overflow-x-auto">
+      {/* Desktop table */}
+      <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
             <tr>
@@ -91,6 +92,47 @@ export function ExamsTable() {
             </tr>
           </tfoot>
         </table>
+      </div>
+
+      {/* Mobile card layout */}
+      <div className="sm:hidden divide-y divide-gray-100 dark:divide-gray-700">
+        {sorted.map((course) => {
+          const key = `${course.courseCode}-${course.group}`;
+          const hasConflict = conflictingPairs.has(key);
+          return (
+            <div
+              key={key}
+              className={`p-3 text-sm ${hasConflict ? 'bg-danger-50 dark:bg-danger-500/10' : ''}`}
+            >
+              <div className="flex justify-between items-start gap-2">
+                <div className="min-w-0">
+                  <div className="font-medium text-gray-900 dark:text-gray-100">{course.courseName}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {course.professor} · گروه {toPersianDigits(course.group)} · {toPersianDigits(course.unitCount)} واحد
+                  </div>
+                </div>
+                <button
+                  onClick={() => removeCourse(course.courseCode, course.group)}
+                  className="text-gray-400 hover:text-danger-500 transition-colors cursor-pointer p-1 -m-1 shrink-0"
+                >
+                  ✕
+                </button>
+              </div>
+              {course.examDate && (
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 tabular-nums">
+                  امتحان: {toPersianDigits(course.examDate)} - {toPersianDigits(course.examTime)}
+                  {hasConflict && (
+                    <span className="mr-2 text-danger-600 dark:text-danger-400 font-medium">⚠ تداخل</span>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+        <div className="p-3 bg-gray-50 dark:bg-gray-700 text-sm font-medium flex justify-between">
+          <span>جمع</span>
+          <span>{toPersianDigits(totalUnits)} واحد</span>
+        </div>
       </div>
     </div>
   );
