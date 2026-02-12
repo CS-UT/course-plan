@@ -2,84 +2,67 @@ import { useSchedule } from '@/hooks/useSchedule';
 import html2canvas from 'html2canvas';
 
 export function ExportButtons() {
-  const { schedules, currentScheduleId } = useSchedule();
+  const { currentScheduleId } = useSchedule();
 
-  async function exportAsImage() {
+  async function getScheduleCanvas() {
     const el = document.getElementById('schedule-export-area');
-    if (!el) return;
-    const canvas = await html2canvas(el, {
+    if (!el) return null;
+    return html2canvas(el, {
       backgroundColor: '#ffffff',
       scale: 2,
       useCORS: true,
     });
+  }
+
+  async function downloadImage() {
+    const canvas = await getScheduleCanvas();
+    if (!canvas) return;
     const link = document.createElement('a');
-    link.download = `schedule-${currentScheduleId + 1}.png`;
-    link.href = canvas.toDataURL('image/png');
+    link.download = `schedule-${currentScheduleId + 1}.jpg`;
+    link.href = canvas.toDataURL('image/jpeg', 0.92);
     link.click();
   }
 
-  function exportAsJson() {
-    const data = {
-      schedules,
-      currentScheduleId,
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const link = document.createElement('a');
-    link.download = 'plan-csut-schedules.json';
-    link.href = URL.createObjectURL(blob);
-    link.click();
-    URL.revokeObjectURL(link.href);
-  }
+  async function shareImage() {
+    const canvas = await getScheduleCanvas();
+    if (!canvas) return;
 
-  function importFromJson() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const file = new File([blob], `schedule-${currentScheduleId + 1}.jpg`, { type: 'image/jpeg' });
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
         try {
-          const data = JSON.parse(ev.target?.result as string);
-          if (data.schedules && Array.isArray(data.schedules)) {
-            localStorage.setItem('plan-schedules', JSON.stringify(data.schedules));
-            if (typeof data.currentScheduleId === 'number') {
-              localStorage.setItem('plan-currentScheduleId', JSON.stringify(data.currentScheduleId));
-            }
-            window.location.reload();
-          }
+          await navigator.share({ files: [file], title: 'برنامه هفتگی - plan.csut.ir' });
         } catch {
-          alert('فایل نامعتبر است');
+          // User cancelled share
         }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
+      } else {
+        // Fallback: copy image to clipboard
+        try {
+          const pngBlob = await new Promise<Blob>((resolve) =>
+            canvas.toBlob((b) => resolve(b!), 'image/png'),
+          );
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': pngBlob }),
+          ]);
+        } catch {
+          // Fallback: just download
+          downloadImage();
+        }
+      }
+    }, 'image/jpeg', 0.92);
   }
+
+  const btnClass = "text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer";
 
   return (
     <div className="flex items-center gap-1">
-      <button
-        onClick={exportAsImage}
-        className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-        title="ذخیره تصویر برنامه"
-      >
-        تصویر
+      <button onClick={downloadImage} className={btnClass} title="دانلود تصویر برنامه">
+        دانلود تصویر
       </button>
-      <button
-        onClick={exportAsJson}
-        className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-        title="خروجی JSON"
-      >
-        خروجی
-      </button>
-      <button
-        onClick={importFromJson}
-        className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-        title="ورودی JSON"
-      >
-        ورودی
+      <button onClick={shareImage} className={btnClass} title="اشتراک‌گذاری تصویر برنامه">
+        اشتراک‌گذاری
       </button>
     </div>
   );
