@@ -7,6 +7,7 @@ import { findTimeConflicts, findExamConflicts } from '@/utils/conflicts';
 interface Props {
   courses: Course[];
   onHoverCourse: (course: Course | null) => void;
+  onOpenManualEntry: () => void;
 }
 
 interface Filters {
@@ -21,7 +22,7 @@ const defaultFilters: Filters = {
   hideConflicts: false,
 };
 
-export function CourseSearch({ courses, onHoverCourse }: Props) {
+export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Props) {
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [showFilters, setShowFilters] = useState(false);
@@ -84,6 +85,13 @@ export function CourseSearch({ courses, onHoverCourse }: Props) {
         onChange={(e) => setQuery(e.target.value)}
         className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400"
       />
+
+      <button
+        onClick={onOpenManualEntry}
+        className="w-full px-4 py-2 text-sm font-medium border border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:border-primary-400 dark:hover:border-primary-500 transition-colors cursor-pointer"
+      >
+        + افزودن درس دستی
+      </button>
 
       <div className="text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center">
         <span>{toPersianDigits(filtered.length)} درس</span>

@@ -6,6 +6,7 @@ import { WeeklySchedule } from '@/components/WeeklySchedule';
 import { ScheduleTabs } from '@/components/ScheduleTabs';
 import { ExamsTable } from '@/components/ExamsTable';
 import { ExportButtons } from '@/components/ExportButtons';
+import { ManualCourseModal } from '@/components/ManualCourseModal';
 import { useSchedule } from '@/hooks/useSchedule';
 import { toPersianDigits } from '@/utils/persian';
 
@@ -55,6 +56,7 @@ function App() {
   const schedule = useSchedule();
   const [hoveredCourse, setHoveredCourse] = useState<Course | null>(null);
   const [showExams, setShowExams] = useState(true);
+  const [showManualEntry, setShowManualEntry] = useState(false);
   const [dark, toggleDark] = useDarkMode();
 
   return (
@@ -107,6 +109,7 @@ function App() {
           <CourseSearch
             courses={data.courses}
             onHoverCourse={setHoveredCourse}
+            onOpenManualEntry={() => setShowManualEntry(true)}
           />
         </aside>
 
@@ -133,12 +136,19 @@ function App() {
       </div>
 
       {/* Mobile course search - bottom sheet */}
-      <MobileCourseSearch courses={data.courses} onHoverCourse={setHoveredCourse} />
+      <MobileCourseSearch courses={data.courses} onHoverCourse={setHoveredCourse} onOpenManualEntry={() => setShowManualEntry(true)} />
+
+      {/* Manual course entry modal */}
+      <ManualCourseModal
+        open={showManualEntry}
+        onClose={() => setShowManualEntry(false)}
+        onSubmit={(course) => schedule.addCourse(course)}
+      />
     </div>
   );
 }
 
-function MobileCourseSearch({ courses, onHoverCourse }: { courses: Course[]; onHoverCourse: (c: Course | null) => void }) {
+function MobileCourseSearch({ courses, onHoverCourse, onOpenManualEntry }: { courses: Course[]; onHoverCourse: (c: Course | null) => void; onOpenManualEntry: () => void }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -159,7 +169,7 @@ function MobileCourseSearch({ courses, onHoverCourse }: { courses: Course[]; onH
               <h3 className="font-bold text-lg">انتخاب درس</h3>
               <button onClick={() => setOpen(false)} className="text-gray-500 text-xl cursor-pointer">✕</button>
             </div>
-            <CourseSearch courses={courses} onHoverCourse={onHoverCourse} />
+            <CourseSearch courses={courses} onHoverCourse={onHoverCourse} onOpenManualEntry={onOpenManualEntry} />
           </div>
         </div>
       )}
