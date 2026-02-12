@@ -1,52 +1,37 @@
 import { useState } from 'react';
 import { useSchedule } from '@/hooks/useSchedule';
-import html2canvas from 'html2canvas';
+import { toJpeg, toPng } from 'html-to-image';
 
 export function ExportButtons() {
   const { currentScheduleId } = useSchedule();
   const [busy, setBusy] = useState(false);
 
-  async function captureSchedule(): Promise<Blob | null> {
-    const el = document.getElementById('schedule-export-area');
-    if (!el) return null;
-
-    try {
-      const canvas = await html2canvas(el, {
-        backgroundColor: '#ffffff',
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        allowTaint: true,
-      });
-
-      return new Promise<Blob | null>((resolve) => {
-        canvas.toBlob(
-          (blob) => resolve(blob),
-          'image/jpeg',
-          0.92,
-        );
-      });
-    } catch (err) {
-      console.error('Failed to capture schedule:', err);
-      return null;
-    }
+  function getExportElement() {
+    return document.getElementById('schedule-export-area');
   }
 
   async function downloadImage() {
     if (busy) return;
+    const el = getExportElement();
+    if (!el) return;
+
     setBusy(true);
     try {
-      const blob = await captureSchedule();
-      if (!blob) return;
+      const dataUrl = await toJpeg(el, {
+        quality: 0.92,
+        pixelRatio: 2,
+        backgroundColor: '#ffffff',
+      });
 
-      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = url;
+      link.href = dataUrl;
       link.download = `schedule-${currentScheduleId + 1}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to capture schedule:', err);
+      alert('خطا در ذخیره تصویر. لطفا دوباره تلاش کنید.');
     } finally {
       setBusy(false);
     }
@@ -54,55 +39,52 @@ export function ExportButtons() {
 
   async function shareImage() {
     if (busy) return;
+    const el = getExportElement();
+    if (!el) return;
+
     setBusy(true);
     try {
-      const blob = await captureSchedule();
-      if (!blob) return;
-
-      const file = new File([blob], `schedule-${currentScheduleId + 1}.jpg`, {
-        type: 'image/jpeg',
-      });
-
-      if (navigator.share && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: 'برنامه هفتگی',
+      // Try Web Share API first (mobile)
+      if (navigator.share) {
+        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#ffffff' });
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], `schedule-${currentScheduleId + 1}.png`, {
+          type: 'image/png',
         });
-      } else {
-        // Fallback: copy to clipboard as PNG
-        try {
-          const pngBlob = await new Promise<Blob | null>((resolve) => {
-            const el = document.getElementById('schedule-export-area');
-            if (!el) { resolve(null); return; }
-            html2canvas(el, {
-              backgroundColor: '#ffffff',
-              scale: 2,
-              useCORS: true,
-              logging: false,
-              allowTaint: true,
-            }).then((canvas) => {
-              canvas.toBlob((b) => resolve(b), 'image/png');
-            });
-          });
-          if (pngBlob) {
-            await navigator.clipboard.write([
-              new ClipboardItem({ 'image/png': pngBlob }),
-            ]);
-            return;
-          }
-        } catch {
-          // ignore clipboard errors
+
+        if (navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'برنامه هفتگی' });
+          return;
         }
-        // Final fallback: download
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `schedule-${currentScheduleId + 1}.jpg`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
       }
+
+      // Fallback: copy to clipboard
+      try {
+        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#ffffff' });
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        await navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob }),
+        ]);
+        alert('تصویر در کلیپبورد کپی شد.');
+        return;
+      } catch {
+        // clipboard failed, fall through to download
+      }
+
+      // Final fallback: download
+      const dataUrl = await toJpeg(el, {
+        quality: 0.92,
+        pixelRatio: 2,
+        backgroundColor: '#ffffff',
+      });
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `schedule-${currentScheduleId + 1}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch {
       // User cancelled share dialog
     } finally {
