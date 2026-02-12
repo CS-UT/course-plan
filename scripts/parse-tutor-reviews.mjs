@@ -292,49 +292,6 @@ function parseReview(msg) {
   return parseFormatBCDEF(msg, text);
 }
 
-// ── Match tutors to courses.json professors ────────────────────────
-
-function matchTutorToProf(tutorName, professorNames) {
-  const tutorSet = nameParts(tutorName);
-
-  let bestMatch = null;
-  let bestScore = 0;
-  let ambiguous = false;
-
-  for (const profName of professorNames) {
-    const profSet = nameParts(profName);
-    const common = new Set([...tutorSet].filter((p) => profSet.has(p)));
-    if (common.size === 0) continue;
-
-    // Exact set equality
-    if (common.size === tutorSet.size && common.size === profSet.size) {
-      return profName;
-    }
-
-    // Subset match
-    const tutorAllFound = [...tutorSet].every((p) => profSet.has(p));
-    const profAllFound = [...profSet].every((p) => tutorSet.has(p));
-
-    if (tutorAllFound || profAllFound) {
-      const smaller = Math.min(tutorSet.size, profSet.size);
-      const larger = Math.max(tutorSet.size, profSet.size);
-      if (smaller >= 2 && larger - smaller <= 2) {
-        const score = smaller / larger;
-        if (score > bestScore) {
-          bestScore = score;
-          bestMatch = profName;
-          ambiguous = false;
-        } else if (score === bestScore) {
-          ambiguous = true;
-        }
-      }
-    }
-  }
-
-  if (bestMatch && !ambiguous) return bestMatch;
-  return null;
-}
-
 // ── Main ───────────────────────────────────────────────────────────
 
 async function main() {
@@ -377,15 +334,13 @@ async function main() {
   const professorNames = [...new Set(coursesData.courses.map((c) => c.professor).filter(Boolean))];
   console.log(`Unique professors in courses.json: ${professorNames.length}`);
 
-  // Build tutor profiles and match
+  // Build tutor profiles
   const tutors = [];
-  const nameMap = {};
-  let matchCount = 0;
-
   let id = 0;
   for (const [, tutor] of tutorMap) {
     id++;
     const tutorId = `tutor-${id}`;
+    tutor.id = tutorId;
     const profile = {
       id: tutorId,
       name: tutor.displayName,
@@ -395,18 +350,53 @@ async function main() {
       reviews: tutor.reviews,
     };
     tutors.push(profile);
+  }
 
-    const match = matchTutorToProf(tutor.displayName, professorNames);
-    if (match) {
-      nameMap[match] = tutorId;
+  // Match professors to best tutor profile
+  // For each professor, find all candidate tutors and pick the best one
+  const nameMap = {};
+  let matchCount = 0;
+
+  for (const profName of professorNames) {
+    const profSet = nameParts(profName);
+    let bestTutor = null;
+    let bestScore = 0;
+
+    for (const [, tutor] of tutorMap) {
+      const tutorSet = nameParts(tutor.displayName);
+      const common = new Set([...tutorSet].filter((p) => profSet.has(p)));
+      if (common.size === 0) continue;
+
+      const tutorAllFound = [...tutorSet].every((p) => profSet.has(p));
+      const profAllFound = [...profSet].every((p) => tutorSet.has(p));
+
+      if (!tutorAllFound && !profAllFound) continue;
+
+      const smaller = Math.min(tutorSet.size, profSet.size);
+      const larger = Math.max(tutorSet.size, profSet.size);
+      if (smaller < 2 || larger - smaller > 2) continue;
+
+      // Score: prefer exact size match, then closer size, then more reviews
+      const sizeMatch = tutorSet.size === profSet.size ? 1000 : 0;
+      const closeness = smaller / larger * 100;
+      const reviewBonus = Math.min(tutor.reviews.length, 50);
+      const score = sizeMatch + closeness + reviewBonus;
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestTutor = tutor;
+      }
+    }
+
+    if (bestTutor) {
+      nameMap[profName] = bestTutor.id;
       matchCount++;
-      console.log(`  ✓ "${tutor.displayName}" → "${match}"`);
+      console.log(`  ✓ "${bestTutor.displayName}" → "${profName}"`);
     }
   }
 
-  console.log(`\nMatched ${matchCount}/${tutorMap.size} tutors to courses.json professors`);
-  const matchedProfs = new Set(Object.keys(nameMap));
-  const unmatchedProfs = professorNames.filter((p) => !matchedProfs.has(p));
+  console.log(`\nMatched ${matchCount}/${professorNames.length} professors to tutor profiles`);
+  const unmatchedProfs = professorNames.filter((p) => !nameMap[p]);
   console.log(`Professors in courses.json without reviews: ${unmatchedProfs.length}`);
 
   await writeFile(TUTORS_OUT, JSON.stringify(tutors, null, 2) + '\n', 'utf-8');
