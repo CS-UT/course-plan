@@ -67,6 +67,10 @@ body {
   right: 0 !important;
 }
 
+.fc .fc-timegrid-col-events {
+  margin: 0 2px !important;
+}
+
 .fc .fc-timegrid-event .fc-event-main {
   padding: 2px 6px;
   overflow: hidden;
