@@ -26,6 +26,31 @@ function useDarkMode() {
   return [dark, () => setDark((d) => !d)] as const;
 }
 
+function MobileBanner() {
+  const [dismissed, setDismissed] = useState(() =>
+    sessionStorage.getItem('plan-mobile-banner-dismissed') === 'true',
+  );
+
+  if (dismissed) return null;
+
+  return (
+    <div className="lg:hidden bg-primary-50 dark:bg-primary-900/30 border-b border-primary-200 dark:border-primary-800 px-4 py-2.5 flex items-center justify-between gap-3">
+      <p className="text-xs text-primary-800 dark:text-primary-200">
+        برای تجربه بهتر و مشاهده کامل برنامه هفتگی، از نسخه دسکتاپ استفاده کنید.
+      </p>
+      <button
+        onClick={() => {
+          setDismissed(true);
+          sessionStorage.setItem('plan-mobile-banner-dismissed', 'true');
+        }}
+        className="text-primary-600 dark:text-primary-400 text-xs shrink-0 cursor-pointer font-medium"
+      >
+        متوجه شدم
+      </button>
+    </div>
+  );
+}
+
 function App() {
   const schedule = useSchedule();
   const [hoveredCourse, setHoveredCourse] = useState<Course | null>(null);
@@ -45,7 +70,7 @@ function App() {
               {data.semesterLabel} — {data.department}
             </span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <span className="text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-3 py-1 rounded-full">
               {toPersianDigits(schedule.totalUnits)} واحد
             </span>
@@ -60,14 +85,22 @@ function App() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
               )}
             </button>
-            <ExportButtons />
+            <div className="hidden sm:block">
+              <ExportButtons />
+            </div>
           </div>
         </div>
       </header>
 
+      {/* Mobile banner */}
+      <MobileBanner />
+
       {/* Schedule Tabs */}
-      <div className="max-w-[1600px] mx-auto px-4 pt-3">
+      <div className="max-w-[1600px] mx-auto px-4 pt-3 flex items-center justify-between">
         <ScheduleTabs />
+        <div className="sm:hidden">
+          <ExportButtons />
+        </div>
       </div>
 
       {/* Main Content */}
@@ -82,8 +115,11 @@ function App() {
 
         {/* Main - Schedule Grid */}
         <main className="flex-1 min-w-0">
-          <div id="schedule-export-area">
-            <WeeklySchedule hoveredCourse={hoveredCourse} />
+          {/* Horizontally scrollable on mobile */}
+          <div className="overflow-x-auto -mx-4 px-4 lg:mx-0 lg:px-0">
+            <div id="schedule-export-area" className="min-w-[640px]">
+              <WeeklySchedule hoveredCourse={hoveredCourse} />
+            </div>
           </div>
 
           {/* Exams table */}
