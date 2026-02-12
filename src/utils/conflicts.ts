@@ -16,7 +16,7 @@ export function findTimeConflicts(
 ): Course[] {
   const conflicts: Course[] = [];
   for (const selected of selectedCourses) {
-    if (selected.courseCode === course.courseCode) continue;
+    if (selected.courseCode === course.courseCode && selected.group === course.group) continue;
     for (const sessionA of course.sessions) {
       for (const sessionB of selected.sessions) {
         if (hasTimeConflict(sessionA, sessionB)) {
@@ -36,7 +36,7 @@ export function findExamConflicts(
 ): Course[] {
   return selectedCourses.filter(
     (s) =>
-      s.courseCode !== course.courseCode &&
+      (s.courseCode !== course.courseCode || s.group !== course.group) &&
       hasExamConflict(course, s),
   );
 }
