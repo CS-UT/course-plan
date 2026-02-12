@@ -7650,7 +7650,7 @@
       "professor": "ساجدي هديه",
       "sessions": [
         {
-          "dayOfWeek": 6,
+          "dayOfWeek": 0,
           "startTime": "08:00",
           "endTime": "10:00"
         },
