@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import type { Course } from '@/types';
-import { normalizeQuery, toPersianDigits, dayName, WEEK_DAYS_ORDER } from '@/utils/persian';
+import { normalizeQuery, tokenizeQuery, matchesAllTokens, toPersianDigits, dayName, WEEK_DAYS_ORDER } from '@/utils/persian';
 import { useSchedule } from '@/hooks/useSchedule';
 import { findTimeConflicts, findExamConflicts } from '@/utils/conflicts';
 
@@ -60,11 +60,12 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
 
     const q = normalizeQuery(query);
     if (q) {
+      const tokens = tokenizeQuery(q);
       result = result.filter(
         (c) =>
-          normalizeQuery(c.courseName).includes(q) ||
-          normalizeQuery(c.courseCode).includes(q) ||
-          normalizeQuery(c.professor).includes(q),
+          matchesAllTokens(tokens, normalizeQuery(c.courseName)) ||
+          matchesAllTokens(tokens, normalizeQuery(c.courseCode)) ||
+          matchesAllTokens(tokens, normalizeQuery(c.professor)),
       );
     }
 

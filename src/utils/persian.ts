@@ -20,6 +20,16 @@ export function normalizeQuery(input: string): string {
   return toEnglishDigits(input.trim().toLowerCase());
 }
 
+/** Tokenize a normalized query into non-empty words */
+export function tokenizeQuery(normalizedQuery: string): string[] {
+  return normalizedQuery.split(/\s+/).filter(Boolean);
+}
+
+/** Check if all query tokens appear in the target string */
+export function matchesAllTokens(tokens: string[], target: string): boolean {
+  return tokens.every((t) => target.includes(t));
+}
+
 export const WEEK_DAYS: Record<number, string> = {
   6: 'شنبه',
   0: 'یکشنبه',
