@@ -47,8 +47,6 @@
   }
 
   function parseSessionsText(text) {
-    // Example: "درس(ت): شنبه 13:00-15:00، دوشنبه 13:00-15:00"
-    // Example: "درس(ع): یک شنبه 08:00-10:00"
     const sessions = [];
     const dayMap = {
       'شنبه': 6,
@@ -60,7 +58,7 @@
       'جمعه': 5,
     };
 
-    // Match day + time patterns; use longer day names first to avoid partial matches
+    // Match day + time patterns; longer day names first to avoid partial matches
     const dayPattern = /(پنج\s?شنبه|پنجشنبه|چهار\s?شنبه|چهارشنبه|سه[\s‌]?شنبه|سهشنبه|دو\s?شنبه|دوشنبه|یک\s?شنبه|يک\s?شنبه|یکشنبه|يكشنبه|شنبه|جمعه)\s+(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})/g;
 
     let match;
@@ -68,7 +66,6 @@
       const rawDay = match[1].trim();
       let dayOfWeek = null;
 
-      // Normalize spaces and zero-width non-joiners for matching
       const normalized = rawDay.replace(/[\s‌]+/g, '');
       for (const [name, num] of Object.entries(dayMap)) {
         if (name.replace(/[\s‌]+/g, '') === normalized) {
@@ -89,9 +86,6 @@
   }
 
   function parseExamText(text) {
-    // Patterns seen in EMS:
-    // "امتحان(1405.04.20) ساعت : 10:00-12:00"
-    // "امتحان(1405/04/20) ساعت : 10:00"
     const examMatch = text.match(
       /امتحان\s*\((\d{4})[./](\d{2})[./](\d{2})\)\s*ساعت\s*:\s*(\d{1,2}:\d{2})/
     );
@@ -108,54 +102,40 @@
     const cells = row.querySelectorAll('td');
     if (cells.length < 9) return null;
 
-    // --- col 0: شماره و گروه درس ---
     const codeGroupText = persianToEnglish(cells[0]?.textContent?.trim() || '');
     const codeGroupMatch = codeGroupText.match(/(\d+)[_\-–](\d+)/);
     if (!codeGroupMatch) return null;
 
     const courseCode = codeGroupMatch[1];
     const group = parseInt(codeGroupMatch[2], 10);
-
-    // --- col 1: نام درس ---
     const courseName = cells[1]?.textContent?.trim() || '';
     if (!courseName) return null;
 
-    // --- col 2: واحد کل ---
     const unitText = persianToEnglish(cells[2]?.textContent?.trim() || '0');
     const unitMatch = unitText.match(/(\d+)/);
     const unitCount = unitMatch ? parseInt(unitMatch[1], 10) : 0;
 
-    // --- col 3: واحد عملی (skip, we only need total) ---
+    // col 3 = practical units (skip)
 
-    // --- col 4: ظرفیت ---
     const capacityText = persianToEnglish(cells[4]?.textContent?.trim() || '0');
     const capacityMatch = capacityText.match(/(\d+)/);
     const capacity = capacityMatch ? parseInt(capacityMatch[1], 10) : 0;
 
-    // --- col 5: جنسیت ---
     const genderText = cells[5]?.textContent?.trim() || '';
     let gender = 'mixed';
     if (genderText.includes('مرد') || genderText.includes('برادر')) gender = 'male';
     else if (genderText.includes('زن') || genderText.includes('خواهر')) gender = 'female';
 
-    // --- col 6: نام استاد ---
     const professor = cells[6]?.textContent?.trim() || '';
 
-    // --- col 7: ساعات ارائه و امتحان ---
     const scheduleText = persianToEnglish(cells[7]?.textContent?.trim() || '');
     const sessions = parseSessionsText(scheduleText);
     const { examDate, examTime } = parseExamText(scheduleText);
 
-    // --- col 8: محل ---
     const location = cells[8]?.textContent?.trim() || '';
-
-    // --- col 9: دروس پیش‌نیاز ---
     const prerequisites = cells[9]?.textContent?.trim() || '';
-
-    // --- col 10: توضیحات / مقطع ---
     const notesRaw = cells[10]?.textContent?.trim() || '';
 
-    // Try to extract grade from notes or default
     let grade = '';
     if (notesRaw.includes('کارشناسی ارشد') || notesRaw.includes('ارشد')) {
       grade = 'کارشناسی ارشد';
@@ -166,61 +146,62 @@
     }
 
     return {
-      courseCode,
-      group,
-      courseName,
-      unitCount,
-      capacity,
-      enrolled: 0,
-      gender,
-      professor,
-      sessions,
-      examDate,
-      examTime,
-      location,
-      prerequisites,
-      notes: notesRaw,
-      grade,
+      courseCode, group, courseName, unitCount, capacity,
+      enrolled: 0, gender, professor, sessions, examDate,
+      examTime, location, prerequisites, notes: notesRaw, grade,
     };
   }
 
-  // --- NpGrid-specific table row selector ---
+  // ---------- NpGrid helpers ----------
+
   function getTableRows() {
-    // NpGrid renders data rows inside .np-grid-content table tbody
-    const contentArea = document.querySelector('.np-grid-content, .ui-npgrid');
-    if (contentArea) {
-      // Get only data rows (not header rows)
-      const headerTable = contentArea.querySelector('.npgrid-table-header');
-      const allTables = contentArea.querySelectorAll('table');
-      for (const table of allTables) {
-        if (table === headerTable) continue;
-        const rows = table.querySelectorAll('tbody tr');
-        if (rows.length > 0) return rows;
+    // NpGrid data rows are in a separate table from the header
+    const grid = document.querySelector('.ui-npgrid');
+    if (!grid) return [];
+
+    const headerTable = grid.querySelector('.npgrid-table-header');
+    const allTables = grid.querySelectorAll('table');
+    for (const table of allTables) {
+      if (table === headerTable) continue;
+      const rows = table.querySelectorAll('tbody tr');
+      if (rows.length > 0) return Array.from(rows);
+    }
+
+    // Fallback
+    const allRows = document.querySelectorAll('table tbody tr');
+    return Array.from(allRows).filter(r => r.querySelectorAll('td').length >= 9);
+  }
+
+  // Get the NpGrid Knockout ViewModel (the most reliable way to navigate)
+  function getNpGridVM() {
+    const grid = document.querySelector('.ui-npgrid');
+    if (grid && typeof ko !== 'undefined') {
+      const ctx = ko.contextFor(grid);
+      if (ctx && ctx.$data) return ctx.$data;
+    }
+    return null;
+  }
+
+  function getPageInfo() {
+    // Try KO ViewModel first
+    const vm = getNpGridVM();
+    if (vm) {
+      const current = typeof vm.PageIndex === 'function' ? vm.PageIndex() : null;
+      const total = typeof vm.PageCount === 'function' ? vm.PageCount() : null;
+      if (current != null && total != null) {
+        return { current: current + 1, total }; // PageIndex is 0-based
       }
     }
 
-    // Fallback: any table with enough columns
-    const allRows = document.querySelectorAll('table tbody tr');
-    const dataRows = [];
-    for (const row of allRows) {
-      const cells = row.querySelectorAll('td');
-      if (cells.length >= 9) dataRows.push(row);
-    }
-    return dataRows;
-  }
-
-  // --- NpGrid pagination ---
-  function getPageInfo() {
+    // Fallback: parse page text
     const bodyText = persianToEnglish(document.body.innerText);
-
-    // Pattern: "صفحه X از Y" or just numbers in pagination area
     const match = bodyText.match(/صفحه\s*(\d+)\s*از\s*(\d+)/);
     if (match) {
       return { current: parseInt(match[1]), total: parseInt(match[2]) };
     }
 
-    // NpGrid often uses an input for current page + "از N" label
-    const pagerArea = document.querySelector('.np-grid-pager, .npgrid-pager, [class*="pager"]');
+    // Fallback: look in pager area
+    const pagerArea = document.querySelector('[class*="pager"]');
     if (pagerArea) {
       const pagerText = persianToEnglish(pagerArea.textContent || '');
       const totalMatch = pagerText.match(/از\s*(\d+)/);
@@ -233,53 +214,60 @@
       }
     }
 
-    // Try all inputs in the page
-    const inputs = document.querySelectorAll('input');
-    for (const input of inputs) {
-      const parent = input.closest('div, span, td');
-      if (!parent) continue;
-      const parentText = persianToEnglish(parent.textContent || '');
-      const totalMatch = parentText.match(/از\s*(\d+)/);
-      if (totalMatch) {
-        const val = parseInt(persianToEnglish(input.value));
-        if (val > 0) {
-          return { current: val, total: parseInt(totalMatch[1]) };
-        }
-      }
-    }
-
     return null;
   }
 
-  function clickNextPage() {
-    // NpGrid navigation buttons
-    const selectors = [
-      '.np-grid-pager button[title*="بعد"]',
-      '.np-grid-pager button[title*="next"]',
-      '.npgrid-pager button[title*="بعد"]',
-      '[class*="pager"] button[title*="بعد"]',
-      'button[title*="بعد"]',
-      'button[title*="next"]',
-      'a[title*="بعد"]',
-    ];
+  function goToPage(pageIndex) {
+    // Method 1: Use KO ViewModel directly (0-based index)
+    const vm = getNpGridVM();
+    if (vm && typeof vm.PageIndex === 'function') {
+      vm.PageIndex(pageIndex);
+      return true;
+    }
 
-    for (const sel of selectors) {
+    // Method 2: Use the pager input field
+    const pagerArea = document.querySelector('[class*="pager"]');
+    if (pagerArea) {
+      const input = pagerArea.querySelector('input');
+      if (input) {
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+          window.HTMLInputElement.prototype, 'value'
+        ).set;
+        nativeInputValueSetter.call(input, String(pageIndex + 1));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+
+        // Try pressing Enter to confirm
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keypress', { key: 'Enter', keyCode: 13, bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', keyCode: 13, bubbles: true }));
+        return true;
+      }
+    }
+
+    // Method 3: Click next button
+    const nextSelectors = [
+      'button[title*="بعد"]', 'button[title*="next"]', 'a[title*="بعد"]',
+    ];
+    for (const sel of nextSelectors) {
       const btn = document.querySelector(sel);
       if (btn && !btn.disabled) { btn.click(); return true; }
     }
 
-    // Try NpGrid's KO-bound navigation; look for arrow icons/buttons
-    const allBtns = document.querySelectorAll('button, a, [role="button"], .np-btn, [class*="page"]');
-    for (const btn of allBtns) {
-      const title = (btn.getAttribute('title') || '').trim();
-      const text = btn.textContent?.trim();
-      // Left arrow in RTL = next page
-      if (title.includes('بعد') || title.includes('Next') ||
-          text === '‹' || text === '<' || text === '\u25C0' ||
-          btn.querySelector('.fa-chevron-left, .fa-angle-left, [class*="left"]')) {
-        if (!btn.disabled && !btn.classList.contains('disabled')) {
-          btn.click();
-          return true;
+    // Method 4: Find arrow buttons in pager
+    if (pagerArea) {
+      const btns = pagerArea.querySelectorAll('button, a, span[role="button"]');
+      for (const btn of btns) {
+        const text = btn.textContent?.trim();
+        const cls = btn.className || '';
+        // In RTL, "next" arrow points left
+        if (text === '‹' || text === '<' || text === '◀' ||
+            cls.includes('left') || cls.includes('prev') || cls.includes('next') ||
+            cls.includes('بعد')) {
+          if (!btn.disabled && !btn.classList.contains('disabled')) {
+            btn.click();
+            return true;
+          }
         }
       }
     }
@@ -287,15 +275,14 @@
     return false;
   }
 
-  // --- Wait for table to be ready after page change ---
-  async function waitForTableLoad(previousFirstCell) {
-    for (let i = 0; i < 20; i++) {
-      await sleep(300);
+  // Wait for table data to change after navigation
+  async function waitForTableChange(prevFirstCellText) {
+    for (let i = 0; i < 30; i++) {
+      await sleep(200);
       const rows = getTableRows();
       if (rows.length > 0) {
         const firstCell = rows[0]?.querySelector('td')?.textContent?.trim();
-        // If the content changed or we don't have a reference, table has loaded
-        if (!previousFirstCell || firstCell !== previousFirstCell) {
+        if (firstCell && firstCell !== prevFirstCellText) {
           return true;
         }
       }
@@ -303,20 +290,58 @@
     return false;
   }
 
+  // ---------- Main scraping loop ----------
+
   console.log('Starting course scraper for EMS Report #212...');
+
+  // Detect KO ViewModel
+  const vm = getNpGridVM();
+  if (vm) {
+    console.log('Found NpGrid Knockout ViewModel - using direct page navigation');
+  } else {
+    console.log('No KO ViewModel found - will try DOM-based navigation');
+  }
+
   console.log('Reading page data...');
 
-  const allCourses = new Map(); // keyed by courseCode-group to avoid duplicates
+  const allCourses = new Map();
   const pageInfo = getPageInfo();
   const totalPages = pageInfo?.total || 1;
 
   console.log(`Found ${totalPages} page(s) to scrape`);
 
-  for (let page = 1; page <= totalPages; page++) {
-    console.log(`Scraping page ${page}/${totalPages}...`);
+  for (let page = 0; page < totalPages; page++) {
+    const displayPage = page + 1;
+    console.log(`Scraping page ${displayPage}/${totalPages}...`);
 
-    // Small initial delay for first page, longer for subsequent
-    if (page === 1) await sleep(500);
+    // Navigate to the target page (skip for first page, we're already there)
+    if (page > 0) {
+      const currentRows = getTableRows();
+      const prevFirstCell = currentRows[0]?.querySelector('td')?.textContent?.trim();
+
+      const navigated = goToPage(page);
+      if (!navigated) {
+        console.warn(`Could not navigate to page ${displayPage}. Stopping.`);
+        break;
+      }
+
+      // Wait for new data
+      const changed = await waitForTableChange(prevFirstCell);
+      if (!changed) {
+        console.warn(`Page ${displayPage} did not load in time. Waiting longer...`);
+        await sleep(DELAY * 2);
+
+        // Check again
+        const rows2 = getTableRows();
+        const nowFirst = rows2[0]?.querySelector('td')?.textContent?.trim();
+        if (nowFirst === prevFirstCell) {
+          console.warn(`Page ${displayPage} still shows same data. Stopping.`);
+          break;
+        }
+      }
+    } else {
+      await sleep(500);
+    }
 
     const rows = getTableRows();
     let pageCount = 0;
@@ -336,29 +361,12 @@
       }
     }
 
-    console.log(`  Found ${pageCount} new courses on page ${page} (total so far: ${allCourses.size})`);
-
-    if (page < totalPages) {
-      // Remember first cell to detect page change
-      const firstCell = rows[0]?.querySelector('td')?.textContent?.trim();
-      const navigated = clickNextPage();
-      if (!navigated) {
-        console.warn(`Could not navigate to next page. Stopping at page ${page}`);
-        break;
-      }
-      // Wait for the new page data to load
-      const loaded = await waitForTableLoad(firstCell);
-      if (!loaded) {
-        console.warn(`Page ${page + 1} did not load in time. Continuing anyway...`);
-        await sleep(DELAY);
-      }
-    }
+    console.log(`  Found ${pageCount} new courses on page ${displayPage} (total so far: ${allCourses.size})`);
   }
 
   const coursesArray = Array.from(allCourses.values());
   console.log(`\nDone! Total unique courses: ${coursesArray.length}`);
 
-  // Build the output JSON
   const output = {
     semester: '14042',
     semesterLabel: 'نیمسال دوم ۱۴۰۴-۱۴۰۵',
@@ -367,7 +375,6 @@
     courses: coursesArray,
   };
 
-  // Download as JSON file
   const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
