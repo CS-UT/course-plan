@@ -81,17 +81,6 @@ function extractHashtags(msg) {
   return tags;
 }
 
-function getReactions(msg) {
-  let thumbsUp = 0, thumbsDown = 0;
-  if (Array.isArray(msg.reactions)) {
-    for (const r of msg.reactions) {
-      if (r.emoji === '👍') thumbsUp = r.count || 0;
-      if (r.emoji === '👎') thumbsDown = r.count || 0;
-    }
-  }
-  return { thumbsUp, thumbsDown };
-}
-
 // ── Parse a single tutor review message ────────────────────────────
 
 function parseReview(msg) {
@@ -145,7 +134,6 @@ function parseReview(msg) {
     }
   }
 
-  const { thumbsUp, thumbsDown } = getReactions(msg);
   const date = msg.date ? msg.date.split('T')[0] : '';
 
   return {
@@ -158,8 +146,6 @@ function parseReview(msg) {
       gradingRating,
       flags,
       comments,
-      thumbsUp,
-      thumbsDown,
       date,
     },
   };

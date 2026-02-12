@@ -70,18 +70,6 @@ function ReviewCard({ review }: { review: TutorReview }) {
         })}
       </div>
 
-      {/* Reactions */}
-      {(review.thumbsUp > 0 || review.thumbsDown > 0) && (
-        <div className="flex gap-3 text-xs text-gray-500 dark:text-gray-400">
-          {review.thumbsUp > 0 && (
-            <span>👍 {toPersianDigits(review.thumbsUp.toString())}</span>
-          )}
-          {review.thumbsDown > 0 && (
-            <span>👎 {toPersianDigits(review.thumbsDown.toString())}</span>
-          )}
-        </div>
-      )}
-
       {/* Comments */}
       {review.comments.length > 0 && (
         <div className="flex flex-col gap-2">

@@ -44,8 +44,6 @@ export interface TutorReview {
   gradingRating: number;
   flags: Record<string, boolean>;
   comments: string[];
-  thumbsUp: number;
-  thumbsDown: number;
   date: string;
 }
 
