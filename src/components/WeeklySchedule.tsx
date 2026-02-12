@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import type { EventClickArg, EventContentArg } from '@fullcalendar/core';
@@ -20,9 +20,10 @@ const DAY_HEADER_MAP: Record<string, string> = {
   Thu: 'پنجشنبه',
 };
 
+const colorMap = new Map<string, number>();
+
 export function WeeklySchedule({ hoveredCourse }: Props) {
   const { selectedCourses, removeCourse } = useSchedule();
-  const colorMapRef = useRef(new Map<string, number>());
   const [tooltip, setTooltip] = useState<{
     visible: boolean;
     x: number;
@@ -50,7 +51,7 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
   }, [selectedCourses, hoveredCourse]);
 
   const events = useMemo(
-    () => coursesToEvents(allCourses, colorMapRef.current),
+    () => coursesToEvents(allCourses, colorMap),
     [allCourses],
   );
 
