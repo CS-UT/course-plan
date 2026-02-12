@@ -122,7 +122,7 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
             <div>کد: {toPersianDigits(tooltip.content.courseCode)}-{toPersianDigits(tooltip.content.group)}</div>
             <div>واحد: {toPersianDigits(tooltip.content.unitCount)}</div>
             {tooltip.content.location && <div>محل: {tooltip.content.location}</div>}
-            {tooltip.content.prerequisites && <div>پیش‌نیاز: {tooltip.content.prerequisites}</div>}
+            {tooltip.content.prerequisites && <div>{tooltip.content.prerequisites}</div>}
             {tooltip.content.examDate && (
               <div>
                 امتحان: {toPersianDigits(tooltip.content.examDate)} - {toPersianDigits(tooltip.content.examTime)}
