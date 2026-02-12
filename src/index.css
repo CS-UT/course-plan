@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Vazirmatn", system-ui, sans-serif;
+
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  --color-accent-50: #f0fdf4;
+  --color-accent-100: #dcfce7;
+  --color-accent-200: #bbf7d0;
+  --color-accent-400: #4ade80;
+  --color-accent-500: #22c55e;
+  --color-accent-600: #16a34a;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-400: #f87171;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+}
+
+body {
+  font-family: var(--font-sans);
+  direction: rtl;
+  margin: 0;
+}
+
+/* FullCalendar RTL overrides */
+.fc {
+  direction: rtl;
+  font-family: var(--font-sans);
+}
+
+.fc .fc-col-header-cell-cushion,
+.fc .fc-timegrid-slot-label-cushion {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+}
+
+.fc .fc-timegrid-event {
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.fc .fc-timegrid-event .fc-event-main {
+  padding: 2px 6px;
+  overflow: hidden;
+}
+
+.fc .fc-toolbar {
+  display: none !important;
+}
+
+.fc .fc-scrollgrid {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.fc td, .fc th {
+  border-color: #e5e7eb;
+}
+
+.fc .fc-timegrid-slot {
+  height: 2.5rem;
+}

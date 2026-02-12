@@ -1,0 +1,506 @@
+{
+  "semester": "14042",
+  "semesterLabel": "نیمسال دوم ۱۴۰۴-۱۴۰۵",
+  "fetchedAt": "2026-02-12T10:00:00Z",
+  "department": "دانشکده ریاضی، آمار و علوم کامپیوتر",
+  "courses": [
+    {
+      "courseCode": "1115140",
+      "group": 1,
+      "courseName": "مبانی برنامه‌سازی",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 48,
+      "gender": "mixed",
+      "professor": "احمدی علی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDate": "1405/04/06",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115140",
+      "group": 2,
+      "courseName": "مبانی برنامه‌سازی",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 45,
+      "gender": "mixed",
+      "professor": "محمدی سارا",
+      "sessions": [
+        { "dayOfWeek": 1, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 3, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDate": "1405/04/06",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115141",
+      "group": 1,
+      "courseName": "برنامه‌سازی پیشرفته",
+      "unitCount": 3,
+      "capacity": 45,
+      "enrolled": 40,
+      "gender": "mixed",
+      "professor": "کریمی رضا",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 1, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDate": "1405/04/08",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "مبانی برنامه‌سازی (1115140)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115142",
+      "group": 1,
+      "courseName": "ساختمان داده‌ها",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 42,
+      "gender": "mixed",
+      "professor": "حسینی محمد",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDate": "1405/04/10",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "برنامه‌سازی پیشرفته (1115141)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115142",
+      "group": 2,
+      "courseName": "ساختمان داده‌ها",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 38,
+      "gender": "mixed",
+      "professor": "رضایی فاطمه",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 1, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDate": "1405/04/10",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "برنامه‌سازی پیشرفته (1115141)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115143",
+      "group": 1,
+      "courseName": "طراحی الگوریتم‌ها",
+      "unitCount": 3,
+      "capacity": 45,
+      "enrolled": 40,
+      "gender": "mixed",
+      "professor": "نوری حسین",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 2, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDate": "1405/04/13",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "ساختمان داده‌ها (1115142)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115144",
+      "group": 1,
+      "courseName": "سیستم‌های عامل",
+      "unitCount": 3,
+      "capacity": 45,
+      "enrolled": 35,
+      "gender": "mixed",
+      "professor": "موسوی علیرضا",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 1, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDate": "1405/04/15",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "ساختمان داده‌ها (1115142)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115145",
+      "group": 1,
+      "courseName": "پایگاه داده‌ها",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 44,
+      "gender": "mixed",
+      "professor": "عباسی مریم",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDate": "1405/04/17",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "ساختمان داده‌ها (1115142)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115146",
+      "group": 1,
+      "courseName": "شبکه‌های کامپیوتری",
+      "unitCount": 3,
+      "capacity": 45,
+      "enrolled": 38,
+      "gender": "mixed",
+      "professor": "طاهری امین",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 1, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDate": "1405/04/20",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "سیستم‌های عامل (1115144)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115147",
+      "group": 1,
+      "courseName": "هوش مصنوعی",
+      "unitCount": 3,
+      "capacity": 40,
+      "enrolled": 37,
+      "gender": "mixed",
+      "professor": "صادقی پویا",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 3, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDate": "1405/04/22",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "طراحی الگوریتم‌ها (1115143)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1110161",
+      "group": 1,
+      "courseName": "فیزیک عمومی ۲",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 0,
+      "gender": "mixed",
+      "professor": "تقی نواز فرید",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 1, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDate": "1405/04/20",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "فیزیک عمومی ۱ (1110160)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1111164",
+      "group": 1,
+      "courseName": "حسابان پیشرفته",
+      "unitCount": 4,
+      "capacity": 50,
+      "enrolled": 0,
+      "gender": "mixed",
+      "professor": "خواجه صالحانی مهدی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDate": "1405/04/22",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "ریاضیات عمومی ۲ (4103263)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1111165",
+      "group": 1,
+      "courseName": "تحلیل چند متغیره آماری",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 0,
+      "gender": "mixed",
+      "professor": "امینی سیدمرتضی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDate": "1405/04/14",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "آمار ریاضی ۲ (4103063)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1120002",
+      "group": 3,
+      "courseName": "اندیشه اسلامی ۲ (نبوت و امامت)",
+      "unitCount": 2,
+      "capacity": 40,
+      "enrolled": 0,
+      "gender": "male",
+      "professor": "موسوی فراز سیدمحمدرضا",
+      "sessions": [
+        { "dayOfWeek": 3, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDate": "1405/04/25",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "اندیشه اسلامی ۱ (مبدا و معاد)",
+      "notes": "حضور در جلسات درس الزامی است",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1120002",
+      "group": 4,
+      "courseName": "اندیشه اسلامی ۲ (نبوت و امامت)",
+      "unitCount": 2,
+      "capacity": 50,
+      "enrolled": 0,
+      "gender": "female",
+      "professor": "موسوی فراز سیدمحمدرضا",
+      "sessions": [
+        { "dayOfWeek": 3, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDate": "1405/04/25",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "اندیشه اسلامی ۱ (مبدا و معاد)",
+      "notes": "حضور در جلسات درس الزامی است",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115150",
+      "group": 1,
+      "courseName": "مهندسی نرم‌افزار",
+      "unitCount": 3,
+      "capacity": 45,
+      "enrolled": 39,
+      "gender": "mixed",
+      "professor": "قاسمی نرگس",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDate": "1405/04/08",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "برنامه‌سازی پیشرفته (1115141)",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115151",
+      "group": 1,
+      "courseName": "نظریه زبان‌ها و ماشین‌ها",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 43,
+      "gender": "mixed",
+      "professor": "جعفری حمید",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 3, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDate": "1405/04/13",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "ریاضیات گسسته",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115152",
+      "group": 1,
+      "courseName": "معماری کامپیوتر",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 46,
+      "gender": "mixed",
+      "professor": "بهرامی احسان",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDate": "1405/04/15",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "مدارهای منطقی",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115153",
+      "group": 1,
+      "courseName": "ریاضیات گسسته",
+      "unitCount": 3,
+      "capacity": 55,
+      "enrolled": 50,
+      "gender": "mixed",
+      "professor": "زارعی مهدی",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDate": "1405/04/06",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115154",
+      "group": 1,
+      "courseName": "مدارهای منطقی",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 44,
+      "gender": "mixed",
+      "professor": "سلطانی امیر",
+      "sessions": [
+        { "dayOfWeek": 1, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 3, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDate": "1405/04/17",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "4103263",
+      "group": 1,
+      "courseName": "ریاضیات عمومی ۲",
+      "unitCount": 4,
+      "capacity": 60,
+      "enrolled": 55,
+      "gender": "mixed",
+      "professor": "خواجه صالحانی مهدی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 2, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDate": "1405/04/08",
+      "examTime": "14:00",
+      "location": "",
+      "prerequisites": "ریاضیات عمومی ۱",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "4103063",
+      "group": 1,
+      "courseName": "آمار ریاضی ۲",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 35,
+      "gender": "mixed",
+      "professor": "امینی سیدمرتضی",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDate": "1405/04/10",
+      "examTime": "14:00",
+      "location": "",
+      "prerequisites": "آمار ریاضی ۱",
+      "notes": "",
+      "grade": "کارشناسی"
+    },
+    {
+      "courseCode": "1115160",
+      "group": 1,
+      "courseName": "یادگیری ماشین",
+      "unitCount": 3,
+      "capacity": 40,
+      "enrolled": 38,
+      "gender": "mixed",
+      "professor": "صادقی پویا",
+      "sessions": [
+        { "dayOfWeek": 1, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 3, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDate": "1405/04/22",
+      "examTime": "14:00",
+      "location": "",
+      "prerequisites": "هوش مصنوعی (1115147)",
+      "notes": "",
+      "grade": "کارشناسی ارشد"
+    },
+    {
+      "courseCode": "1115161",
+      "group": 1,
+      "courseName": "بینایی کامپیوتری",
+      "unitCount": 3,
+      "capacity": 35,
+      "enrolled": 30,
+      "gender": "mixed",
+      "professor": "کریمی رضا",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 3, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDate": "1405/04/24",
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "یادگیری ماشین (1115160)",
+      "notes": "",
+      "grade": "کارشناسی ارشد"
+    },
+    {
+      "courseCode": "1115155",
+      "group": 1,
+      "courseName": "اصول و مبانی هوش مصنوعی",
+      "unitCount": 3,
+      "capacity": 50,
+      "enrolled": 45,
+      "gender": "mixed",
+      "professor": "نوری حسین",
+      "sessions": [
+        { "dayOfWeek": 1, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 4, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDate": "1405/04/20",
+      "examTime": "14:00",
+      "location": "",
+      "prerequisites": "ساختمان داده‌ها (1115142)",
+      "notes": "",
+      "grade": "کارشناسی"
+    }
+  ]
+}
