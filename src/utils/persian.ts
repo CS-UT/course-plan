@@ -17,7 +17,10 @@ export function toEnglishDigits(input: string): string {
 
 export function normalizeQuery(input: string): string {
   if (typeof input !== 'string') return '';
-  return toEnglishDigits(input.trim().toLowerCase());
+  return toEnglishDigits(input.trim().toLowerCase())
+    .replace(/ي/g, 'ی')   // Arabic yeh → Persian yeh
+    .replace(/ك/g, 'ک')   // Arabic kaf → Persian kaf
+    .replace(/\u200C/g, ' '); // ZWNJ (half-space) → space
 }
 
 /** Tokenize a normalized query into non-empty words */
