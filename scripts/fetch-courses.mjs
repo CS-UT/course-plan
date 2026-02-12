@@ -183,13 +183,14 @@
   }
 
   function getPageInfo() {
-    // Try KO ViewModel first
+    // NpGrid VM uses: currpage (1-based), pagecount
     const vm = getNpGridVM();
     if (vm) {
-      const current = typeof vm.PageIndex === 'function' ? vm.PageIndex() : null;
-      const total = typeof vm.PageCount === 'function' ? vm.PageCount() : null;
+      const current = typeof vm.currpage === 'function' ? vm.currpage() : null;
+      const total = typeof vm.pagecount === 'function' ? vm.pagecount() : null;
       if (current != null && total != null) {
-        return { current: current + 1, total }; // PageIndex is 0-based
+        console.log(`  [VM] currpage=${current}, pagecount=${total}, LinePerPage=${typeof vm.LinePerPage === 'function' ? vm.LinePerPage() : '?'}`);
+        return { current, total }; // currpage is 1-based
       }
     }
 
@@ -200,78 +201,16 @@
       return { current: parseInt(match[1]), total: parseInt(match[2]) };
     }
 
-    // Fallback: look in pager area
-    const pagerArea = document.querySelector('[class*="pager"]');
-    if (pagerArea) {
-      const pagerText = persianToEnglish(pagerArea.textContent || '');
-      const totalMatch = pagerText.match(/از\s*(\d+)/);
-      const input = pagerArea.querySelector('input');
-      if (input && totalMatch) {
-        return {
-          current: parseInt(persianToEnglish(input.value)) || 1,
-          total: parseInt(totalMatch[1]),
-        };
-      }
-    }
-
     return null;
   }
 
-  function goToPage(pageIndex) {
-    // Method 1: Use KO ViewModel directly (0-based index)
+  function goToPage(pageNum) {
+    // pageNum is 1-based (matching currpage convention)
     const vm = getNpGridVM();
-    if (vm && typeof vm.PageIndex === 'function') {
-      vm.PageIndex(pageIndex);
+    if (vm && typeof vm.currpage === 'function') {
+      vm.currpage(pageNum);
       return true;
     }
-
-    // Method 2: Use the pager input field
-    const pagerArea = document.querySelector('[class*="pager"]');
-    if (pagerArea) {
-      const input = pagerArea.querySelector('input');
-      if (input) {
-        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-          window.HTMLInputElement.prototype, 'value'
-        ).set;
-        nativeInputValueSetter.call(input, String(pageIndex + 1));
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-
-        // Try pressing Enter to confirm
-        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
-        input.dispatchEvent(new KeyboardEvent('keypress', { key: 'Enter', keyCode: 13, bubbles: true }));
-        input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', keyCode: 13, bubbles: true }));
-        return true;
-      }
-    }
-
-    // Method 3: Click next button
-    const nextSelectors = [
-      'button[title*="بعد"]', 'button[title*="next"]', 'a[title*="بعد"]',
-    ];
-    for (const sel of nextSelectors) {
-      const btn = document.querySelector(sel);
-      if (btn && !btn.disabled) { btn.click(); return true; }
-    }
-
-    // Method 4: Find arrow buttons in pager
-    if (pagerArea) {
-      const btns = pagerArea.querySelectorAll('button, a, span[role="button"]');
-      for (const btn of btns) {
-        const text = btn.textContent?.trim();
-        const cls = btn.className || '';
-        // In RTL, "next" arrow points left
-        if (text === '‹' || text === '<' || text === '◀' ||
-            cls.includes('left') || cls.includes('prev') || cls.includes('next') ||
-            cls.includes('بعد')) {
-          if (!btn.disabled && !btn.classList.contains('disabled')) {
-            btn.click();
-            return true;
-          }
-        }
-      }
-    }
-
     return false;
   }
 
@@ -310,32 +249,31 @@
 
   console.log(`Found ${totalPages} page(s) to scrape`);
 
-  for (let page = 0; page < totalPages; page++) {
-    const displayPage = page + 1;
-    console.log(`Scraping page ${displayPage}/${totalPages}...`);
+  for (let page = 1; page <= totalPages; page++) {
+    console.log(`Scraping page ${page}/${totalPages}...`);
 
     // Navigate to the target page (skip for first page, we're already there)
-    if (page > 0) {
+    if (page > 1) {
       const currentRows = getTableRows();
       const prevFirstCell = currentRows[0]?.querySelector('td')?.textContent?.trim();
 
       const navigated = goToPage(page);
       if (!navigated) {
-        console.warn(`Could not navigate to page ${displayPage}. Stopping.`);
+        console.warn(`Could not navigate to page ${page}. Stopping.`);
         break;
       }
 
       // Wait for new data
       const changed = await waitForTableChange(prevFirstCell);
       if (!changed) {
-        console.warn(`Page ${displayPage} did not load in time. Waiting longer...`);
+        console.warn(`Page ${page} did not load in time. Waiting longer...`);
         await sleep(DELAY * 2);
 
         // Check again
         const rows2 = getTableRows();
         const nowFirst = rows2[0]?.querySelector('td')?.textContent?.trim();
         if (nowFirst === prevFirstCell) {
-          console.warn(`Page ${displayPage} still shows same data. Stopping.`);
+          console.warn(`Page ${page} still shows same data. Stopping.`);
           break;
         }
       }
@@ -361,7 +299,7 @@
       }
     }
 
-    console.log(`  Found ${pageCount} new courses on page ${displayPage} (total so far: ${allCourses.size})`);
+    console.log(`  Found ${pageCount} new courses on page ${page} (total so far: ${allCourses.size})`);
   }
 
   const coursesArray = Array.from(allCourses.values());
