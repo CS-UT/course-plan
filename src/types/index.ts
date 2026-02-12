@@ -36,3 +36,21 @@ export interface CoursesData {
   department: string;
   courses: Course[];
 }
+
+export interface TutorReview {
+  courseName: string;
+  averageRating: number;
+  teachingRating: number;
+  gradingRating: number;
+  flags: Record<string, boolean>;
+  comments: string[];
+  thumbsUp: number;
+  thumbsDown: number;
+  date: string;
+}
+
+export interface TutorProfile {
+  id: string;
+  name: string;
+  reviews: TutorReview[];
+}

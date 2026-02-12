@@ -3,6 +3,8 @@ import type { Course } from '@/types';
 import { normalizeQuery, tokenizeQuery, matchesAllTokens, toPersianDigits, dayName, WEEK_DAYS_ORDER } from '@/utils/persian';
 import { useSchedule } from '@/hooks/useSchedule';
 import { findTimeConflicts, findExamConflicts } from '@/utils/conflicts';
+import { TutorProfileModal } from './TutorProfileModal';
+import tutorNameMap from '@/data/tutor-name-map.json';
 
 interface Props {
   courses: Course[];
@@ -45,6 +47,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [showFilters, setShowFilters] = useState(false);
+  const [activeTutorId, setActiveTutorId] = useState<string | null>(null);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
 
   const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.courseType ? 1 : 0) + (filters.department ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
@@ -226,10 +229,17 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
               onToggle={() => handleToggle(course)}
               onHover={() => onHoverCourse(course)}
               onLeave={() => onHoverCourse(null)}
+              onOpenTutor={setActiveTutorId}
             />
           );
         })}
       </div>
+
+      <TutorProfileModal
+        open={activeTutorId !== null}
+        onClose={() => setActiveTutorId(null)}
+        tutorId={activeTutorId}
+      />
     </div>
   );
 }
@@ -243,6 +253,7 @@ function CourseCard({
   onToggle,
   onHover,
   onLeave,
+  onOpenTutor,
 }: {
   course: Course;
   selected: boolean;
@@ -252,8 +263,10 @@ function CourseCard({
   onToggle: () => void;
   onHover: () => void;
   onLeave: () => void;
+  onOpenTutor: (tutorId: string) => void;
 }) {
   const genderLabel = course.gender === 'male' ? 'پسران' : course.gender === 'female' ? 'دختران' : '';
+  const tutorId = (tutorNameMap as Record<string, string>)[course.professor] ?? null;
 
   return (
     <div
@@ -271,7 +284,21 @@ function CourseCard({
       <div className="flex justify-between items-start gap-2">
         <div className="flex-1 min-w-0">
           <div className="font-bold text-gray-900 dark:text-gray-100 truncate">{course.courseName}</div>
-          <div className="text-gray-600 dark:text-gray-400 text-xs mt-1">{course.professor}</div>
+          <div className="text-xs mt-1">
+            {tutorId ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenTutor(tutorId);
+                }}
+                className="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 underline decoration-dotted cursor-pointer"
+              >
+                {course.professor}
+              </button>
+            ) : (
+              <span className="text-gray-600 dark:text-gray-400">{course.professor}</span>
+            )}
+          </div>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
           <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums">
