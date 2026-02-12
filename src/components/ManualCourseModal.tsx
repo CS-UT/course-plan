@@ -14,6 +14,12 @@ interface SessionInput {
   endTime: string;
 }
 
+const TIME_OPTIONS: string[] = [];
+for (let h = 7; h <= 19; h++) {
+  TIME_OPTIONS.push(`${String(h).padStart(2, '0')}:00`);
+  if (h < 19) TIME_OPTIONS.push(`${String(h).padStart(2, '0')}:30`);
+}
+
 const emptySession = (): SessionInput => ({
   dayOfWeek: '6',
   startTime: '08:00',
@@ -161,19 +167,25 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
                       <option key={d} value={d}>{dayName(d)}</option>
                     ))}
                   </select>
-                  <input
-                    type="time"
+                  <select
                     value={session.startTime}
                     onChange={(e) => updateSession(i, 'startTime', e.target.value)}
-                    className={selectClass + ' w-24'}
-                  />
+                    className={selectClass}
+                  >
+                    {TIME_OPTIONS.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
                   <span className="text-gray-400 text-sm">تا</span>
-                  <input
-                    type="time"
+                  <select
                     value={session.endTime}
                     onChange={(e) => updateSession(i, 'endTime', e.target.value)}
-                    className={selectClass + ' w-24'}
-                  />
+                    className={selectClass}
+                  >
+                    {TIME_OPTIONS.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
                   {sessions.length > 1 && (
                     <button
                       onClick={() => removeSession(i)}
@@ -195,7 +207,7 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
 
           {/* Professor */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام استاد</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام استاد (اختیاری)</label>
             <input
               type="text"
               value={professor}
@@ -207,7 +219,7 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
           {/* Exam date + time */}
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">تاریخ امتحان</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">تاریخ امتحان (اختیاری)</label>
               <input
                 type="text"
                 value={examDate}
@@ -219,12 +231,16 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
             </div>
             <div className="w-28">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ساعت</label>
-              <input
-                type="time"
+              <select
                 value={examTime}
                 onChange={(e) => setExamTime(e.target.value)}
                 className={inputClass}
-              />
+              >
+                <option value="">—</option>
+                {TIME_OPTIONS.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
             </div>
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 -mt-2">
