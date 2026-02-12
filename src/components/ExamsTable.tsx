@@ -28,17 +28,17 @@ export function ExamsTable() {
 
   if (selectedCourses.length === 0) {
     return (
-      <div className="mt-3 text-sm text-gray-400 text-center py-6">
+      <div className="mt-3 text-sm text-gray-400 dark:text-gray-500 text-center py-6">
         هنوز درسی انتخاب نشده
       </div>
     );
   }
 
   return (
-    <div className="mt-3 bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div className="mt-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-600">
+          <thead className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
             <tr>
               <th className="px-3 py-2 text-right font-medium">کد</th>
               <th className="px-3 py-2 text-right font-medium">نام درس</th>
@@ -49,14 +49,14 @@ export function ExamsTable() {
               <th className="px-3 py-2 text-center font-medium">حذف</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
             {sorted.map((course) => {
               const key = `${course.courseCode}-${course.group}`;
               const hasConflict = conflictingPairs.has(key);
               return (
                 <tr
                   key={key}
-                  className={hasConflict ? 'bg-danger-50' : 'hover:bg-gray-50'}
+                  className={hasConflict ? 'bg-danger-50 dark:bg-danger-500/10' : 'hover:bg-gray-50 dark:hover:bg-gray-750'}
                 >
                   <td className="px-3 py-2 tabular-nums">{toPersianDigits(course.courseCode)}</td>
                   <td className="px-3 py-2 font-medium">{course.courseName}</td>
@@ -68,7 +68,7 @@ export function ExamsTable() {
                       ? `${toPersianDigits(course.examDate)} - ${toPersianDigits(course.examTime)}`
                       : '—'}
                     {hasConflict && (
-                      <span className="mr-2 text-danger-600 text-xs font-medium">⚠ تداخل</span>
+                      <span className="mr-2 text-danger-600 dark:text-danger-400 text-xs font-medium">⚠ تداخل</span>
                     )}
                   </td>
                   <td className="px-3 py-2 text-center">
@@ -83,7 +83,7 @@ export function ExamsTable() {
               );
             })}
           </tbody>
-          <tfoot className="bg-gray-50 font-medium">
+          <tfoot className="bg-gray-50 dark:bg-gray-700 font-medium">
             <tr>
               <td className="px-3 py-2" colSpan={3}>جمع</td>
               <td className="px-3 py-2">{toPersianDigits(totalUnits)}</td>

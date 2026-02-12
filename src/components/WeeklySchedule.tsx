@@ -74,13 +74,14 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 relative">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 relative transition-colors">
       <FullCalendar
         plugins={[timeGridPlugin]}
         initialView="timeGridWeek"
         initialDate={BASE_SATURDAY}
         locale="fa"
         direction="rtl"
+        firstDay={6}
         headerToolbar={false}
         allDaySlot={false}
         slotMinTime="07:00:00"
@@ -109,13 +110,13 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
       {/* Tooltip */}
       {tooltip.visible && tooltip.content && (
         <div
-          className="fixed z-50 bg-white rounded-xl shadow-lg border border-gray-200 p-3 text-sm w-64 pointer-events-none"
+          className="fixed z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 text-sm w-64 pointer-events-none"
           style={{ left: tooltip.x, top: tooltip.y }}
         >
-          <div className="font-bold text-gray-900 mb-1">
+          <div className="font-bold text-gray-900 dark:text-gray-100 mb-1">
             {tooltip.content.courseName}
           </div>
-          <div className="text-gray-600 space-y-0.5">
+          <div className="text-gray-600 dark:text-gray-300 space-y-0.5">
             <div>استاد: {tooltip.content.professor}</div>
             <div>کد: {toPersianDigits(tooltip.content.courseCode)}-{toPersianDigits(tooltip.content.group)}</div>
             <div>واحد: {toPersianDigits(tooltip.content.unitCount)}</div>

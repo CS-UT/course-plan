@@ -62,21 +62,21 @@ export function ExportButtons() {
     <div className="flex items-center gap-1">
       <button
         onClick={exportAsImage}
-        className="text-xs text-gray-500 hover:text-primary-600 px-2 py-1 rounded hover:bg-gray-100 transition-colors cursor-pointer"
+        className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
         title="ذخیره تصویر برنامه"
       >
         تصویر
       </button>
       <button
         onClick={exportAsJson}
-        className="text-xs text-gray-500 hover:text-primary-600 px-2 py-1 rounded hover:bg-gray-100 transition-colors cursor-pointer"
+        className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
         title="خروجی JSON"
       >
         خروجی
       </button>
       <button
         onClick={importFromJson}
-        className="text-xs text-gray-500 hover:text-primary-600 px-2 py-1 rounded hover:bg-gray-100 transition-colors cursor-pointer"
+        className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
         title="ورودی JSON"
       >
         ورودی

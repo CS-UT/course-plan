@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap');
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Vazirmatn", system-ui, sans-serif;
 
@@ -80,4 +82,26 @@ body {
 
 .fc .fc-timegrid-slot {
   height: 2.5rem;
+}
+
+/* Dark mode FullCalendar */
+.dark .fc .fc-scrollgrid {
+  border-color: #374151;
+}
+
+.dark .fc td, .dark .fc th {
+  border-color: #374151;
+}
+
+.dark .fc .fc-col-header-cell {
+  background-color: #1f2937;
+  color: #d1d5db;
+}
+
+.dark .fc .fc-timegrid-slot-label {
+  color: #9ca3af;
+}
+
+.dark .fc .fc-timegrid-col {
+  background-color: #111827;
 }
