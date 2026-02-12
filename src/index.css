@@ -61,6 +61,12 @@ body {
   cursor: pointer;
 }
 
+.fc .fc-timegrid-event-harness {
+  inset-inline-end: unset !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
 .fc .fc-timegrid-event .fc-event-main {
   padding: 2px 6px;
   overflow: hidden;
