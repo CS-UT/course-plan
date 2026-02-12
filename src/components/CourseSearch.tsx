@@ -14,6 +14,7 @@ interface Filters {
   day: string;
   gender: string;
   courseType: string;
+  department: string;
   hideConflicts: boolean;
 }
 
@@ -21,11 +22,23 @@ const defaultFilters: Filters = {
   day: '',
   gender: '',
   courseType: '',
+  department: '',
   hideConflicts: false,
 };
 
 function isGeneralCourse(course: Course): boolean {
   return course.courseCode.startsWith('1120');
+}
+
+function getDepartment(course: Course): string {
+  if (!isGeneralCourse(course)) return 'ریاضی';
+  if (!course.notes) return 'تربیت بدنی';
+  const match = course.notes.match(/^([^-/]+?)[\s]*-/);
+  if (!match) return 'تربیت بدنی';
+  let dept = match[1].trim();
+  if (dept === 'روان شناسی') dept = 'روانشناسی';
+  if (dept.startsWith('قابل اخذ')) return 'علوم';
+  return dept;
 }
 
 export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Props) {
@@ -34,7 +47,13 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   const [showFilters, setShowFilters] = useState(false);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
 
-  const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.courseType ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
+  const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.courseType ? 1 : 0) + (filters.department ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
+
+  const departments = useMemo(() => {
+    const deptSet = new Set<string>();
+    courses.forEach((c) => deptSet.add(getDepartment(c)));
+    return [...deptSet].sort((a, b) => a.localeCompare(b, 'fa'));
+  }, [courses]);
 
   const filtered = useMemo(() => {
     let result = courses;
@@ -60,6 +79,9 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
       result = result.filter((c) =>
         filters.courseType === 'general' ? isGeneralCourse(c) : !isGeneralCourse(c),
       );
+    }
+    if (filters.department) {
+      result = result.filter((c) => getDepartment(c) === filters.department);
     }
     if (filters.hideConflicts) {
       result = result.filter((c) => {
@@ -151,6 +173,16 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
               <option value="">نوع درس</option>
               <option value="specialized">تخصصی</option>
               <option value="general">عمومی</option>
+            </select>
+            <select
+              value={filters.department}
+              onChange={(e) => setFilters((f) => ({ ...f, department: e.target.value }))}
+              className={selectClass}
+            >
+              <option value="">دانشکده</option>
+              {departments.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
             </select>
           </div>
 
