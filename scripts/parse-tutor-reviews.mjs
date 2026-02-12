@@ -143,6 +143,7 @@ function parseFormatA(msg, text, hashtags) {
       gradingRating: parseRating('نمره دهی استاد'),
       flags,
       comments,
+      messageId: msg.id,
       date: msg.date ? msg.date.split('T')[0] : '',
     },
   };
@@ -271,6 +272,7 @@ function parseFormatBCDEF(msg, text) {
       courseName,
       comments,
       ...(Object.keys(sections).length > 0 ? { sections } : {}),
+      messageId: msg.id,
       date: msg.date ? msg.date.split('T')[0] : '',
     },
   };

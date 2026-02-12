@@ -123,6 +123,19 @@ function ReviewCard({ review }: { review: TutorReview }) {
           </div>
         </div>
       )}
+
+      {/* Link to original Telegram message */}
+      {review.messageId && (
+        <a
+          href={`https://t.me/UTeacherz/${review.messageId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[10px] text-gray-400 dark:text-gray-500 hover:text-primary-500 dark:hover:text-primary-400 self-start"
+          onClick={(e) => e.stopPropagation()}
+        >
+          مشاهده در تلگرام ←
+        </a>
+      )}
     </div>
   );
 }

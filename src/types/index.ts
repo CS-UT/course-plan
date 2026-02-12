@@ -47,6 +47,7 @@ export interface TutorReview {
   comments: string[];
   // Format B-F (prose reviews, may have sections)
   sections?: Record<string, string>;
+  messageId?: number;
   date: string;
 }
 
