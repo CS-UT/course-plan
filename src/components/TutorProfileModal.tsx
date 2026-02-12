@@ -155,7 +155,7 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
         {/* Source note */}
         <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
           <p className="text-[10px] text-gray-400 dark:text-gray-500">
-            منبع: کانال اساتید دانشگاه تهران
+            منبع: <a href="https://t.me/UTeacherz" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600 dark:hover:text-gray-300">@UTeacherz</a>
           </p>
         </div>
       </div>
