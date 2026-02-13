@@ -15,16 +15,16 @@ function RatingBar({ value, label }: { value: number; label: string }) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-gray-600 dark:text-gray-400 w-28 shrink-0 text-start">
+      <span className="text-sm text-gray-600 dark:text-gray-400 w-28 shrink-0 text-start">
         {label}
       </span>
-      <div className="flex-1 h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div className="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all ${color}`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-xs font-medium text-gray-700 dark:text-gray-300 w-10 text-start tabular-nums" dir="ltr">
+      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-10 text-start tabular-nums" dir="ltr">
         {toPersianDigits(value.toString())}/۱۰
       </span>
     </div>
@@ -72,7 +72,7 @@ function ReviewCard({ review }: { review: TutorReview }) {
                 return (
                   <span
                     key={key}
-                    className={`text-xs px-2 py-1 rounded-lg ${
+                    className={`text-sm px-2.5 py-1 rounded-lg ${
                       val
                         ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
@@ -92,10 +92,10 @@ function ReviewCard({ review }: { review: TutorReview }) {
         <div className="flex flex-col gap-2.5">
           {Object.entries(review.sections!).map(([key, content]) => (
             <div key={key}>
-              <h4 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {SECTION_LABELS[key] || key}
               </h4>
-              <div className="text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2 leading-relaxed whitespace-pre-line">
+              <div className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2.5 leading-relaxed whitespace-pre-line">
                 {content}
               </div>
             </div>
@@ -107,7 +107,7 @@ function ReviewCard({ review }: { review: TutorReview }) {
       {review.comments.length > 0 && (
         <div className="flex flex-col gap-2">
           {(hasRatings || hasSections) && (
-            <h4 className="text-xs font-medium text-gray-700 dark:text-gray-300">
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
               نظرات دانشجویان
             </h4>
           )}
@@ -115,7 +115,7 @@ function ReviewCard({ review }: { review: TutorReview }) {
             {review.comments.map((c, i) => (
               <div
                 key={i}
-                className="text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2 leading-relaxed whitespace-pre-line"
+                className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2.5 leading-relaxed whitespace-pre-line"
               >
                 {c}
               </div>
@@ -130,7 +130,7 @@ function ReviewCard({ review }: { review: TutorReview }) {
           href={`https://t.me/UTeacherz/${review.messageId}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] text-gray-400 dark:text-gray-500 hover:text-primary-500 dark:hover:text-primary-400 self-start"
+          className="text-xs text-gray-400 dark:text-gray-500 hover:text-primary-500 dark:hover:text-primary-400 self-start"
           onClick={(e) => e.stopPropagation()}
         >
           مشاهده در تلگرام ←
@@ -193,7 +193,7 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
               )}
             </h2>
             {(tutor.rank || tutor.workplace) && (
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+              <div className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                 {tutor.rank && <span>{tutor.rank}</span>}
                 {tutor.rank && tutor.workplace && <span> · </span>}
                 {tutor.workplace && <span>{tutor.workplace}</span>}
@@ -215,7 +215,7 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
               <button
                 key={i}
                 onClick={() => setActiveReviewIdx(i)}
-                className={`text-xs px-3 py-1.5 rounded-lg cursor-pointer transition-colors ${
+                className={`text-sm px-3 py-1.5 rounded-lg cursor-pointer transition-colors ${
                   i === activeReviewIdx
                     ? 'bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 font-medium'
                     : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
@@ -229,7 +229,7 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
 
         {/* Single course label */}
         {review.courseName && tutor.reviews.length <= 1 && (
-          <div className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+          <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
             درس: {review.courseName}
           </div>
         )}
@@ -238,7 +238,7 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
 
         {/* Source note */}
         <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-[10px] text-gray-400 dark:text-gray-500">
+          <p className="text-xs text-gray-400 dark:text-gray-500">
             منبع: <a href="https://t.me/UTeacherz" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600 dark:hover:text-gray-300">@UTeacherz</a>
           </p>
         </div>
