@@ -170,7 +170,7 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
                       <option key={d} value={d}>{dayName(d)}</option>
                     ))}
                   </select>
-                  <div className="flex items-center gap-0.5">
+                  <div className="flex items-center gap-0.5" dir="ltr">
                     <select
                       value={session.startHour}
                       onChange={(e) => updateSession(i, 'startHour', e.target.value)}
@@ -192,7 +192,7 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
                     </select>
                   </div>
                   <span className="text-gray-400 text-sm">تا</span>
-                  <div className="flex items-center gap-0.5">
+                  <div className="flex items-center gap-0.5" dir="ltr">
                     <select
                       value={session.endHour}
                       onChange={(e) => updateSession(i, 'endHour', e.target.value)}
@@ -258,7 +258,7 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ساعت</label>
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-0.5" dir="ltr">
                 <select
                   value={examTimeHour}
                   onChange={(e) => setExamTimeHour(e.target.value)}
