@@ -10,20 +10,21 @@ interface Props {
 
 interface SessionInput {
   dayOfWeek: string;
-  startTime: string;
-  endTime: string;
+  startHour: string;
+  startMinute: string;
+  endHour: string;
+  endMinute: string;
 }
 
-const TIME_OPTIONS: string[] = [];
-for (let h = 7; h <= 19; h++) {
-  TIME_OPTIONS.push(`${String(h).padStart(2, '0')}:00`);
-  if (h < 19) TIME_OPTIONS.push(`${String(h).padStart(2, '0')}:30`);
-}
+const HOURS = Array.from({ length: 14 }, (_, i) => String(i + 6).padStart(2, '0'));
+const MINUTES = ['00', '15', '30', '45'];
 
 const emptySession = (): SessionInput => ({
   dayOfWeek: '6',
-  startTime: '08:00',
-  endTime: '10:00',
+  startHour: '08',
+  startMinute: '00',
+  endHour: '10',
+  endMinute: '00',
 });
 
 const inputClass =
@@ -37,7 +38,8 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
   const [professor, setProfessor] = useState('');
   const [unitCount, setUnitCount] = useState('3');
   const [examDate, setExamDate] = useState('');
-  const [examTime, setExamTime] = useState('');
+  const [examTimeHour, setExamTimeHour] = useState('');
+  const [examTimeMinute, setExamTimeMinute] = useState('00');
   const [sessions, setSessions] = useState<SessionInput[]>([emptySession()]);
   const [error, setError] = useState('');
 
@@ -64,7 +66,8 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
     setProfessor('');
     setUnitCount('3');
     setExamDate('');
-    setExamTime('');
+    setExamTimeHour('');
+    setExamTimeMinute('00');
     setSessions([emptySession()]);
     setError('');
     onClose();
@@ -81,15 +84,15 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
       return;
     }
     for (const s of sessions) {
-      if (!s.startTime || !s.endTime) {
-        setError('ساعت جلسات را وارد کنید');
-        return;
-      }
-      if (s.startTime >= s.endTime) {
+      const startTime = `${s.startHour}:${s.startMinute}`;
+      const endTime = `${s.endHour}:${s.endMinute}`;
+      if (startTime >= endTime) {
         setError('ساعت شروع باید قبل از ساعت پایان باشد');
         return;
       }
     }
+
+    const examTime = examTimeHour ? `${examTimeHour}:${examTimeMinute}` : '';
 
     const course: Course = {
       courseCode: `MANUAL-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
@@ -100,11 +103,11 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
       professor: professor.trim(),
       sessions: sessions.map((s) => ({
         dayOfWeek: Number(s.dayOfWeek),
-        startTime: s.startTime,
-        endTime: s.endTime,
+        startTime: `${s.startHour}:${s.startMinute}`,
+        endTime: `${s.endHour}:${s.endMinute}`,
       })),
       examDate: examDate.trim(),
-      examTime: examTime.trim(),
+      examTime,
       location: '',
       prerequisites: '',
       notes: '',
@@ -167,25 +170,49 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
                       <option key={d} value={d}>{dayName(d)}</option>
                     ))}
                   </select>
-                  <select
-                    value={session.startTime}
-                    onChange={(e) => updateSession(i, 'startTime', e.target.value)}
-                    className={selectClass}
-                  >
-                    {TIME_OPTIONS.map((t) => (
-                      <option key={t} value={t}>{t}</option>
-                    ))}
-                  </select>
+                  <div className="flex items-center gap-0.5">
+                    <select
+                      value={session.startHour}
+                      onChange={(e) => updateSession(i, 'startHour', e.target.value)}
+                      className={selectClass}
+                    >
+                      {HOURS.map((h) => (
+                        <option key={h} value={h}>{h}</option>
+                      ))}
+                    </select>
+                    <span className="text-gray-400 text-sm">:</span>
+                    <select
+                      value={session.startMinute}
+                      onChange={(e) => updateSession(i, 'startMinute', e.target.value)}
+                      className={selectClass}
+                    >
+                      {MINUTES.map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
                   <span className="text-gray-400 text-sm">تا</span>
-                  <select
-                    value={session.endTime}
-                    onChange={(e) => updateSession(i, 'endTime', e.target.value)}
-                    className={selectClass}
-                  >
-                    {TIME_OPTIONS.map((t) => (
-                      <option key={t} value={t}>{t}</option>
-                    ))}
-                  </select>
+                  <div className="flex items-center gap-0.5">
+                    <select
+                      value={session.endHour}
+                      onChange={(e) => updateSession(i, 'endHour', e.target.value)}
+                      className={selectClass}
+                    >
+                      {HOURS.map((h) => (
+                        <option key={h} value={h}>{h}</option>
+                      ))}
+                    </select>
+                    <span className="text-gray-400 text-sm">:</span>
+                    <select
+                      value={session.endMinute}
+                      onChange={(e) => updateSession(i, 'endMinute', e.target.value)}
+                      className={selectClass}
+                    >
+                      {MINUTES.map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
                   {sessions.length > 1 && (
                     <button
                       onClick={() => removeSession(i)}
@@ -229,18 +256,30 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
                 dir="ltr"
               />
             </div>
-            <div className="w-28">
+            <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ساعت</label>
-              <select
-                value={examTime}
-                onChange={(e) => setExamTime(e.target.value)}
-                className={inputClass}
-              >
-                <option value="">—</option>
-                {TIME_OPTIONS.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
+              <div className="flex items-center gap-0.5">
+                <select
+                  value={examTimeHour}
+                  onChange={(e) => setExamTimeHour(e.target.value)}
+                  className={selectClass}
+                >
+                  <option value="">—</option>
+                  {HOURS.map((h) => (
+                    <option key={h} value={h}>{h}</option>
+                  ))}
+                </select>
+                <span className="text-gray-400 text-sm">:</span>
+                <select
+                  value={examTimeMinute}
+                  onChange={(e) => setExamTimeMinute(e.target.value)}
+                  className={selectClass}
+                >
+                  {MINUTES.map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 -mt-2">
