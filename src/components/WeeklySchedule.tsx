@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useMemo, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import type { EventClickArg, EventContentArg } from '@fullcalendar/core';
-import type { Course } from '@/types';
+import type { Course, SelectedCourse } from '@/types';
 import { useSchedule } from '@/hooks/useSchedule';
-import { coursesToEvents, BASE_SATURDAY } from '@/utils/calendar';
+import { coursesToEvents, BASE_SATURDAY, COURSE_COLORS } from '@/utils/calendar';
 import { toPersianDigits } from '@/utils/persian';
 
 interface Props {
@@ -29,11 +29,7 @@ function getStoredRotation(): boolean {
 
 export function WeeklySchedule({ hoveredCourse }: Props) {
   const { selectedCourses, removeCourse } = useSchedule();
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const rotatorRef = useRef<HTMLDivElement>(null);
-  const calRef = useRef<HTMLDivElement>(null);
-  // Track rotation in a ref to avoid re-rendering FullCalendar
-  const isRotated = useRef(getStoredRotation());
+  const [rotated, setRotated] = useState(getStoredRotation);
 
   const [tooltip, setTooltip] = useState<{
     visible: boolean;
@@ -66,47 +62,12 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
     [allCourses],
   );
 
-  // Apply/remove rotation via direct DOM manipulation to avoid triggering
-  // a React re-render of FullCalendar (which would recalculate event sizes
-  // using post-transform dimensions from getBoundingClientRect).
-  const applyRotation = useCallback((rotated: boolean) => {
-    const wrapper = wrapperRef.current;
-    const rotator = rotatorRef.current;
-    const cal = calRef.current;
-    if (!wrapper || !rotator || !cal) return;
-
-    if (rotated) {
-      const w = cal.offsetWidth;
-      wrapper.style.height = `${w}px`;
-      rotator.style.setProperty('--cal-w', `${w}px`);
-      rotator.classList.add('calendar-rotated');
-    } else {
-      wrapper.style.height = '';
-      rotator.classList.remove('calendar-rotated');
-      rotator.style.removeProperty('--cal-w');
-    }
-  }, []);
-
-  // Apply initial rotation after FullCalendar has rendered
-  useEffect(() => {
-    // Wait for FullCalendar to fully render before applying rotation
-    const timer = setTimeout(() => applyRotation(isRotated.current), 150);
-    return () => clearTimeout(timer);
-  }, [applyRotation]);
-
-  // Re-apply rotation when events change (FullCalendar might re-render)
-  useEffect(() => {
-    if (isRotated.current) {
-      // Small delay to let FullCalendar finish its update
-      const timer = setTimeout(() => applyRotation(true), 150);
-      return () => clearTimeout(timer);
-    }
-  }, [events, applyRotation]);
-
   function handleToggleRotation() {
-    isRotated.current = !isRotated.current;
-    localStorage.setItem('plan-calendar-rotated', String(isRotated.current));
-    applyRotation(isRotated.current);
+    setRotated((r) => {
+      const next = !r;
+      localStorage.setItem('plan-calendar-rotated', String(next));
+      return next;
+    });
   }
 
   function handleEventClick(info: EventClickArg) {
@@ -135,7 +96,7 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
       <button
         onClick={handleToggleRotation}
         className="absolute top-2 left-2 z-10 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer text-gray-500 dark:text-gray-400"
-        title={isRotated.current ? 'نمای عادی' : 'چرخش ۹۰ درجه'}
+        title={rotated ? 'نمای عادی' : 'چرخش ۹۰ درجه'}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21.5 2v6h-6"/>
@@ -143,46 +104,46 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
         </svg>
       </button>
 
-      {/* Outer wrapper — reserves visual height when rotated */}
-      <div ref={wrapperRef} className="overflow-hidden">
-        {/* Rotator — carries the CSS transform */}
-        <div ref={rotatorRef}>
-          {/* Stable container — FullCalendar lives here, never changes size */}
-          <div ref={calRef}>
-            <FullCalendar
-              plugins={[timeGridPlugin]}
-              initialView="timeGridWeek"
-              initialDate={BASE_SATURDAY}
-              locale="fa"
-              direction="rtl"
-              firstDay={6}
-              headerToolbar={false}
-              allDaySlot={false}
-              slotMinTime="07:00:00"
-              slotMaxTime="20:00:00"
-              slotDuration="01:00:00"
-              slotLabelFormat={{
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-              }}
-              dayHeaderFormat={{ weekday: 'short' }}
-              dayHeaderContent={(arg) => {
-                const dayKey = arg.date.toLocaleDateString('en-US', { weekday: 'short' });
-                return DAY_HEADER_MAP[dayKey] ?? dayKey;
-              }}
-              hiddenDays={[4, 5]} // Hide Thursday & Friday
-              events={events}
-              eventClick={handleEventClick}
-              eventMouseEnter={handleMouseEnter}
-              eventMouseLeave={handleMouseLeave}
-              eventContent={renderEventContent}
-              height="auto"
-              expandRows
-            />
-          </div>
-        </div>
-      </div>
+      {rotated ? (
+        <TransposedCalendar
+          courses={allCourses}
+          onRemoveCourse={removeCourse}
+        />
+      ) : (
+        <>
+          <FullCalendar
+            plugins={[timeGridPlugin]}
+            initialView="timeGridWeek"
+            initialDate={BASE_SATURDAY}
+            locale="fa"
+            direction="rtl"
+            firstDay={6}
+            headerToolbar={false}
+            allDaySlot={false}
+            slotMinTime="07:00:00"
+            slotMaxTime="20:00:00"
+            slotDuration="01:00:00"
+            slotLabelFormat={{
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            }}
+            dayHeaderFormat={{ weekday: 'short' }}
+            dayHeaderContent={(arg) => {
+              const dayKey = arg.date.toLocaleDateString('en-US', { weekday: 'short' });
+              return DAY_HEADER_MAP[dayKey] ?? dayKey;
+            }}
+            hiddenDays={[4, 5]}
+            events={events}
+            eventClick={handleEventClick}
+            eventMouseEnter={handleMouseEnter}
+            eventMouseLeave={handleMouseLeave}
+            eventContent={renderEventContent}
+            height="auto"
+            expandRows
+          />
+        </>
+      )}
 
       {/* Tooltip */}
       {tooltip.visible && tooltip.content && (
@@ -214,6 +175,162 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
     </div>
   );
 }
+
+/* ─── Transposed Calendar (days=rows, hours=columns, native RTL) ─── */
+
+const HOVER_COLOR = { bg: '#f3f4f6', border: '#9ca3af', text: '#6b7280' };
+
+const DAYS: { dow: number; label: string }[] = [
+  { dow: 6, label: 'شنبه' },
+  { dow: 0, label: 'یکشنبه' },
+  { dow: 1, label: 'دوشنبه' },
+  { dow: 2, label: 'سه‌شنبه' },
+  { dow: 3, label: 'چهارشنبه' },
+];
+
+const SLOT_START = 7;  // 07:00
+const SLOT_END = 20;   // 20:00
+const TOTAL_SLOTS = SLOT_END - SLOT_START; // 13 hours
+
+function timeToFraction(time: string): number {
+  const [h, m] = time.split(':').map(Number);
+  return (h - SLOT_START + m / 60) / TOTAL_SLOTS;
+}
+
+interface TransposedEvent {
+  courseCode: string;
+  group: number;
+  courseName: string;
+  professor: string;
+  unitCount: number;
+  location: string;
+  examDate: string;
+  examTime: string;
+  prerequisites: string;
+  notes: string;
+  startFraction: number; // 0..1 within the hour axis
+  widthFraction: number; // 0..1
+  color: { bg: string; border: string; text: string };
+  isHover: boolean;
+}
+
+function buildTransposedEvents(
+  courses: SelectedCourse[],
+  cMap: Map<string, number>,
+): Map<number, TransposedEvent[]> {
+  const byDay = new Map<number, TransposedEvent[]>();
+  for (const d of DAYS) byDay.set(d.dow, []);
+
+  for (const course of courses) {
+    const colorKey = `${course.courseCode}-${course.group}`;
+    let colorIndex = cMap.get(colorKey);
+    if (colorIndex === undefined) {
+      colorIndex = cMap.size % COURSE_COLORS.length;
+      cMap.set(colorKey, colorIndex);
+    }
+    const isHover = course.mode === 'hover';
+    const color = isHover ? HOVER_COLOR : COURSE_COLORS[colorIndex];
+
+    for (const session of course.sessions) {
+      const start = timeToFraction(session.startTime);
+      const end = timeToFraction(session.endTime);
+      const evt: TransposedEvent = {
+        courseCode: course.courseCode,
+        group: course.group,
+        courseName: course.courseName,
+        professor: course.professor,
+        unitCount: course.unitCount,
+        location: course.location,
+        examDate: course.examDate,
+        examTime: course.examTime,
+        prerequisites: course.prerequisites,
+        notes: course.notes,
+        startFraction: start,
+        widthFraction: end - start,
+        color,
+        isHover,
+      };
+      byDay.get(session.dayOfWeek)?.push(evt);
+    }
+  }
+  return byDay;
+}
+
+const transposedColorMap = new Map<string, number>();
+
+function TransposedCalendar({
+  courses,
+  onRemoveCourse,
+}: {
+  courses: SelectedCourse[];
+  onRemoveCourse: (code: string, group: number) => void;
+}) {
+  const byDay = useMemo(
+    () => buildTransposedEvents(courses, transposedColorMap),
+    [courses],
+  );
+
+  const hours = useMemo(() => {
+    const arr: number[] = [];
+    for (let h = SLOT_START; h < SLOT_END; h++) arr.push(h);
+    return arr;
+  }, []);
+
+  return (
+    <div className="transposed-cal overflow-x-auto" dir="rtl">
+      <table className="w-full border-collapse min-w-[600px]">
+        {/* Hour header row */}
+        <thead>
+          <tr>
+            <th className="transposed-cal-day-header" />
+            {hours.map((h) => (
+              <th key={h} className="transposed-cal-hour-header">
+                {toPersianDigits(String(h).padStart(2, '0'))}:۰۰
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {DAYS.map(({ dow, label }) => (
+            <tr key={dow} className="transposed-cal-row">
+              <td className="transposed-cal-day-label">{label}</td>
+              <td colSpan={TOTAL_SLOTS} className="transposed-cal-track">
+                {/* Grid lines */}
+                <div className="transposed-cal-grid">
+                  {hours.map((h) => (
+                    <div key={h} className="transposed-cal-gridline" />
+                  ))}
+                </div>
+                {/* Events */}
+                {byDay.get(dow)?.map((evt, i) => (
+                  <div
+                    key={`${evt.courseCode}-${evt.group}-${i}`}
+                    className="transposed-cal-event"
+                    style={{
+                      right: `${evt.startFraction * 100}%`,
+                      width: `${evt.widthFraction * 100}%`,
+                      backgroundColor: evt.color.bg,
+                      borderColor: evt.color.border,
+                      color: evt.color.text,
+                      opacity: evt.isHover ? 0.7 : 1,
+                    }}
+                    onClick={() => !evt.isHover && onRemoveCourse(evt.courseCode, evt.group)}
+                    title={`${evt.courseName} — ${evt.professor}`}
+                  >
+                    <span className="transposed-cal-event-name">{evt.courseName}</span>
+                    <span className="transposed-cal-event-prof">{evt.professor}</span>
+                  </div>
+                ))}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ─── Standard FullCalendar event renderer ─── */
 
 function renderEventContent(eventInfo: EventContentArg) {
   const { courseName, professor } = eventInfo.event.extendedProps;

@@ -129,34 +129,156 @@ body {
   background-color: #111827;
 }
 
-/*
- * Rotated calendar (-90deg clockwise).
- * The transform is purely visual — FullCalendar still lays out normally.
- * --cal-w is set by JS to the element's offsetWidth.
- * After rotate(-90deg) around (0,0), the element is above the viewport.
- * translateY(--cal-w) brings it back down.
- */
-.calendar-rotated {
-  transform-origin: 0 0;
-  transform: translateY(var(--cal-w)) rotate(-90deg);
+/* ─── Transposed calendar (days=rows, hours=columns, RTL) ─── */
+
+.transposed-cal {
+  font-family: var(--font-sans);
+  direction: rtl;
 }
 
-/* Counter-rotate text so it stays upright after the -90deg container rotation */
-.calendar-rotated .fc-col-header-cell-cushion {
-  display: inline-block;
-  transform: rotate(90deg);
-  white-space: nowrap;
-}
-
-.calendar-rotated .fc-timegrid-slot-label-cushion {
-  display: inline-block;
-  transform: rotate(90deg);
-  white-space: nowrap;
-}
-
-.calendar-rotated .fc-timegrid-event .fc-event-main {
-  transform: rotate(90deg);
-  transform-origin: center center;
+.transposed-cal table {
+  border-radius: 0.75rem;
   overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.transposed-cal-day-header {
+  width: 70px;
+  min-width: 70px;
+}
+
+.transposed-cal-hour-header {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  padding: 8px 0;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  border-left: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.transposed-cal-day-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  padding: 0 12px;
+  text-align: center;
   white-space: nowrap;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  width: 70px;
+  min-width: 70px;
+}
+
+.transposed-cal-track {
+  position: relative;
+  height: 52px;
+  padding: 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.transposed-cal-grid {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  direction: ltr; /* grid lines flow left-to-right regardless of RTL */
+}
+
+.transposed-cal-gridline {
+  flex: 1;
+  border-left: 1px solid #f3f4f6;
+}
+
+.transposed-cal-gridline:first-child {
+  border-left: none;
+}
+
+.transposed-cal-event {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  border-radius: 0.375rem;
+  border-right: 3px solid;
+  padding: 2px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 1;
+  transition: filter 0.15s;
+}
+
+.transposed-cal-event:hover {
+  filter: brightness(0.93);
+}
+
+.transposed-cal-event-name {
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transposed-cal-event-prof {
+  font-size: 0.6rem;
+  opacity: 0.8;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Dark mode transposed calendar */
+.dark .transposed-cal table {
+  border-color: #374151;
+}
+
+.dark .transposed-cal-hour-header {
+  color: #9ca3af;
+  border-bottom-color: #374151;
+  border-left-color: #374151;
+  background: #1f2937;
+}
+
+.dark .transposed-cal-day-label {
+  color: #d1d5db;
+  border-bottom-color: #374151;
+  background: #1f2937;
+}
+
+.dark .transposed-cal-track {
+  border-bottom-color: #374151;
+}
+
+.dark .transposed-cal-gridline {
+  border-left-color: #1f2937;
+}
+
+@media (max-width: 639px) {
+  .transposed-cal-hour-header {
+    font-size: 0.65rem;
+  }
+  .transposed-cal-day-label {
+    font-size: 0.7rem;
+    padding: 0 6px;
+    width: 55px;
+    min-width: 55px;
+  }
+  .transposed-cal-day-header {
+    width: 55px;
+    min-width: 55px;
+  }
+  .transposed-cal-track {
+    height: 44px;
+  }
+  .transposed-cal-event-name {
+    font-size: 0.6rem;
+  }
+  .transposed-cal-event-prof {
+    font-size: 0.55rem;
+  }
 }
