@@ -128,3 +128,35 @@ body {
 .dark .fc .fc-timegrid-col {
   background-color: #111827;
 }
+
+/*
+ * Rotated calendar (-90deg clockwise).
+ * The transform is purely visual — FullCalendar still lays out normally.
+ * --cal-w is set by JS to the element's offsetWidth.
+ * After rotate(-90deg) around (0,0), the element is above the viewport.
+ * translateY(--cal-w) brings it back down.
+ */
+.calendar-rotated {
+  transform-origin: 0 0;
+  transform: translateY(var(--cal-w)) rotate(-90deg);
+}
+
+/* Counter-rotate text so it stays upright after the -90deg container rotation */
+.calendar-rotated .fc-col-header-cell-cushion {
+  display: inline-block;
+  transform: rotate(90deg);
+  white-space: nowrap;
+}
+
+.calendar-rotated .fc-timegrid-slot-label-cushion {
+  display: inline-block;
+  transform: rotate(90deg);
+  white-space: nowrap;
+}
+
+.calendar-rotated .fc-timegrid-event .fc-event-main {
+  transform: rotate(90deg);
+  transform-origin: center center;
+  overflow: hidden;
+  white-space: nowrap;
+}
