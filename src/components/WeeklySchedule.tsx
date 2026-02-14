@@ -92,17 +92,20 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 relative transition-colors">
-      {/* Rotate toggle */}
-      <button
-        onClick={handleToggleRotation}
-        className="absolute top-2 left-2 z-10 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer text-gray-500 dark:text-gray-400"
-        title={rotated ? 'نمای عادی' : 'چرخش ۹۰ درجه'}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21.5 2v6h-6"/>
-          <path d="M21.34 15.57a10 10 0 1 1-.57-8.38"/>
-        </svg>
-      </button>
+      {/* Rotate toggle — top bar */}
+      <div className="flex justify-start mb-2">
+        <button
+          onClick={handleToggleRotation}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+          title={rotated ? 'نمای عادی' : 'چرخش ۹۰ درجه'}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21.5 2v6h-6"/>
+            <path d="M21.34 15.57a10 10 0 1 1-.57-8.38"/>
+          </svg>
+          {rotated ? 'نمای عادی' : 'چرخش ۹۰°'}
+        </button>
+      </div>
 
       {rotated ? (
         <TransposedCalendar
@@ -276,56 +279,57 @@ function TransposedCalendar({
     return arr;
   }, []);
 
+  // CSS grid: 1 day-label column + N hour columns
+  const gridCols = `70px repeat(${TOTAL_SLOTS}, 1fr)`;
+
   return (
     <div className="transposed-cal overflow-x-auto" dir="rtl">
-      <table className="w-full border-collapse min-w-[600px]">
-        {/* Hour header row */}
-        <thead>
-          <tr>
-            <th className="transposed-cal-day-header" />
-            {hours.map((h) => (
-              <th key={h} className="transposed-cal-hour-header">
-                {toPersianDigits(String(h).padStart(2, '0'))}:۰۰
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {DAYS.map(({ dow, label }) => (
-            <tr key={dow} className="transposed-cal-row">
-              <td className="transposed-cal-day-label">{label}</td>
-              <td colSpan={TOTAL_SLOTS} className="transposed-cal-track">
-                {/* Grid lines */}
-                <div className="transposed-cal-grid">
-                  {hours.map((h) => (
-                    <div key={h} className="transposed-cal-gridline" />
-                  ))}
-                </div>
-                {/* Events */}
-                {byDay.get(dow)?.map((evt, i) => (
-                  <div
-                    key={`${evt.courseCode}-${evt.group}-${i}`}
-                    className="transposed-cal-event"
-                    style={{
-                      right: `${evt.startFraction * 100}%`,
-                      width: `${evt.widthFraction * 100}%`,
-                      backgroundColor: evt.color.bg,
-                      borderColor: evt.color.border,
-                      color: evt.color.text,
-                      opacity: evt.isHover ? 0.7 : 1,
-                    }}
-                    onClick={() => !evt.isHover && onRemoveCourse(evt.courseCode, evt.group)}
-                    title={`${evt.courseName} — ${evt.professor}`}
-                  >
-                    <span className="transposed-cal-event-name">{evt.courseName}</span>
-                    <span className="transposed-cal-event-prof">{evt.professor}</span>
-                  </div>
+      <div className="min-w-[600px]" style={{ display: 'grid', gridTemplateColumns: gridCols }}>
+        {/* Header row: empty corner + hour labels */}
+        <div className="transposed-cal-corner" />
+        {hours.map((h) => (
+          <div key={h} className="transposed-cal-hour-header">
+            {toPersianDigits(String(h).padStart(2, '0'))}:۰۰
+          </div>
+        ))}
+
+        {/* Day rows */}
+        {DAYS.map(({ dow, label }) => (
+          <div key={dow} className="contents">
+            {/* Day label */}
+            <div className="transposed-cal-day-label">{label}</div>
+            {/* Track spanning all hour columns */}
+            <div className="transposed-cal-track" style={{ gridColumn: `2 / -1` }}>
+              {/* Grid lines */}
+              <div className="transposed-cal-grid">
+                {hours.map((h) => (
+                  <div key={h} className="transposed-cal-gridline" />
                 ))}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+              {/* Events */}
+              {byDay.get(dow)?.map((evt, i) => (
+                <div
+                  key={`${evt.courseCode}-${evt.group}-${i}`}
+                  className="transposed-cal-event"
+                  style={{
+                    right: `${evt.startFraction * 100}%`,
+                    width: `${evt.widthFraction * 100}%`,
+                    backgroundColor: evt.color.bg,
+                    borderColor: evt.color.border,
+                    color: evt.color.text,
+                    opacity: evt.isHover ? 0.7 : 1,
+                  }}
+                  onClick={() => !evt.isHover && onRemoveCourse(evt.courseCode, evt.group)}
+                  title={`${evt.courseName} — ${evt.professor}`}
+                >
+                  <span className="transposed-cal-event-name">{evt.courseName}</span>
+                  <span className="transposed-cal-event-prof">{evt.professor}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

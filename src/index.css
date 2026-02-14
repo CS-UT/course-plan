@@ -129,22 +129,22 @@ body {
   background-color: #111827;
 }
 
-/* ─── Transposed calendar (days=rows, hours=columns, RTL) ─── */
+/* ─── Transposed calendar (CSS grid, days=rows, hours=columns, RTL) ─── */
 
 .transposed-cal {
   font-family: var(--font-sans);
   direction: rtl;
 }
 
-.transposed-cal table {
+.transposed-cal > div {
   border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid #e5e7eb;
 }
 
-.transposed-cal-day-header {
-  width: 70px;
-  min-width: 70px;
+.transposed-cal-corner {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .transposed-cal-hour-header {
@@ -154,7 +154,7 @@ body {
   padding: 8px 0;
   text-align: center;
   border-bottom: 1px solid #e5e7eb;
-  border-left: 1px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb;
   background: #f9fafb;
 }
 
@@ -167,14 +167,14 @@ body {
   white-space: nowrap;
   border-bottom: 1px solid #e5e7eb;
   background: #f9fafb;
-  width: 70px;
-  min-width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .transposed-cal-track {
   position: relative;
   height: 52px;
-  padding: 0;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -182,7 +182,7 @@ body {
   position: absolute;
   inset: 0;
   display: flex;
-  direction: ltr; /* grid lines flow left-to-right regardless of RTL */
+  direction: ltr;
 }
 
 .transposed-cal-gridline {
@@ -233,14 +233,19 @@ body {
 }
 
 /* Dark mode transposed calendar */
-.dark .transposed-cal table {
+.dark .transposed-cal > div {
   border-color: #374151;
+}
+
+.dark .transposed-cal-corner {
+  background: #1f2937;
+  border-bottom-color: #374151;
 }
 
 .dark .transposed-cal-hour-header {
   color: #9ca3af;
   border-bottom-color: #374151;
-  border-left-color: #374151;
+  border-right-color: #374151;
   background: #1f2937;
 }
 
@@ -265,12 +270,6 @@ body {
   .transposed-cal-day-label {
     font-size: 0.7rem;
     padding: 0 6px;
-    width: 55px;
-    min-width: 55px;
-  }
-  .transposed-cal-day-header {
-    width: 55px;
-    min-width: 55px;
   }
   .transposed-cal-track {
     height: 44px;
