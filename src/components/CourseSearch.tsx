@@ -12,10 +12,11 @@ interface Props {
   onOpenManualEntry: () => void;
 }
 
+type CourseTab = 'specialized' | 'general';
+
 interface Filters {
   day: string;
   gender: string;
-  courseType: string;
   department: string;
   hideConflicts: boolean;
 }
@@ -23,7 +24,6 @@ interface Filters {
 const defaultFilters: Filters = {
   day: '',
   gender: '',
-  courseType: '',
   department: '',
   hideConflicts: false,
 };
@@ -45,21 +45,28 @@ function getDepartment(course: Course): string {
 
 export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Props) {
   const [query, setQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<CourseTab>('specialized');
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [showFilters, setShowFilters] = useState(false);
   const [activeTutorId, setActiveTutorId] = useState<string | null>(null);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
 
-  const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.courseType ? 1 : 0) + (filters.department ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
+  const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.department ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
+
+  const tabCourses = useMemo(() => {
+    return courses.filter((c) =>
+      activeTab === 'general' ? isGeneralCourse(c) : !isGeneralCourse(c),
+    );
+  }, [courses, activeTab]);
 
   const departments = useMemo(() => {
     const deptSet = new Set<string>();
-    courses.forEach((c) => deptSet.add(getDepartment(c)));
+    tabCourses.forEach((c) => deptSet.add(getDepartment(c)));
     return [...deptSet].sort((a, b) => a.localeCompare(b, 'fa'));
-  }, [courses]);
+  }, [tabCourses]);
 
   const filtered = useMemo(() => {
-    let result = courses;
+    let result = tabCourses;
 
     const q = normalizeQuery(query);
     if (q) {
@@ -79,11 +86,6 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
     if (filters.gender) {
       result = result.filter((c) => c.gender === filters.gender);
     }
-    if (filters.courseType) {
-      result = result.filter((c) =>
-        filters.courseType === 'general' ? isGeneralCourse(c) : !isGeneralCourse(c),
-      );
-    }
     if (filters.department) {
       result = result.filter((c) => getDepartment(c) === filters.department);
     }
@@ -95,7 +97,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
     }
 
     return result;
-  }, [courses, query, filters, selectedCourses, isCourseSelected]);
+  }, [tabCourses, query, filters, selectedCourses, isCourseSelected]);
 
   function handleToggle(course: Course) {
     if (isCourseSelected(course.courseCode, course.group)) {
@@ -113,8 +115,38 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   const selectClass =
     'px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
 
+  // Reset department filter when switching tabs since departments differ per tab
+  function handleTabChange(tab: CourseTab) {
+    setActiveTab(tab);
+    setFilters((f) => ({ ...f, department: '' }));
+  }
+
   return (
     <div className="flex flex-col gap-3">
+      {/* Tab bar */}
+      <div className="flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1 gap-1">
+        <button
+          onClick={() => handleTabChange('specialized')}
+          className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
+            activeTab === 'specialized'
+              ? 'bg-white dark:bg-gray-700 text-primary-700 dark:text-primary-300 shadow-sm'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+          }`}
+        >
+          تخصصی
+        </button>
+        <button
+          onClick={() => handleTabChange('general')}
+          className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
+            activeTab === 'general'
+              ? 'bg-white dark:bg-gray-700 text-primary-700 dark:text-primary-300 shadow-sm'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+          }`}
+        >
+          عمومی
+        </button>
+      </div>
+
       <input
         type="text"
         placeholder="جستجوی درس، کد یا استاد..."
@@ -169,25 +201,18 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
               <option value="female">دختران</option>
               <option value="mixed">مختلط</option>
             </select>
-            <select
-              value={filters.courseType}
-              onChange={(e) => setFilters((f) => ({ ...f, courseType: e.target.value }))}
-              className={selectClass}
-            >
-              <option value="">نوع درس</option>
-              <option value="specialized">تخصصی</option>
-              <option value="general">عمومی</option>
-            </select>
-            <select
-              value={filters.department}
-              onChange={(e) => setFilters((f) => ({ ...f, department: e.target.value }))}
-              className={selectClass}
-            >
-              <option value="">دانشکده</option>
-              {departments.map((d) => (
-                <option key={d} value={d}>{d}</option>
-              ))}
-            </select>
+            {activeTab === 'general' && (
+              <select
+                value={filters.department}
+                onChange={(e) => setFilters((f) => ({ ...f, department: e.target.value }))}
+                className={selectClass}
+              >
+                <option value="">دانشکده</option>
+                {departments.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            )}
           </div>
 
           <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 cursor-pointer">
