@@ -1,4 +1,5 @@
 import type { SelectedCourse } from '@/types';
+import { hasTimeConflict } from './conflicts';
 
 // Colors for different courses on the calendar
 const COURSE_COLORS = [
@@ -46,6 +47,7 @@ export interface CalendarEvent {
     examTime: string;
     prerequisites: string;
     notes: string;
+    hasConflict: boolean;
   };
 }
 
@@ -54,6 +56,25 @@ export function coursesToEvents(
   colorMap: Map<string, number>,
 ): CalendarEvent[] {
   const events: CalendarEvent[] = [];
+
+  // Pre-compute per-session conflict flags
+  const sessionConflicts = new Map<string, boolean>();
+  for (const course of courses) {
+    for (let i = 0; i < course.sessions.length; i++) {
+      const session = course.sessions[i];
+      const key = `${course.courseCode}-${course.group}-${i}`;
+      for (const other of courses) {
+        if (other.courseCode === course.courseCode && other.group === course.group) continue;
+        for (const otherSession of other.sessions) {
+          if (hasTimeConflict(session, otherSession)) {
+            sessionConflicts.set(key, true);
+            break;
+          }
+        }
+        if (sessionConflicts.has(key)) break;
+      }
+    }
+  }
 
   for (const course of courses) {
     const colorKey = `${course.courseCode}-${course.group}`;
@@ -73,9 +94,10 @@ export function coursesToEvents(
       const month = dateNum > 31 ? '01' : '12';
       const day = dateNum > 31 ? String(dateNum - 31).padStart(2, '0') : String(dateNum).padStart(2, '0');
       const year = dateNum > 31 ? '2024' : '2023';
+      const conflictKey = `${course.courseCode}-${course.group}-${i}`;
 
       events.push({
-        id: `${course.courseCode}-${course.group}-${i}`,
+        id: conflictKey,
         title: course.courseName,
         start: `${year}-${month}-${day}T${session.startTime}:00`,
         end: `${year}-${month}-${day}T${session.endTime}:00`,
@@ -93,6 +115,7 @@ export function coursesToEvents(
           examTime: course.examTime,
           prerequisites: course.prerequisites,
           notes: course.notes,
+          hasConflict: sessionConflicts.has(conflictKey),
         },
       });
     }

@@ -138,11 +138,15 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
               return DAY_HEADER_MAP[dayKey] ?? dayKey;
             }}
             hiddenDays={[4, 5]}
+            slotEventOverlap={false}
             events={events}
             eventClick={handleEventClick}
             eventMouseEnter={handleMouseEnter}
             eventMouseLeave={handleMouseLeave}
             eventContent={renderEventContent}
+            eventClassNames={(arg) =>
+              arg.event.extendedProps.hasConflict ? ['fc-event--conflict'] : []
+            }
             height="auto"
             expandRows
           />
@@ -213,9 +217,59 @@ interface TransposedEvent {
   prerequisites: string;
   notes: string;
   startFraction: number; // 0..1 within the hour axis
+  endFraction: number;   // 0..1
   widthFraction: number; // 0..1
   color: { bg: string; border: string; text: string };
   isHover: boolean;
+  hasConflict: boolean;
+  // Layout fields set after overlap detection
+  lane: number;
+  totalLanes: number;
+}
+
+function eventsOverlap(a: TransposedEvent, b: TransposedEvent): boolean {
+  return a.startFraction < b.endFraction && b.startFraction < a.endFraction;
+}
+
+function assignLanes(events: TransposedEvent[]): void {
+  // Sort by start time
+  const sorted = [...events].sort((a, b) => a.startFraction - b.startFraction);
+
+  // Assign lanes using a greedy algorithm
+  for (const evt of sorted) {
+    // Find overlapping events already assigned lanes
+    const overlapping = sorted.filter(
+      (other) => other !== evt && other.lane >= 0 && eventsOverlap(evt, other),
+    );
+    // Find the first available lane
+    const usedLanes = new Set(overlapping.map((o) => o.lane));
+    let lane = 0;
+    while (usedLanes.has(lane)) lane++;
+    evt.lane = lane;
+  }
+
+  // For each group of overlapping events, set totalLanes
+  for (const evt of sorted) {
+    // Find all events in the same overlap cluster
+    const cluster: TransposedEvent[] = [evt];
+    const visited = new Set<TransposedEvent>([evt]);
+    const queue = [evt];
+    while (queue.length > 0) {
+      const current = queue.pop()!;
+      for (const other of sorted) {
+        if (!visited.has(other) && eventsOverlap(current, other)) {
+          visited.add(other);
+          cluster.push(other);
+          queue.push(other);
+        }
+      }
+    }
+    const maxLane = Math.max(...cluster.map((e) => e.lane));
+    for (const e of cluster) {
+      e.totalLanes = Math.max(e.totalLanes, maxLane + 1);
+      e.hasConflict = cluster.length > 1;
+    }
+  }
 }
 
 function buildTransposedEvents(
@@ -250,13 +304,23 @@ function buildTransposedEvents(
         prerequisites: course.prerequisites,
         notes: course.notes,
         startFraction: start,
+        endFraction: end,
         widthFraction: end - start,
         color,
         isHover,
+        hasConflict: false,
+        lane: -1,
+        totalLanes: 1,
       };
       byDay.get(session.dayOfWeek)?.push(evt);
     }
   }
+
+  // Assign lanes for each day
+  for (const events of byDay.values()) {
+    assignLanes(events);
+  }
+
   return byDay;
 }
 
@@ -295,12 +359,18 @@ function TransposedCalendar({
         ))}
 
         {/* Day rows */}
-        {DAYS.map(({ dow, label }) => (
+        {DAYS.map(({ dow, label }) => {
+          const dayEvents = byDay.get(dow) ?? [];
+          const maxLanes = dayEvents.length > 0
+            ? Math.max(...dayEvents.map((e) => e.totalLanes))
+            : 1;
+          const trackHeight = maxLanes > 1 ? maxLanes * 36 : undefined;
+          return (
           <div key={dow} className="contents">
             {/* Day label */}
             <div className="transposed-cal-day-label">{label}</div>
             {/* Track spanning all hour columns */}
-            <div className="transposed-cal-track" style={{ gridColumn: `2 / -1` }}>
+            <div className="transposed-cal-track" style={{ gridColumn: `2 / -1`, ...(trackHeight ? { height: trackHeight } : {}) }}>
               {/* Grid lines */}
               <div className="transposed-cal-grid">
                 {hours.map((h) => (
@@ -308,28 +378,39 @@ function TransposedCalendar({
                 ))}
               </div>
               {/* Events */}
-              {byDay.get(dow)?.map((evt, i) => (
-                <div
-                  key={`${evt.courseCode}-${evt.group}-${i}`}
-                  className="transposed-cal-event"
-                  style={{
-                    right: `${evt.startFraction * 100}%`,
-                    width: `${evt.widthFraction * 100}%`,
-                    backgroundColor: evt.color.bg,
-                    borderColor: evt.color.border,
-                    color: evt.color.text,
-                    opacity: evt.isHover ? 0.7 : 1,
-                  }}
-                  onClick={() => !evt.isHover && onRemoveCourse(evt.courseCode, evt.group)}
-                  title={`${evt.courseName} — ${evt.professor}`}
-                >
-                  <span className="transposed-cal-event-name">{evt.courseName}</span>
-                  <span className="transposed-cal-event-prof">{evt.professor}</span>
-                </div>
-              ))}
+              {byDay.get(dow)?.map((evt, i) => {
+                const laneHeight = 100 / evt.totalLanes;
+                const topPct = evt.lane * laneHeight;
+                return (
+                  <div
+                    key={`${evt.courseCode}-${evt.group}-${i}`}
+                    className={`transposed-cal-event${evt.hasConflict ? ' transposed-cal-event--conflict' : ''}`}
+                    style={{
+                      right: `${evt.startFraction * 100}%`,
+                      width: `${evt.widthFraction * 100}%`,
+                      top: evt.totalLanes > 1 ? `${topPct}%` : '3px',
+                      bottom: evt.totalLanes > 1 ? undefined : '3px',
+                      height: evt.totalLanes > 1 ? `calc(${laneHeight}% - 2px)` : undefined,
+                      backgroundColor: evt.color.bg,
+                      borderColor: evt.color.border,
+                      color: evt.color.text,
+                      opacity: evt.isHover ? 0.7 : 1,
+                    }}
+                    onClick={() => !evt.isHover && onRemoveCourse(evt.courseCode, evt.group)}
+                    title={`${evt.courseName} — ${evt.professor}`}
+                  >
+                    {evt.hasConflict && (
+                      <span className="conflict-badge" title="تداخل زمانی">⚠</span>
+                    )}
+                    <span className="transposed-cal-event-name">{evt.courseName}</span>
+                    <span className="transposed-cal-event-prof">{evt.professor}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -338,9 +419,12 @@ function TransposedCalendar({
 /* ─── Standard FullCalendar event renderer ─── */
 
 function renderEventContent(eventInfo: EventContentArg) {
-  const { courseName, professor } = eventInfo.event.extendedProps;
+  const { courseName, professor, hasConflict } = eventInfo.event.extendedProps;
   return (
-    <div className="flex flex-col h-full justify-center text-center leading-tight p-0.5">
+    <div className="flex flex-col h-full justify-center text-center leading-tight p-0.5 relative">
+      {hasConflict && (
+        <span className="conflict-badge" title="تداخل زمانی">⚠</span>
+      )}
       <div className="font-bold text-xs truncate">{courseName}</div>
       <div className="text-[11px] truncate opacity-80">{professor}</div>
     </div>
