@@ -52,7 +52,7 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
   }
 
   function addSession() {
-    if (sessions.length >= 2) return;
+    if (sessions.length >= 7) return;
     setSessions((prev) => [...prev, emptySession()]);
   }
 
@@ -226,12 +226,12 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
                 </div>
               ))}
             </div>
-            {sessions.length < 2 && (
+            {sessions.length < 7 && (
               <button
                 onClick={addSession}
                 className="mt-2 text-xs text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium cursor-pointer"
               >
-                + افزودن جلسه دوم
+                + افزودن جلسه
               </button>
             )}
           </div>
