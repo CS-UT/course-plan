@@ -11,6 +11,11 @@ export function ExportButtons() {
     return document.getElementById('schedule-export-area');
   }
 
+  function exportFilter(node: Node) {
+    if (node instanceof HTMLElement && node.dataset.exportExclude !== undefined) return false;
+    return true;
+  }
+
   async function downloadImage() {
     if (busy) return;
     const el = getExportElement();
@@ -22,6 +27,7 @@ export function ExportButtons() {
         quality: 0.92,
         pixelRatio: 2,
         backgroundColor: '#ffffff',
+        filter: exportFilter,
       });
 
       const link = document.createElement('a');
@@ -47,7 +53,7 @@ export function ExportButtons() {
     try {
       // Try Web Share API first (mobile)
       if (navigator.share) {
-        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#ffffff' });
+        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#ffffff', filter: exportFilter });
         const res = await fetch(dataUrl);
         const blob = await res.blob();
         const file = new File([blob], `schedule-${currentScheduleId + 1}.png`, {
@@ -62,7 +68,7 @@ export function ExportButtons() {
 
       // Fallback: copy to clipboard
       try {
-        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#ffffff' });
+        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#ffffff', filter: exportFilter });
         const res = await fetch(dataUrl);
         const blob = await res.blob();
         await navigator.clipboard.write([
@@ -79,6 +85,7 @@ export function ExportButtons() {
         quality: 0.92,
         pixelRatio: 2,
         backgroundColor: '#ffffff',
+        filter: exportFilter,
       });
       const link = document.createElement('a');
       link.href = dataUrl;

@@ -96,6 +96,7 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
       <div className="flex justify-start mb-2">
         <button
           onClick={handleToggleRotation}
+          data-export-exclude
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
           title={rotated ? 'نمای عادی' : 'چرخش ۹۰ درجه'}
         >
