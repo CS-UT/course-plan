@@ -160,65 +160,69 @@ export function ManualCourseModal({ open, onClose, onSubmit }: Props) {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">جلسات *</label>
             <div className="flex flex-col gap-2">
               {sessions.map((session, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <select
-                    value={session.dayOfWeek}
-                    onChange={(e) => updateSession(i, 'dayOfWeek', e.target.value)}
-                    className={selectClass + ' flex-shrink-0'}
-                  >
-                    {WEEK_DAYS_ORDER.map((d) => (
-                      <option key={d} value={d}>{dayName(d)}</option>
-                    ))}
-                  </select>
-                  <div className="flex items-center gap-0.5" dir="ltr">
+                <div key={i} className="flex flex-col gap-1.5 border border-gray-200 dark:border-gray-600 rounded-lg p-2">
+                  <div className="flex items-center gap-2">
                     <select
-                      value={session.startHour}
-                      onChange={(e) => updateSession(i, 'startHour', e.target.value)}
-                      className={selectClass}
+                      value={session.dayOfWeek}
+                      onChange={(e) => updateSession(i, 'dayOfWeek', e.target.value)}
+                      className={selectClass + ' flex-shrink-0'}
                     >
-                      {HOURS.map((h) => (
-                        <option key={h} value={h}>{h}</option>
+                      {WEEK_DAYS_ORDER.map((d) => (
+                        <option key={d} value={d}>{dayName(d)}</option>
                       ))}
                     </select>
-                    <span className="text-gray-400 text-sm">:</span>
-                    <select
-                      value={session.startMinute}
-                      onChange={(e) => updateSession(i, 'startMinute', e.target.value)}
-                      className={selectClass}
-                    >
-                      {MINUTES.map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
-                    </select>
+                    {sessions.length > 1 && (
+                      <button
+                        onClick={() => removeSession(i)}
+                        className="text-gray-400 hover:text-danger-500 cursor-pointer text-lg mr-auto"
+                      >✕</button>
+                    )}
                   </div>
-                  <span className="text-gray-400 text-sm">تا</span>
-                  <div className="flex items-center gap-0.5" dir="ltr">
-                    <select
-                      value={session.endHour}
-                      onChange={(e) => updateSession(i, 'endHour', e.target.value)}
-                      className={selectClass}
-                    >
-                      {HOURS.map((h) => (
-                        <option key={h} value={h}>{h}</option>
-                      ))}
-                    </select>
-                    <span className="text-gray-400 text-sm">:</span>
-                    <select
-                      value={session.endMinute}
-                      onChange={(e) => updateSession(i, 'endMinute', e.target.value)}
-                      className={selectClass}
-                    >
-                      {MINUTES.map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
-                    </select>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <div className="flex items-center gap-0.5" dir="ltr">
+                      <select
+                        value={session.startHour}
+                        onChange={(e) => updateSession(i, 'startHour', e.target.value)}
+                        className={selectClass}
+                      >
+                        {HOURS.map((h) => (
+                          <option key={h} value={h}>{h}</option>
+                        ))}
+                      </select>
+                      <span className="text-gray-400 text-sm">:</span>
+                      <select
+                        value={session.startMinute}
+                        onChange={(e) => updateSession(i, 'startMinute', e.target.value)}
+                        className={selectClass}
+                      >
+                        {MINUTES.map((m) => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <span className="text-gray-400 text-sm">تا</span>
+                    <div className="flex items-center gap-0.5" dir="ltr">
+                      <select
+                        value={session.endHour}
+                        onChange={(e) => updateSession(i, 'endHour', e.target.value)}
+                        className={selectClass}
+                      >
+                        {HOURS.map((h) => (
+                          <option key={h} value={h}>{h}</option>
+                        ))}
+                      </select>
+                      <span className="text-gray-400 text-sm">:</span>
+                      <select
+                        value={session.endMinute}
+                        onChange={(e) => updateSession(i, 'endMinute', e.target.value)}
+                        className={selectClass}
+                      >
+                        {MINUTES.map((m) => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                  {sessions.length > 1 && (
-                    <button
-                      onClick={() => removeSession(i)}
-                      className="text-gray-400 hover:text-danger-500 cursor-pointer text-lg"
-                    >✕</button>
-                  )}
                 </div>
               ))}
             </div>
