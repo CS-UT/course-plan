@@ -72,7 +72,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   function handleToggleRotation() {
     setRotated((r) => {
       const next = !r;
-      localStorage.setItem('plan-calendar-rotated', String(next));
+      try { localStorage.setItem('plan-calendar-rotated', String(next)); } catch { /* ignore */ }
       return next;
     });
   }

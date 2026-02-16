@@ -14,23 +14,27 @@ const data = coursesData as CoursesData;
 
 function useDarkMode() {
   const [dark, setDark] = useState(() => {
-    const saved = localStorage.getItem('plan-dark-mode');
-    if (saved !== null) return saved === 'true';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    try {
+      const saved = localStorage.getItem('plan-dark-mode');
+      if (saved !== null) return saved === 'true';
+    } catch { /* private browsing or storage disabled */ }
+    try {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch { return false; }
   });
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
-    localStorage.setItem('plan-dark-mode', String(dark));
+    try { localStorage.setItem('plan-dark-mode', String(dark)); } catch { /* ignore */ }
   }, [dark]);
 
   return [dark, () => setDark((d) => !d)] as const;
 }
 
 function MobileBanner() {
-  const [dismissed, setDismissed] = useState(() =>
-    sessionStorage.getItem('plan-mobile-banner-dismissed') === 'true',
-  );
+  const [dismissed, setDismissed] = useState(() => {
+    try { return sessionStorage.getItem('plan-mobile-banner-dismissed') === 'true'; } catch { return false; }
+  });
 
   if (dismissed) return null;
 
@@ -42,7 +46,7 @@ function MobileBanner() {
       <button
         onClick={() => {
           setDismissed(true);
-          sessionStorage.setItem('plan-mobile-banner-dismissed', 'true');
+          try { sessionStorage.setItem('plan-mobile-banner-dismissed', 'true'); } catch { /* ignore */ }
         }}
         className="text-primary-600 dark:text-primary-400 text-xs shrink-0 cursor-pointer font-medium"
       >
