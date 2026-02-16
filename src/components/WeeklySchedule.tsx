@@ -9,6 +9,7 @@ import { toPersianDigits } from '@/utils/persian';
 
 interface Props {
   hoveredCourse: Course | null;
+  onEditCourse: (course: Course) => void;
 }
 
 const DAY_HEADER_MAP: Record<string, string> = {
@@ -27,7 +28,7 @@ function getStoredRotation(): boolean {
   } catch { return false; }
 }
 
-export function WeeklySchedule({ hoveredCourse }: Props) {
+export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   const { selectedCourses, removeCourse } = useSchedule();
   const [rotated, setRotated] = useState(getStoredRotation);
 
@@ -71,9 +72,15 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
   }
 
   function handleEventClick(info: EventClickArg) {
-    const { courseCode, group } = info.event.extendedProps;
+    const props = info.event.extendedProps;
+    // Find the full course object from selectedCourses to pass to edit
+    const course = selectedCourses.find(
+      (c) => c.courseCode === props.courseCode && c.group === props.group,
+    );
+    if (course) {
+      onEditCourse(course);
+    }
     setTooltip((t) => ({ ...t, visible: false }));
-    removeCourse(courseCode, group);
   }
 
   function handleMouseEnter(info: { event: EventClickArg['event']; el: HTMLElement }) {
@@ -112,6 +119,7 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
         <TransposedCalendar
           courses={allCourses}
           onRemoveCourse={removeCourse}
+          onEditCourse={onEditCourse}
         />
       ) : (
         <>
@@ -156,8 +164,10 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
       {/* Tooltip */}
       {tooltip.visible && tooltip.content && (
         <div
-          className="fixed z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 text-sm w-64 pointer-events-none"
+          className="fixed z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 text-sm w-64"
           style={{ left: tooltip.x, top: tooltip.y }}
+          onMouseEnter={() => setTooltip((t) => ({ ...t, visible: true }))}
+          onMouseLeave={() => setTooltip((t) => ({ ...t, visible: false }))}
         >
           <div className="font-bold text-gray-900 dark:text-gray-100 mb-1">
             {tooltip.content.courseName}
@@ -177,7 +187,34 @@ export function WeeklySchedule({ hoveredCourse }: Props) {
               <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">{tooltip.content.notes}</div>
             )}
           </div>
-          <div className="mt-2 text-xs text-gray-400">برای حذف کلیک کنید</div>
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={() => {
+                const course = selectedCourses.find(
+                  (c) => c.courseCode === tooltip.content!.courseCode && c.group === tooltip.content!.group,
+                );
+                if (course) {
+                  setTooltip((t) => ({ ...t, visible: false }));
+                  onEditCourse(course);
+                }
+              }}
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 hover:bg-primary-100 dark:hover:bg-primary-900/50 rounded-lg transition-colors cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              ویرایش
+            </button>
+            <button
+              onClick={() => {
+                const { courseCode, group } = tooltip.content!;
+                setTooltip((t) => ({ ...t, visible: false }));
+                removeCourse(courseCode, group);
+              }}
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-danger-600 dark:text-danger-400 bg-danger-50 dark:bg-danger-500/10 hover:bg-danger-100 dark:hover:bg-danger-500/20 rounded-lg transition-colors cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              حذف
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -329,9 +366,11 @@ const transposedColorMap = new Map<string, number>();
 function TransposedCalendar({
   courses,
   onRemoveCourse,
+  onEditCourse,
 }: {
   courses: SelectedCourse[];
   onRemoveCourse: (code: string, group: number) => void;
+  onEditCourse: (course: Course) => void;
 }) {
   const byDay = useMemo(
     () => buildTransposedEvents(courses, transposedColorMap),
@@ -384,7 +423,7 @@ function TransposedCalendar({
                 return (
                   <div
                     key={`${evt.courseCode}-${evt.group}-${i}`}
-                    className={`transposed-cal-event${evt.hasConflict ? ' transposed-cal-event--conflict' : ''}`}
+                    className={`transposed-cal-event group/evt${evt.hasConflict ? ' transposed-cal-event--conflict' : ''}`}
                     style={{
                       right: `${evt.startFraction * 100}%`,
                       width: `${evt.widthFraction * 100}%`,
@@ -396,7 +435,6 @@ function TransposedCalendar({
                       color: evt.color.text,
                       opacity: evt.isHover ? 0.7 : 1,
                     }}
-                    onClick={() => !evt.isHover && onRemoveCourse(evt.courseCode, evt.group)}
                     title={`${evt.courseName} — ${evt.professor}`}
                   >
                     {evt.hasConflict && (
@@ -404,6 +442,33 @@ function TransposedCalendar({
                     )}
                     <span className="transposed-cal-event-name">{evt.courseName}</span>
                     <span className="transposed-cal-event-prof">{evt.professor}</span>
+                    {!evt.isHover && (
+                      <div className="absolute inset-0 bg-black/0 group-hover/evt:bg-black/40 transition-colors rounded flex items-center justify-center gap-1 opacity-0 group-hover/evt:opacity-100">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const course = courses.find(
+                              (c) => c.courseCode === evt.courseCode && c.group === evt.group,
+                            );
+                            if (course) onEditCourse(course);
+                          }}
+                          className="p-1 bg-white/90 dark:bg-gray-800/90 rounded hover:bg-white dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                          title="ویرایش"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary-600 dark:text-primary-400"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onRemoveCourse(evt.courseCode, evt.group);
+                          }}
+                          className="p-1 bg-white/90 dark:bg-gray-800/90 rounded hover:bg-white dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                          title="حذف"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-danger-600 dark:text-danger-400"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -421,7 +486,7 @@ function TransposedCalendar({
 function renderEventContent(eventInfo: EventContentArg) {
   const { courseName, professor, hasConflict } = eventInfo.event.extendedProps;
   return (
-    <div className="flex flex-col h-full justify-center text-center leading-tight p-0.5 relative">
+    <div className="flex flex-col h-full justify-center text-center leading-tight p-0.5 relative group/fc">
       {hasConflict && (
         <span className="conflict-badge" title="تداخل زمانی">⚠</span>
       )}

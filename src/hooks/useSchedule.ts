@@ -51,6 +51,34 @@ export function useSchedule() {
     );
   }
 
+  function updateCourse(oldCourseCode: string, oldGroup: number, updatedCourse: Course): { timeConflicts: Course[]; examConflicts: Course[] } | null {
+    const otherCourses = selectedCourses.filter(
+      (c) => !(c.courseCode === oldCourseCode && c.group === oldGroup),
+    );
+
+    const timeConflicts = findTimeConflicts(updatedCourse, otherCourses);
+    const examConflicts = findExamConflicts(updatedCourse, otherCourses);
+
+    const newCourse: SelectedCourse = { ...updatedCourse, mode: 'default' };
+    setSchedules((prev) =>
+      prev.map((s) =>
+        s.id === currentScheduleId
+          ? {
+              ...s,
+              courses: s.courses.map((c) =>
+                c.courseCode === oldCourseCode && c.group === oldGroup ? newCourse : c,
+              ),
+            }
+          : s,
+      ),
+    );
+
+    if (timeConflicts.length > 0 || examConflicts.length > 0) {
+      return { timeConflicts, examConflicts };
+    }
+    return null;
+  }
+
   function isCourseSelected(courseCode: string, group: number): boolean {
     return selectedCourses.some(
       (c) => c.courseCode === courseCode && c.group === group,
@@ -101,6 +129,7 @@ export function useSchedule() {
     selectedCourses,
     addCourse,
     removeCourse,
+    updateCourse,
     isCourseSelected,
     createSchedule,
     deleteSchedule,

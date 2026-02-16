@@ -57,7 +57,27 @@ function App() {
   const [hoveredCourse, setHoveredCourse] = useState<Course | null>(null);
   const [showExams, setShowExams] = useState(true);
   const [showManualEntry, setShowManualEntry] = useState(false);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [dark, toggleDark] = useDarkMode();
+
+  function handleEditCourse(course: Course) {
+    setEditingCourse(course);
+    setShowManualEntry(true);
+  }
+
+  function handleEditSubmit(updatedCourse: Course) {
+    if (editingCourse) {
+      schedule.updateCourse(editingCourse.courseCode, editingCourse.group, updatedCourse);
+      setEditingCourse(null);
+    } else {
+      schedule.addCourse(updatedCourse);
+    }
+  }
+
+  function handleModalClose() {
+    setShowManualEntry(false);
+    setEditingCourse(null);
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
@@ -118,7 +138,7 @@ function App() {
           {/* Horizontally scrollable on mobile */}
           <div className="overflow-x-auto -mx-4 px-4 lg:mx-0 lg:px-0">
             <div id="schedule-export-area" className="min-w-[640px]">
-              <WeeklySchedule hoveredCourse={hoveredCourse} />
+              <WeeklySchedule hoveredCourse={hoveredCourse} onEditCourse={handleEditCourse} />
             </div>
           </div>
 
@@ -130,7 +150,7 @@ function App() {
             >
               {showExams ? 'پنهان کردن جدول امتحانات' : 'نمایش جدول امتحانات'}
             </button>
-            {showExams && <ExamsTable />}
+            {showExams && <ExamsTable onEditCourse={handleEditCourse} />}
           </div>
         </main>
       </div>
@@ -141,8 +161,9 @@ function App() {
       {/* Manual course entry modal */}
       <ManualCourseModal
         open={showManualEntry}
-        onClose={() => setShowManualEntry(false)}
-        onSubmit={(course) => schedule.addCourse(course)}
+        onClose={handleModalClose}
+        onSubmit={handleEditSubmit}
+        editingCourse={editingCourse}
       />
     </div>
   );
