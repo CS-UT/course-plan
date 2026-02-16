@@ -47,7 +47,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<CourseTab>('specialized');
   const [filters, setFilters] = useState<Filters>(defaultFilters);
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(activeTab === 'general');
   const [activeTutorId, setActiveTutorId] = useState<string | null>(null);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
 
@@ -119,6 +119,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   function handleTabChange(tab: CourseTab) {
     setActiveTab(tab);
     setFilters((f) => ({ ...f, department: '' }));
+    if (tab === 'general') setShowFilters(true);
   }
 
   return (
