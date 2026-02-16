@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import type { EventClickArg, EventContentArg } from '@fullcalendar/core';
@@ -38,6 +38,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
     y: number;
     content: EventClickArg['event']['extendedProps'] | null;
   }>({ visible: false, x: 0, y: 0, content: null });
+  const tooltipHideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const allCourses = useMemo(() => {
     const courses = [...selectedCourses];
@@ -84,17 +85,23 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   }
 
   function handleMouseEnter(info: { event: EventClickArg['event']; el: HTMLElement }) {
+    if (tooltipHideTimeout.current) {
+      clearTimeout(tooltipHideTimeout.current);
+      tooltipHideTimeout.current = null;
+    }
     const rect = info.el.getBoundingClientRect();
     setTooltip({
       visible: true,
       x: rect.left,
-      y: rect.bottom + 8,
+      y: rect.bottom + 4,
       content: info.event.extendedProps,
     });
   }
 
   function handleMouseLeave() {
-    setTooltip((t) => ({ ...t, visible: false }));
+    tooltipHideTimeout.current = setTimeout(() => {
+      setTooltip((t) => ({ ...t, visible: false }));
+    }, 150);
   }
 
   return (
@@ -166,8 +173,17 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
         <div
           className="fixed z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 text-sm w-64"
           style={{ left: tooltip.x, top: tooltip.y }}
-          onMouseEnter={() => setTooltip((t) => ({ ...t, visible: true }))}
-          onMouseLeave={() => setTooltip((t) => ({ ...t, visible: false }))}
+          onMouseEnter={() => {
+            if (tooltipHideTimeout.current) {
+              clearTimeout(tooltipHideTimeout.current);
+              tooltipHideTimeout.current = null;
+            }
+          }}
+          onMouseLeave={() => {
+            tooltipHideTimeout.current = setTimeout(() => {
+              setTooltip((t) => ({ ...t, visible: false }));
+            }, 150);
+          }}
         >
           <div className="font-bold text-gray-900 dark:text-gray-100 mb-1">
             {tooltip.content.courseName}
