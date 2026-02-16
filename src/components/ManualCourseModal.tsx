@@ -84,6 +84,11 @@ function ManualCourseForm({
 }) {
   const isEditing = !!editingCourse;
 
+  const [courseCode, setCourseCode] = useState(() => {
+    if (!editingCourse) return '';
+    // Show the code for editing, but hide auto-generated MANUAL-* codes
+    return editingCourse.courseCode.startsWith('MANUAL-') ? '' : editingCourse.courseCode;
+  });
   const [courseName, setCourseName] = useState(editingCourse?.courseName ?? '');
   const [professor, setProfessor] = useState(editingCourse?.professor ?? '');
   const [unitCount, setUnitCount] = useState(editingCourse ? String(editingCourse.unitCount) : '3');
@@ -139,7 +144,7 @@ function ManualCourseForm({
     const examTime = examTimeHour ? `${examTimeHour}:${examTimeMinute}` : '';
 
     const course: Course = {
-      courseCode: editingCourse?.courseCode ?? `MANUAL-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      courseCode: courseCode.trim() || editingCourse?.courseCode || `MANUAL-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       group: editingCourse?.group ?? 1,
       courseName: courseName.trim(),
       unitCount: units,
@@ -179,6 +184,19 @@ function ManualCourseForm({
             onChange={(e) => setCourseName(e.target.value)}
             className={inputClass}
             placeholder="مثلا: ریاضی عمومی ۱"
+          />
+        </div>
+
+        {/* Course code */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">کد درس (اختیاری)</label>
+          <input
+            type="text"
+            value={courseCode}
+            onChange={(e) => setCourseCode(e.target.value)}
+            className={inputClass}
+            placeholder="مثلا: ۱۱۱۴۰۸۵"
+            dir="ltr"
           />
         </div>
 
