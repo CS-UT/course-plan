@@ -37,9 +37,11 @@ function normalizePersian(str) {
     .replace(/ك/g, 'ک')
     .replace(/أ/g, 'ا')
     .replace(/إ/g, 'ا')
+    .replace(/آ/g, 'ا')    // alef-madda → plain alef
     .replace(/ؤ/g, 'و')
     .replace(/ة/g, 'ه')
     .replace(/ئ/g, 'ی')
+    .replace(/الله/g, 'اله') // normalize allah spelling
     .replace(/[\u200c\u200d\u00a0]/g, ' ') // ZWNJ, ZWJ, NBSP → space
     .replace(/\s+/g, ' ')
     .trim();
@@ -53,6 +55,45 @@ function persianDigitToLatin(str) {
 
 function nameParts(name) {
   return new Set(normalizePersian(name).split(' ').filter(Boolean));
+}
+
+/** Expand compound سید/سیده prefixes: سیدمرتضی → {سید, مرتضی} */
+function expandParts(parts) {
+  const expanded = new Set();
+  for (const p of parts) {
+    expanded.add(p);
+    // Skip standalone سید/سیده — only expand compounds like سیدمرتضی
+    if (p === 'سید' || p === 'سیده') continue;
+    if (p.startsWith('سیده')) {
+      expanded.add('سیده');
+      expanded.add(p.slice(4));
+    } else if (p.startsWith('سید')) {
+      expanded.add('سید');
+      expanded.add(p.slice(3));
+    }
+  }
+  return expanded;
+}
+
+/** Check if setA ⊆ setB, also trying adjacent-pair joins from partsA array */
+function isSubsetFuzzy(setA, setB, orderedA) {
+  // Direct subset check
+  if ([...setA].every((p) => setB.has(p))) return true;
+  // Try joining adjacent pairs of orderedA to match setB
+  if (!orderedA) return false;
+  const arr = [...orderedA];
+  const missing = [...setA].filter((p) => !setB.has(p));
+  if (missing.length > 2) return false;
+  for (let i = 0; i < arr.length - 1; i++) {
+    const joined = arr[i] + arr[i + 1];
+    if (setB.has(joined)) {
+      // Rebuild setA with joined part and re-check
+      const rebuilt = new Set([...setA].filter((p) => p !== arr[i] && p !== arr[i + 1]));
+      rebuilt.add(joined);
+      if ([...rebuilt].every((p) => setB.has(p))) return true;
+    }
+  }
+  return false;
 }
 
 // ── Extract text & links from Telegram message ─────────────────────
@@ -358,26 +399,40 @@ async function main() {
   let matchCount = 0;
 
   for (const profName of professorNames) {
-    const profSet = nameParts(profName);
+    const profRaw = nameParts(profName);
+    const profExp = expandParts(profRaw);
+    const profOrdered = normalizePersian(profName).split(' ').filter(Boolean);
     let bestTutor = null;
     let bestScore = 0;
 
     for (const [, tutor] of tutorMap) {
-      const tutorSet = nameParts(tutor.displayName);
-      const common = new Set([...tutorSet].filter((p) => profSet.has(p)));
+      const tutorRaw = nameParts(tutor.displayName);
+      const tutorExp = expandParts(tutorRaw);
+      const tutorOrdered = normalizePersian(tutor.displayName).split(' ').filter(Boolean);
+
+      // Check overlap on expanded sets
+      const common = new Set([...tutorExp].filter((p) => profExp.has(p)));
       if (common.size === 0) continue;
 
-      const tutorAllFound = [...tutorSet].every((p) => profSet.has(p));
-      const profAllFound = [...profSet].every((p) => tutorSet.has(p));
+      // Fuzzy subset check (handles adjacent-pair joins + expanded prefixes)
+      const tutorInProf = isSubsetFuzzy(tutorExp, profExp, tutorOrdered);
+      const profInTutor = isSubsetFuzzy(profExp, tutorExp, profOrdered);
 
-      if (!tutorAllFound && !profAllFound) continue;
+      if (!tutorInProf && !profInTutor) continue;
 
-      const smaller = Math.min(tutorSet.size, profSet.size);
-      const larger = Math.max(tutorSet.size, profSet.size);
-      if (smaller < 2 || larger - smaller > 2) continue;
+      const smaller = Math.min(tutorExp.size, profExp.size);
+      const larger = Math.max(tutorExp.size, profExp.size);
+
+      // Allow single-part tutor names only for distinctive names (>=4 chars)
+      if (smaller < 2) {
+        const singlePart = tutorExp.size === 1 ? [...tutorExp][0] : [...profExp][0];
+        if (singlePart.length < 4) continue;
+      }
+
+      if (larger - smaller > 2) continue;
 
       // Score: prefer exact size match, then closer size, then more reviews
-      const sizeMatch = tutorSet.size === profSet.size ? 1000 : 0;
+      const sizeMatch = tutorExp.size === profExp.size ? 1000 : 0;
       const closeness = smaller / larger * 100;
       const reviewBonus = Math.min(tutor.reviews.length, 50);
       const score = sizeMatch + closeness + reviewBonus;
@@ -392,6 +447,24 @@ async function main() {
       nameMap[profName] = bestTutor.id;
       matchCount++;
       console.log(`  ✓ "${bestTutor.displayName}" → "${profName}"`);
+    }
+  }
+
+  // Manual overrides for names that can't be matched algorithmically
+  const MANUAL_OVERRIDES = {
+    // EMS encodes as "صادقی مهساناجی اصفهانی" but channel uses "ناجی اصفهانی"
+    'صادقی مهساناجی اصفهانی سید مهدی': 'سید مهدی ناجی اصفهانی',
+    // EMS "تکیه" vs channel "تکیه ای" + compound سیدمحمدباقر split
+    'تکیه سیدمحمدباقر': 'سید محمد باقر تکیه ای',
+  };
+  for (const [profName, tutorDisplayName] of Object.entries(MANUAL_OVERRIDES)) {
+    if (nameMap[profName]) continue; // already matched
+    const key = normalizePersian(tutorDisplayName);
+    const tutor = tutorMap.get(key);
+    if (tutor) {
+      nameMap[profName] = tutor.id;
+      matchCount++;
+      console.log(`  ✓ "${tutor.displayName}" → "${profName}" (manual)`);
     }
   }
 
