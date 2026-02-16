@@ -108,7 +108,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   function handleMouseLeave() {
     tooltipHideTimeout.current = setTimeout(() => {
       setTooltip((t) => ({ ...t, visible: false }));
-    }, 150);
+    }, 300);
   }
 
   return (
@@ -191,7 +191,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
           onMouseLeave={() => {
             tooltipHideTimeout.current = setTimeout(() => {
               setTooltip((t) => ({ ...t, visible: false }));
-            }, 150);
+            }, 300);
           }}
         >
           <div className="font-bold text-gray-900 dark:text-gray-100 mb-1">
