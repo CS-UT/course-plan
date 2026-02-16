@@ -125,7 +125,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
             <path d="M21.5 2v6h-6"/>
             <path d="M21.34 15.57a10 10 0 1 1-.57-8.38"/>
           </svg>
-          {rotated ? 'نمای عادی' : 'چرخش ۹۰°'}
+          {rotated ? 'نمای عادی' : 'چرخش ۹۰ درجه'}
         </button>
       </div>
 
