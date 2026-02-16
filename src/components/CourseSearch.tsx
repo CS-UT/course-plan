@@ -191,16 +191,18 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
                 <option key={d} value={d}>{dayName(d)}</option>
               ))}
             </select>
-            <select
-              value={filters.gender}
-              onChange={(e) => setFilters((f) => ({ ...f, gender: e.target.value }))}
-              className={selectClass}
-            >
-              <option value="">جنسیت</option>
-              <option value="male">پسران</option>
-              <option value="female">دختران</option>
-              <option value="mixed">مختلط</option>
-            </select>
+            {activeTab === 'general' && (
+              <select
+                value={filters.gender}
+                onChange={(e) => setFilters((f) => ({ ...f, gender: e.target.value }))}
+                className={selectClass}
+              >
+                <option value="">جنسیت</option>
+                <option value="male">پسران</option>
+                <option value="female">دختران</option>
+                <option value="mixed">مختلط</option>
+              </select>
+            )}
             {activeTab === 'general' && (
               <select
                 value={filters.department}
