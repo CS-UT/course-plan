@@ -40,6 +40,11 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   }>({ visible: false, x: 0, y: 0, content: null });
   const tooltipHideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Mobile: tapped course for action sheet
+  const [tappedCourse, setTappedCourse] = useState<SelectedCourse | null>(null);
+
+  const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
+
   const allCourses = useMemo(() => {
     const courses = [...selectedCourses];
     if (hoveredCourse) {
@@ -74,14 +79,16 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
 
   function handleEventClick(info: EventClickArg) {
     const props = info.event.extendedProps;
-    // Find the full course object from selectedCourses to pass to edit
     const course = selectedCourses.find(
       (c) => c.courseCode === props.courseCode && c.group === props.group,
     );
-    if (course) {
+    if (!course) return;
+    setTooltip((t) => ({ ...t, visible: false }));
+    if (isTouchDevice) {
+      setTappedCourse(course);
+    } else {
       onEditCourse(course);
     }
-    setTooltip((t) => ({ ...t, visible: false }));
   }
 
   function handleMouseEnter(info: { event: EventClickArg['event']; el: HTMLElement }) {
@@ -127,6 +134,8 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
           courses={allCourses}
           onRemoveCourse={removeCourse}
           onEditCourse={onEditCourse}
+          isTouchDevice={isTouchDevice}
+          onTapCourse={setTappedCourse}
         />
       ) : (
         <>
@@ -230,6 +239,67 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
               حذف
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile action sheet */}
+      {tappedCourse && (
+        <div className="fixed inset-0 z-50 bg-black/30" onClick={() => setTappedCourse(null)}>
+          <div
+            className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl p-5 pb-8 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Drag handle */}
+            <div className="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4" />
+
+            {/* Course info */}
+            <div className="mb-4">
+              <div className="font-bold text-base text-gray-900 dark:text-gray-100">
+                {tappedCourse.courseName}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300 mt-1 space-y-0.5">
+                {tappedCourse.professor && <div>استاد: {tappedCourse.professor}</div>}
+                <div>کد: {toPersianDigits(tappedCourse.courseCode)}-{toPersianDigits(tappedCourse.group)}</div>
+                <div>واحد: {toPersianDigits(tappedCourse.unitCount)}</div>
+                {tappedCourse.examDate && (
+                  <div>
+                    امتحان: {toPersianDigits(tappedCourse.examDate)} - {toPersianDigits(tappedCourse.examTime)}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => {
+                  const course = tappedCourse;
+                  setTappedCourse(null);
+                  onEditCourse(course);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/30 hover:bg-primary-100 dark:hover:bg-primary-900/50 rounded-xl transition-colors cursor-pointer"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                ویرایش درس
+              </button>
+              <button
+                onClick={() => {
+                  removeCourse(tappedCourse.courseCode, tappedCourse.group);
+                  setTappedCourse(null);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-danger-600 dark:text-danger-400 bg-danger-50 dark:bg-danger-500/10 hover:bg-danger-100 dark:hover:bg-danger-500/20 rounded-xl transition-colors cursor-pointer"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                حذف درس
+              </button>
+              <button
+                onClick={() => setTappedCourse(null)}
+                className="w-full px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors cursor-pointer"
+              >
+                انصراف
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -383,10 +453,14 @@ function TransposedCalendar({
   courses,
   onRemoveCourse,
   onEditCourse,
+  isTouchDevice,
+  onTapCourse,
 }: {
   courses: SelectedCourse[];
   onRemoveCourse: (code: string, group: number) => void;
   onEditCourse: (course: Course) => void;
+  isTouchDevice: boolean;
+  onTapCourse: (course: SelectedCourse) => void;
 }) {
   const byDay = useMemo(
     () => buildTransposedEvents(courses, transposedColorMap),
@@ -451,6 +525,18 @@ function TransposedCalendar({
                       color: evt.color.text,
                       opacity: evt.isHover ? 0.7 : 1,
                     }}
+                    onClick={() => {
+                      if (evt.isHover) return;
+                      const course = courses.find(
+                        (c) => c.courseCode === evt.courseCode && c.group === evt.group,
+                      );
+                      if (!course) return;
+                      if (isTouchDevice) {
+                        onTapCourse(course);
+                      } else {
+                        onEditCourse(course);
+                      }
+                    }}
                     title={`${evt.courseName} — ${evt.professor}`}
                   >
                     {evt.hasConflict && (
@@ -458,7 +544,8 @@ function TransposedCalendar({
                     )}
                     <span className="transposed-cal-event-name">{evt.courseName}</span>
                     <span className="transposed-cal-event-prof">{evt.professor}</span>
-                    {!evt.isHover && (
+                    {/* Desktop-only hover overlay with edit/delete */}
+                    {!evt.isHover && !isTouchDevice && (
                       <div className="absolute inset-0 bg-black/0 group-hover/evt:bg-black/40 transition-colors rounded flex items-center justify-center gap-1 opacity-0 group-hover/evt:opacity-100">
                         <button
                           onClick={(e) => {
