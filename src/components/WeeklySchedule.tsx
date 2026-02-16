@@ -39,6 +39,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
     content: EventClickArg['event']['extendedProps'] | null;
   }>({ visible: false, x: 0, y: 0, content: null });
   const tooltipHideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   // Mobile: tapped course for action sheet
   const [tappedCourse, setTappedCourse] = useState<SelectedCourse | null>(null);
@@ -180,7 +181,8 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
       {/* Tooltip */}
       {tooltip.visible && tooltip.content && (
         <div
-          className="fixed z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 text-sm w-64"
+          ref={tooltipRef}
+          className="fixed z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 text-sm w-64 before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-full before:h-3"
           style={{ left: tooltip.x, top: tooltip.y }}
           onMouseEnter={() => {
             if (tooltipHideTimeout.current) {
@@ -188,7 +190,9 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
               tooltipHideTimeout.current = null;
             }
           }}
-          onMouseLeave={() => {
+          onMouseLeave={(e) => {
+            const related = e.relatedTarget as Node | null;
+            if (tooltipRef.current?.contains(related)) return;
             tooltipHideTimeout.current = setTimeout(() => {
               setTooltip((t) => ({ ...t, visible: false }));
             }, 300);
