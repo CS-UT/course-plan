@@ -1,6 +1,21 @@
 import { useState, useEffect } from 'react';
+import moment from 'moment-jalaali';
 import type { TutorProfile, TutorReview } from '@/types';
 import { toPersianDigits } from '@/utils/persian';
+
+const JALALI_MONTHS = [
+  'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+  'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند',
+];
+
+function toShamsiDate(gregorian: string): string {
+  const m = moment(gregorian, 'YYYY-MM-DD');
+  if (!m.isValid()) return '';
+  const jy = m.jYear();
+  const jm = m.jMonth(); // 0-indexed
+  const jd = m.jDate();
+  return `${toPersianDigits(jd.toString())} ${JALALI_MONTHS[jm]} ${toPersianDigits(jy.toString())}`;
+}
 
 interface Props {
   open: boolean;
@@ -124,17 +139,24 @@ function ReviewCard({ review }: { review: TutorReview }) {
         </div>
       )}
 
-      {/* Link to original Telegram message */}
-      {review.messageId && (
-        <a
-          href={`https://t.me/UTeacherz/${review.messageId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-gray-400 dark:text-gray-500 hover:text-primary-500 dark:hover:text-primary-400 self-start"
-          onClick={(e) => e.stopPropagation()}
-        >
-          مشاهده در تلگرام ←
-        </a>
+      {/* Link to original Telegram message + date */}
+      {(review.messageId || review.date) && (
+        <div className="flex items-center justify-between gap-2 text-xs text-gray-400 dark:text-gray-500">
+          {review.messageId ? (
+            <a
+              href={`https://t.me/UTeacherz/${review.messageId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary-500 dark:hover:text-primary-400"
+              onClick={(e) => e.stopPropagation()}
+            >
+              مشاهده در تلگرام ←
+            </a>
+          ) : <span />}
+          {review.date && (
+            <span>{toShamsiDate(review.date)}</span>
+          )}
+        </div>
       )}
     </div>
   );
