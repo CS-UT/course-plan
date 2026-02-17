@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import type { EventClickArg, EventContentArg } from '@fullcalendar/core';
@@ -38,8 +38,29 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
     y: number;
     content: EventClickArg['event']['extendedProps'] | null;
   }>({ visible: false, x: 0, y: 0, content: null });
-  const tooltipHideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const eventElRef = useRef<HTMLElement | null>(null);
+
+  // Hide tooltip when mouse is outside both the event card and tooltip popup
+  useEffect(() => {
+    if (!tooltip.visible) return;
+    let rafId: number;
+    function onMouseMove(e: MouseEvent) {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const overTooltip = tooltipRef.current?.contains(e.target as Node);
+        const overEvent = eventElRef.current?.contains(e.target as Node);
+        if (!overTooltip && !overEvent) {
+          setTooltip((t) => ({ ...t, visible: false }));
+        }
+      });
+    }
+    document.addEventListener('mousemove', onMouseMove);
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      cancelAnimationFrame(rafId);
+    };
+  }, [tooltip.visible]);
 
   // Mobile: tapped course for action sheet
   const [tappedCourse, setTappedCourse] = useState<SelectedCourse | null>(null);
@@ -93,10 +114,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   }
 
   function handleMouseEnter(info: { event: EventClickArg['event']; el: HTMLElement }) {
-    if (tooltipHideTimeout.current) {
-      clearTimeout(tooltipHideTimeout.current);
-      tooltipHideTimeout.current = null;
-    }
+    eventElRef.current = info.el;
     const rect = info.el.getBoundingClientRect();
     setTooltip({
       visible: true,
@@ -107,9 +125,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   }
 
   function handleMouseLeave() {
-    tooltipHideTimeout.current = setTimeout(() => {
-      setTooltip((t) => ({ ...t, visible: false }));
-    }, 300);
+    // Intentionally empty — hiding is handled by the mousemove effect
   }
 
   return (
@@ -182,21 +198,8 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
       {tooltip.visible && tooltip.content && (
         <div
           ref={tooltipRef}
-          className="fixed z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 text-sm w-64 before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-full before:h-3"
+          className="fixed z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 text-sm w-64"
           style={{ left: tooltip.x, top: tooltip.y }}
-          onMouseEnter={() => {
-            if (tooltipHideTimeout.current) {
-              clearTimeout(tooltipHideTimeout.current);
-              tooltipHideTimeout.current = null;
-            }
-          }}
-          onMouseLeave={(e) => {
-            const related = e.relatedTarget as Node | null;
-            if (tooltipRef.current?.contains(related)) return;
-            tooltipHideTimeout.current = setTimeout(() => {
-              setTooltip((t) => ({ ...t, visible: false }));
-            }, 300);
-          }}
         >
           <div className="font-bold text-gray-900 dark:text-gray-100 mb-1">
             {tooltip.content.courseName}
