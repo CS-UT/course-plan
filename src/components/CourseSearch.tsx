@@ -1,9 +1,11 @@
 import { useState, useMemo } from 'react';
+import { useAtom } from 'jotai';
 import type { Course } from '@/types';
 import { normalizeQuery, tokenizeQuery, matchesAllTokens, toPersianDigits, dayName, WEEK_DAYS_ORDER } from '@/utils/persian';
 import { useSchedule } from '@/hooks/useSchedule';
 import { findTimeConflicts, findExamConflicts } from '@/utils/conflicts';
 import { TutorProfileModal } from './TutorProfileModal';
+import { slotFilterAtom } from '@/atoms';
 import tutorNameMap from '@/data/tutor-name-map.json';
 
 interface Props {
@@ -56,6 +58,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   const [showFilters, setShowFilters] = useState(activeTab === 'general');
   const [activeTutorId, setActiveTutorId] = useState<string | null>(null);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
+  const [slotFilter, setSlotFilter] = useAtom(slotFilterAtom);
 
   const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.department ? 1 : 0) + (filters.courseCode ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
 
@@ -113,8 +116,19 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
       });
     }
 
+    if (slotFilter) {
+      result = result.filter((c) =>
+        c.sessions.some(
+          (s) =>
+            s.dayOfWeek === slotFilter.dayOfWeek &&
+            s.startTime < slotFilter.endTime &&
+            s.endTime > slotFilter.startTime,
+        ),
+      );
+    }
+
     return result;
-  }, [tabCourses, query, filters, selectedCourses, isCourseSelected]);
+  }, [tabCourses, query, filters, selectedCourses, isCourseSelected, slotFilter]);
 
   function handleToggle(course: Course) {
     if (isCourseSelected(course.courseCode, course.group)) {
@@ -265,6 +279,22 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
               پاک کردن فیلترها
             </button>
           )}
+        </div>
+      )}
+
+      {slotFilter && (
+        <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 rounded-lg text-xs text-primary-700 dark:text-primary-300">
+          <span className="flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            {dayName(slotFilter.dayOfWeek)} {toPersianDigits(slotFilter.startTime)}-{toPersianDigits(slotFilter.endTime)}
+          </span>
+          <button
+            onClick={() => setSlotFilter(null)}
+            className="text-gray-500 dark:text-gray-400 hover:text-danger-600 dark:hover:text-danger-400 cursor-pointer"
+            title="پاک کردن فیلتر زمانی"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
       )}
 

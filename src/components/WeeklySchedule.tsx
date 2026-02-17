@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import type { EventClickArg, EventContentArg } from '@fullcalendar/core';
+import interactionPlugin from '@fullcalendar/interaction';
+import type { DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core';
+import { useAtom } from 'jotai';
 import type { Course, SelectedCourse } from '@/types';
 import { useSchedule } from '@/hooks/useSchedule';
 import { coursesToEvents, BASE_SATURDAY, COURSE_COLORS } from '@/utils/calendar';
-import { toPersianDigits } from '@/utils/persian';
+import { toPersianDigits, dayName } from '@/utils/persian';
+import { slotFilterAtom } from '@/atoms';
 
 interface Props {
   hoveredCourse: Course | null;
@@ -31,6 +34,21 @@ function getStoredRotation(): boolean {
 export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   const { selectedCourses, removeCourse } = useSchedule();
   const [rotated, setRotated] = useState(getStoredRotation);
+  const [slotFilter, setSlotFilter] = useAtom(slotFilterAtom);
+  const calendarRef = useRef<FullCalendar>(null);
+
+  function handleSelect(info: DateSelectArg) {
+    const dow = info.start.getDay(); // 0=Sun..6=Sat — same as CourseSession.dayOfWeek
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const startTime = `${pad(info.start.getHours())}:${pad(info.start.getMinutes())}`;
+    const endTime = `${pad(info.end.getHours())}:${pad(info.end.getMinutes())}`;
+    setSlotFilter({ dayOfWeek: dow, startTime, endTime });
+  }
+
+  function clearSlotFilter() {
+    setSlotFilter(null);
+    calendarRef.current?.getApi().unselect();
+  }
 
   const [tooltip, setTooltip] = useState<{
     visible: boolean;
@@ -150,6 +168,23 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
         </button>
       </div>
 
+      {/* Slot filter indicator */}
+      {slotFilter && (
+        <div className="hidden lg:flex items-center gap-2 mb-2 px-1" data-export-exclude>
+          <span className="text-xs text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            فیلتر: {dayName(slotFilter.dayOfWeek)} {toPersianDigits(slotFilter.startTime)} تا {toPersianDigits(slotFilter.endTime)}
+          </span>
+          <button
+            onClick={clearSlotFilter}
+            className="text-xs text-gray-500 dark:text-gray-400 hover:text-danger-600 dark:hover:text-danger-400 cursor-pointer p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            title="پاک کردن فیلتر"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      )}
+
       {rotated ? (
         <TransposedCalendar
           courses={allCourses}
@@ -161,7 +196,8 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
       ) : (
         <>
           <FullCalendar
-            plugins={[timeGridPlugin]}
+            ref={calendarRef}
+            plugins={[timeGridPlugin, interactionPlugin]}
             initialView="timeGridWeek"
             initialDate={BASE_SATURDAY}
             locale="fa"
@@ -184,6 +220,10 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
             }}
             hiddenDays={[4, 5]}
             slotEventOverlap={false}
+            selectable
+            selectMirror
+            unselectAuto={false}
+            select={handleSelect}
             events={events}
             eventClick={handleEventClick}
             eventMouseEnter={handleMouseEnter}
