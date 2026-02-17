@@ -18,6 +18,7 @@ interface Filters {
   day: string;
   gender: string;
   department: string;
+  courseCode: string;
   hideConflicts: boolean;
 }
 
@@ -25,6 +26,7 @@ const defaultFilters: Filters = {
   day: '',
   gender: '',
   department: '',
+  courseCode: '',
   hideConflicts: false,
 };
 
@@ -51,7 +53,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   const [activeTutorId, setActiveTutorId] = useState<string | null>(null);
   const { addCourse, removeCourse, isCourseSelected, selectedCourses } = useSchedule();
 
-  const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.department ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
+  const activeFilterCount = (filters.day ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.department ? 1 : 0) + (filters.courseCode ? 1 : 0) + (filters.hideConflicts ? 1 : 0);
 
   const tabCourses = useMemo(() => {
     return courses.filter((c) =>
@@ -63,6 +65,14 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
     const deptSet = new Set<string>();
     tabCourses.forEach((c) => deptSet.add(getDepartment(c)));
     return [...deptSet].sort((a, b) => a.localeCompare(b, 'fa'));
+  }, [tabCourses]);
+
+  const courseTitles = useMemo(() => {
+    const map = new Map<string, string>();
+    tabCourses.forEach((c) => {
+      if (!map.has(c.courseCode)) map.set(c.courseCode, c.courseName);
+    });
+    return [...map.entries()].sort((a, b) => a[1].localeCompare(b[1], 'fa'));
   }, [tabCourses]);
 
   const filtered = useMemo(() => {
@@ -88,6 +98,9 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
     }
     if (filters.department) {
       result = result.filter((c) => getDepartment(c) === filters.department);
+    }
+    if (filters.courseCode) {
+      result = result.filter((c) => c.courseCode === filters.courseCode);
     }
     if (filters.hideConflicts) {
       result = result.filter((c) => {
@@ -118,7 +131,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   // Reset department filter when switching tabs since departments differ per tab
   function handleTabChange(tab: CourseTab) {
     setActiveTab(tab);
-    setFilters((f) => ({ ...f, department: '' }));
+    setFilters((f) => ({ ...f, department: '', courseCode: '' }));
     if (tab === 'general') setShowFilters(true);
   }
 
@@ -213,6 +226,18 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
                 <option value="">دانشکده</option>
                 {departments.map((d) => (
                   <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            )}
+            {activeTab === 'general' && (
+              <select
+                value={filters.courseCode}
+                onChange={(e) => setFilters((f) => ({ ...f, courseCode: e.target.value }))}
+                className={selectClass}
+              >
+                <option value="">نام درس</option>
+                {courseTitles.map(([code, name]) => (
+                  <option key={code} value={code}>{name}</option>
                 ))}
               </select>
             )}
