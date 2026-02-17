@@ -54,9 +54,15 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
     if (!slotHintDismissed) dismissSlotHint();
   }
 
+  // Clear FullCalendar highlight whenever the atom is cleared (from anywhere)
+  useEffect(() => {
+    if (!slotFilter) {
+      calendarRef.current?.getApi().unselect();
+    }
+  }, [slotFilter]);
+
   function clearSlotFilter() {
     setSlotFilter(null);
-    calendarRef.current?.getApi().unselect();
   }
 
   const [tooltip, setTooltip] = useState<{
