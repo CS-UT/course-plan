@@ -41,25 +41,29 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const eventElRef = useRef<HTMLElement | null>(null);
 
-  // Hide tooltip when mouse is outside both the event card and tooltip popup
+  // Hide tooltip when mouse leaves the safe zone (event card + gap + tooltip)
   useEffect(() => {
     if (!tooltip.visible) return;
-    let rafId: number;
+    const MARGIN = 10; // px grace area around safe zone
+    function isInsideSafeZone(x: number, y: number): boolean {
+      const rects: DOMRect[] = [];
+      if (eventElRef.current) rects.push(eventElRef.current.getBoundingClientRect());
+      if (tooltipRef.current) rects.push(tooltipRef.current.getBoundingClientRect());
+      if (rects.length === 0) return false;
+      // Build bounding box that covers both rects (card + tooltip + gap between)
+      const top = Math.min(...rects.map((r) => r.top)) - MARGIN;
+      const bottom = Math.max(...rects.map((r) => r.bottom)) + MARGIN;
+      const left = Math.min(...rects.map((r) => r.left)) - MARGIN;
+      const right = Math.max(...rects.map((r) => r.right)) + MARGIN;
+      return x >= left && x <= right && y >= top && y <= bottom;
+    }
     function onMouseMove(e: MouseEvent) {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        const overTooltip = tooltipRef.current?.contains(e.target as Node);
-        const overEvent = eventElRef.current?.contains(e.target as Node);
-        if (!overTooltip && !overEvent) {
-          setTooltip((t) => ({ ...t, visible: false }));
-        }
-      });
+      if (!isInsideSafeZone(e.clientX, e.clientY)) {
+        setTooltip((t) => ({ ...t, visible: false }));
+      }
     }
     document.addEventListener('mousemove', onMouseMove);
-    return () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(rafId);
-    };
+    return () => document.removeEventListener('mousemove', onMouseMove);
   }, [tooltip.visible]);
 
   // Mobile: tapped course for action sheet
