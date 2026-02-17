@@ -1,11 +1,17 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSchedule } from '@/hooks/useSchedule';
 import { toJpeg, toPng } from 'html-to-image';
 import { downloadICS } from '@/utils/googleCalendar';
+import coursesData from '@/data/courses.json';
+import type { CoursesData } from '@/types';
+import { toPersianDigits } from '@/utils/persian';
+
+const allCourses = (coursesData as CoursesData).courses;
 
 export function ExportButtons() {
-  const { currentScheduleId, selectedCourses } = useSchedule();
+  const { currentScheduleId, selectedCourses, importCourses } = useSchedule();
   const [busy, setBusy] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function getExportElement() {
     return document.getElementById('schedule-export-area');
@@ -108,6 +114,78 @@ export function ExportButtons() {
     downloadICS(selectedCourses);
   }
 
+  function exportSchedule() {
+    const courses = selectedCourses
+      .filter((c) => c.mode !== 'hover')
+      .map((c) => ({ courseCode: c.courseCode, group: c.group }));
+    if (courses.length === 0) {
+      alert('ابتدا درس‌هایی را به برنامه اضافه کنید.');
+      return;
+    }
+    const json = JSON.stringify({ courses }, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `schedule-${currentScheduleId + 1}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // Reset so the same file can be selected again
+    e.target.value = '';
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result as string);
+        if (!data.courses || !Array.isArray(data.courses)) {
+          alert('فرمت فایل نامعتبر است.');
+          return;
+        }
+
+        const coursesToImport = [];
+        const notFound: string[] = [];
+
+        for (const entry of data.courses) {
+          if (typeof entry.courseCode !== 'string' || typeof entry.group !== 'number') {
+            alert('فرمت فایل نامعتبر است.');
+            return;
+          }
+          const found = allCourses.find(
+            (c) => c.courseCode === entry.courseCode && c.group === entry.group,
+          );
+          if (found) {
+            coursesToImport.push(found);
+          } else {
+            notFound.push(`${entry.courseCode}-${entry.group}`);
+          }
+        }
+
+        if (coursesToImport.length === 0 && notFound.length === 0) {
+          alert('فایل خالی است.');
+          return;
+        }
+
+        const { added, skipped } = importCourses(coursesToImport);
+
+        const parts: string[] = [];
+        if (added > 0) parts.push(`${toPersianDigits(added)} درس اضافه شد`);
+        if (skipped > 0) parts.push(`${toPersianDigits(skipped)} درس تکراری رد شد`);
+        if (notFound.length > 0) parts.push(`${toPersianDigits(notFound.length)} درس در کاتالوگ یافت نشد`);
+        alert(parts.join('\n'));
+      } catch {
+        alert('خطا در خواندن فایل. لطفا یک فایل JSON معتبر انتخاب کنید.');
+      }
+    };
+    reader.readAsText(file);
+  }
+
   const btnClass =
     'text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-wait whitespace-nowrap';
 
@@ -116,6 +194,19 @@ export function ExportButtons() {
 
   return (
     <div className="flex items-center gap-1.5">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={handleImport}
+      />
+      <button onClick={exportSchedule} className={btnClass} title="خروجی برنامه به فایل JSON">
+        خروجی
+      </button>
+      <button onClick={() => fileInputRef.current?.click()} className={btnClass} title="ورودی برنامه از فایل JSON">
+        ورودی
+      </button>
       <button onClick={shareImage} className={btnClass} disabled={busy} title="اشتراک‌گذاری تصویر برنامه">
         اشتراک‌گذاری
       </button>

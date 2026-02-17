@@ -119,6 +119,44 @@ export function useSchedule() {
     return true;
   }
 
+  function importCourses(courses: Course[]): { added: number; skipped: number } {
+    let added = 0;
+    let skipped = 0;
+    const newCourses: SelectedCourse[] = [];
+
+    for (const course of courses) {
+      const exists = selectedCourses.some(
+        (c) => c.courseCode === course.courseCode && c.group === course.group,
+      );
+      if (exists) {
+        skipped++;
+        continue;
+      }
+      // Also skip if already being added in this batch
+      const alreadyAdding = newCourses.some(
+        (c) => c.courseCode === course.courseCode && c.group === course.group,
+      );
+      if (alreadyAdding) {
+        skipped++;
+        continue;
+      }
+      newCourses.push({ ...course, mode: 'default' });
+      added++;
+    }
+
+    if (newCourses.length > 0) {
+      setSchedules((prev) =>
+        prev.map((s) =>
+          s.id === currentScheduleId
+            ? { ...s, courses: [...s.courses, ...newCourses] }
+            : s,
+        ),
+      );
+    }
+
+    return { added, skipped };
+  }
+
   const totalUnits = selectedCourses.reduce((sum, c) => sum + c.unitCount, 0);
 
   return {
@@ -134,6 +172,7 @@ export function useSchedule() {
     createSchedule,
     deleteSchedule,
     duplicateSchedule,
+    importCourses,
     totalUnits,
   };
 }
