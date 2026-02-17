@@ -31,7 +31,11 @@ const defaultFilters: Filters = {
 };
 
 function isGeneralCourse(course: Course): boolean {
-  return course.courseCode.startsWith('1120');
+  // 1120xxx are university-wide general courses, but some (e.g. 1120033
+  // معادلات دیفرانسیل) are departmental courses repackaged with a 1120 code.
+  // These have equivalents in the 6103 (department) range.
+  return course.courseCode.startsWith('1120')
+    && !/معادل.*6103\d/.test(course.prerequisites);
 }
 
 function getDepartment(course: Course): string {
