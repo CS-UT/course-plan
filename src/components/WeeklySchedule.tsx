@@ -36,6 +36,14 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   const [rotated, setRotated] = useState(getStoredRotation);
   const [slotFilter, setSlotFilter] = useAtom(slotFilterAtom);
   const calendarRef = useRef<FullCalendar>(null);
+  const [slotHintDismissed, setSlotHintDismissed] = useState(() => {
+    try { return localStorage.getItem('plan-slot-hint-dismissed') === 'true'; } catch { return false; }
+  });
+
+  function dismissSlotHint() {
+    setSlotHintDismissed(true);
+    try { localStorage.setItem('plan-slot-hint-dismissed', 'true'); } catch { /* ignore */ }
+  }
 
   function handleSelect(info: DateSelectArg) {
     const dow = info.start.getDay(); // 0=Sun..6=Sat — same as CourseSession.dayOfWeek
@@ -43,6 +51,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
     const startTime = `${pad(info.start.getHours())}:${pad(info.start.getMinutes())}`;
     const endTime = `${pad(info.end.getHours())}:${pad(info.end.getMinutes())}`;
     setSlotFilter({ dayOfWeek: dow, startTime, endTime });
+    if (!slotHintDismissed) dismissSlotHint();
   }
 
   function clearSlotFilter() {
@@ -167,6 +176,21 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
           {rotated ? 'نمای عادی' : 'چرخش ۹۰ درجه'}
         </button>
       </div>
+
+      {/* Slot selection hint */}
+      {!slotHintDismissed && !slotFilter && !rotated && (
+        <div className="hidden lg:flex items-center gap-2 mb-2 px-1 text-xs text-gray-400 dark:text-gray-500" data-export-exclude>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
+          <span>روی خانه‌های خالی بکشید تا دروس همان ساعت فیلتر شوند</span>
+          <button
+            onClick={dismissSlotHint}
+            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer p-0.5"
+            title="بستن"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      )}
 
       {/* Slot filter indicator */}
       {slotFilter && (
