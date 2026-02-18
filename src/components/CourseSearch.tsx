@@ -144,7 +144,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   }
 
   const selectClass =
-    'px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
+    'px-2 py-1.5 text-xs border border-[#2a2a4e] dark:border-[#3a3a5e] rounded-lg bg-[#0d0d18] dark:bg-[#12122a] text-[#8a8aaa] dark:text-[#c0c0d0] focus:outline-none focus:ring-1 focus:ring-[#00f5ff]/50';
 
   // Reset department filter when switching tabs since departments differ per tab
   function handleTabChange(tab: CourseTab) {
@@ -156,13 +156,13 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   return (
     <div className="flex flex-col gap-3">
       {/* Tab bar */}
-      <div className="flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1 gap-1">
+      <div className="flex rounded-xl bg-[#12121f] dark:bg-gray-800 p-1 gap-1">
         <button
           onClick={() => handleTabChange('specialized')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
             activeTab === 'specialized'
-              ? 'bg-white dark:bg-gray-700 text-primary-700 dark:text-primary-300 shadow-sm'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              ? 'bg-[#0d0d18] dark:bg-gray-700 text-[#00f5ff] dark:text-[#67e8f9] shadow-[0_0_10px_rgba(0,245,255,0.04)]'
+              : 'text-[#4a4a6a] dark:text-[#6a6a8a] hover:text-[#8a8aaa] dark:hover:text-[#5a5a7a]'
           }`}
         >
           تخصصی
@@ -171,8 +171,8 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
           onClick={() => handleTabChange('general')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
             activeTab === 'general'
-              ? 'bg-white dark:bg-gray-700 text-primary-700 dark:text-primary-300 shadow-sm'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              ? 'bg-[#0d0d18] dark:bg-gray-700 text-[#00f5ff] dark:text-[#67e8f9] shadow-[0_0_10px_rgba(0,245,255,0.04)]'
+              : 'text-[#4a4a6a] dark:text-[#6a6a8a] hover:text-[#8a8aaa] dark:hover:text-[#5a5a7a]'
           }`}
         >
           عمومی
@@ -184,26 +184,26 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
         placeholder="جستجوی درس، کد یا استاد..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
+        className="w-full px-4 py-2.5 border border-[#2a2a4e] dark:border-[#3a3a5e] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#00f5ff]/50 focus:border-transparent bg-[#0d0d18] dark:bg-[#12122a] text-[#e0e0e8] dark:text-[#f0f0f8] placeholder-gray-400 dark:placeholder-gray-400"
       />
 
       <button
         onClick={onOpenManualEntry}
-        className="w-full px-4 py-2 text-sm font-medium border border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:border-primary-400 dark:hover:border-primary-500 transition-colors cursor-pointer"
+        className="w-full px-4 py-2 text-sm font-medium border border-dashed border-[#2a2a4e] dark:border-[#3a3a5e] rounded-xl text-[#6a6a8a] dark:text-[#a0a0c0] hover:bg-[#0a0a14] dark:hover:bg-gray-700/50 hover:border-primary-400 dark:hover:border-primary-500 transition-colors cursor-pointer"
       >
         + افزودن درس دستی
       </button>
 
-      <div className="text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center">
+      <div className="text-xs text-[#4a4a6a] dark:text-[#6a6a8a] flex justify-between items-center">
         <span>{toPersianDigits(filtered.length)} درس</span>
         <button
           onClick={() => setShowFilters((v) => !v)}
-          className="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium cursor-pointer flex items-center gap-1"
+          className="text-[#00f5ff] dark:text-[#00f5ff] hover:text-[#00f5ff] dark:hover:text-[#67e8f9] font-medium cursor-pointer flex items-center gap-1"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
           فیلتر
           {activeFilterCount > 0 && (
-            <span className="bg-primary-600 text-white text-[10px] w-4 h-4 rounded-full inline-flex items-center justify-center">
+            <span className="bg-primary-600 text-[#0a0a0f] text-[10px] w-4 h-4 rounded-full inline-flex items-center justify-center">
               {toPersianDigits(activeFilterCount)}
             </span>
           )}
@@ -211,7 +211,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
       </div>
 
       {showFilters && (
-        <div className="flex flex-col gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col gap-2 p-3 bg-[#0a0a14] dark:bg-[#12122a]/50 rounded-xl border border-[#1a1a2e] dark:border-[#2a2a4e]">
           <div className="flex flex-wrap gap-2">
             <select
               value={filters.day}
@@ -261,12 +261,12 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
             )}
           </div>
 
-          <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 cursor-pointer">
+          <label className="flex items-center gap-2 text-xs text-[#6a6a8a] dark:text-[#a0a0c0] cursor-pointer">
             <input
               type="checkbox"
               checked={filters.hideConflicts}
               onChange={(e) => setFilters((f) => ({ ...f, hideConflicts: e.target.checked }))}
-              className="rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-400"
+              className="rounded border-[#2a2a4e] dark:border-[#3a3a5e] text-[#00f5ff] focus:ring-[#00f5ff]/50"
             />
             فقط دروس بدون تداخل
           </label>
@@ -274,7 +274,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
           {activeFilterCount > 0 && (
             <button
               onClick={clearFilters}
-              className="text-xs text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium cursor-pointer self-start"
+              className="text-xs text-red-500 dark:text-red-400 hover:text-[#ff0055] dark:hover:text-red-300 font-medium cursor-pointer self-start"
             >
               پاک کردن فیلترها
             </button>
@@ -283,14 +283,14 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
       )}
 
       {slotFilter && (
-        <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 rounded-lg text-xs text-primary-700 dark:text-primary-300">
+        <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 bg-[#00f5ff]/5 dark:bg-[#00f5ff]/10 border border-primary-200 dark:border-primary-800 rounded-lg text-xs text-[#00f5ff] dark:text-[#67e8f9]">
           <span className="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
             {dayName(slotFilter.dayOfWeek)} {toPersianDigits(slotFilter.startTime)}-{toPersianDigits(slotFilter.endTime)}
           </span>
           <button
             onClick={() => setSlotFilter(null)}
-            className="text-gray-500 dark:text-gray-400 hover:text-danger-600 dark:hover:text-danger-400 cursor-pointer"
+            className="text-[#4a4a6a] dark:text-[#6a6a8a] hover:text-[#ff0055] dark:hover:text-danger-400 cursor-pointer"
             title="پاک کردن فیلتر زمانی"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -359,10 +359,10 @@ function CourseCard({
     <div
       className={`p-3 rounded-xl border text-sm transition-all cursor-pointer ${
         selected
-          ? 'bg-primary-50 dark:bg-primary-900/30 border-primary-300 dark:border-primary-700 ring-1 ring-primary-200 dark:ring-primary-800'
+          ? 'bg-[#00f5ff]/5 dark:bg-[#00f5ff]/10 border-primary-300 dark:border-primary-700 ring-1 ring-primary-200 dark:ring-primary-800'
           : hasConflict
-            ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-warning-50 dark:hover:bg-warning-600/10 hover:border-warning-300 dark:hover:border-warning-600'
-            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:border-gray-300 dark:hover:border-gray-600'
+            ? 'bg-[#0d0d18] dark:bg-[#12122a] border-[#1a1a2e] dark:border-[#2a2a4e] hover:bg-warning-50 dark:hover:bg-warning-600/10 hover:border-warning-300 dark:hover:border-warning-600'
+            : 'bg-[#0d0d18] dark:bg-[#12122a] border-[#1a1a2e] dark:border-[#2a2a4e] hover:bg-[#0a0a14] dark:hover:bg-gray-700/50 hover:border-[#2a2a4e] dark:hover:border-gray-600'
       }`}
       onClick={onToggle}
       onMouseEnter={onHover}
@@ -370,7 +370,7 @@ function CourseCard({
     >
       <div className="flex justify-between items-start gap-2">
         <div className="flex-1 min-w-0">
-          <div className="font-bold text-gray-900 dark:text-gray-100 truncate">{course.courseName}</div>
+          <div className="font-bold text-[#e0e0e8] dark:text-[#f0f0f8] truncate">{course.courseName}</div>
           <div className="text-xs mt-1">
             {tutorId ? (
               <button
@@ -378,50 +378,50 @@ function CourseCard({
                   e.stopPropagation();
                   onOpenTutor(tutorId);
                 }}
-                className="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 underline decoration-dotted cursor-pointer"
+                className="text-[#00f5ff] dark:text-[#00f5ff] hover:text-[#00f5ff] dark:hover:text-[#67e8f9] underline decoration-dotted cursor-pointer"
               >
                 {course.professor}
               </button>
             ) : (
-              <span className="text-gray-600 dark:text-gray-400">{course.professor}</span>
+              <span className="text-[#6a6a8a] dark:text-[#8a8aaa]">{course.professor}</span>
             )}
           </div>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
-          <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums">
+          <span className="text-xs text-[#4a4a6a] dark:text-[#6a6a8a] tabular-nums">
             {toPersianDigits(course.courseCode)}-{toPersianDigits(course.group)}
           </span>
-          <span className="text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded">
+          <span className="text-xs font-medium bg-[#12121f] dark:bg-[#1a1a2e] text-[#8a8aaa] dark:text-[#a0a0c0] px-1.5 py-0.5 rounded">
             {toPersianDigits(course.unitCount)} واحد
           </span>
         </div>
       </div>
 
-      <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+      <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-[#4a4a6a] dark:text-[#6a6a8a]">
         {course.sessions.map((s, i) => (
-          <span key={i} className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">
+          <span key={i} className="bg-[#12121f] dark:bg-[#1a1a2e] px-1.5 py-0.5 rounded">
             {dayName(s.dayOfWeek)} {toPersianDigits(s.startTime)}-{toPersianDigits(s.endTime)}
           </span>
         ))}
         {genderLabel && (
-          <span className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">{genderLabel}</span>
+          <span className="bg-[#12121f] dark:bg-[#1a1a2e] px-1.5 py-0.5 rounded">{genderLabel}</span>
         )}
       </div>
 
       {course.examDate && (
-        <div className="mt-1.5 text-xs text-gray-400 dark:text-gray-500">
+        <div className="mt-1.5 text-xs text-[#3a3a5a] dark:text-[#4a4a6a]">
           امتحان: {toPersianDigits(course.examDate)} ساعت {toPersianDigits(course.examTime)}
         </div>
       )}
 
       {course.prerequisites && (
-        <div className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+        <div className="mt-1.5 text-xs text-[#4a4a6a] dark:text-[#6a6a8a]">
           {course.prerequisites}
         </div>
       )}
 
       {course.notes && (
-        <div className="mt-1 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded px-2 py-1.5 leading-relaxed">
+        <div className="mt-1 text-xs text-[#4a4a6a] dark:text-[#6a6a8a] bg-[#0a0a14] dark:bg-[#1a1a2e]/50 rounded px-2 py-1.5 leading-relaxed">
           {course.notes}
         </div>
       )}
@@ -438,7 +438,7 @@ function CourseCard({
       )}
 
       {selected && (
-        <div className="mt-2 text-xs text-primary-600 dark:text-primary-400 font-medium">
+        <div className="mt-2 text-xs text-[#00f5ff] dark:text-[#00f5ff] font-medium">
           ✓ انتخاب شده
         </div>
       )}

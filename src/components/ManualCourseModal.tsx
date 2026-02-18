@@ -43,10 +43,10 @@ function courseToSessions(course: Course): SessionInput[] {
 }
 
 const inputClass =
-  'w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-400 focus:border-transparent';
+  'w-full px-3 py-2 text-sm border border-[#2a2a4e] dark:border-[#3a3a5e] rounded-lg bg-[#0d0d18] dark:bg-gray-700 text-[#e0e0e8] dark:text-[#f0f0f8] focus:outline-none focus:ring-1 focus:ring-[#00f5ff]/50 focus:border-transparent';
 
 const selectClass =
-  'px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
+  'px-2 py-2 text-sm border border-[#2a2a4e] dark:border-[#3a3a5e] rounded-lg bg-[#0d0d18] dark:bg-gray-700 text-[#e0e0e8] dark:text-[#d0d0e0] focus:outline-none focus:ring-1 focus:ring-[#00f5ff]/50';
 
 export function ManualCourseModal({ open, onClose, onSubmit, editingCourse }: Props) {
   if (!open) return null;
@@ -59,7 +59,7 @@ export function ManualCourseModal({ open, onClose, onSubmit, editingCourse }: Pr
   return (
     <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md max-h-[90vh] overflow-y-auto p-5"
+        className="bg-[#0d0d18] dark:bg-[#12122a] rounded-xl shadow-[0_0_30px_rgba(0,245,255,0.08)] border border-[#1a1a2e] dark:border-[#2a2a4e] w-full max-w-md max-h-[90vh] overflow-y-auto p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <ManualCourseForm
@@ -170,14 +170,14 @@ function ManualCourseForm({
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-bold text-lg text-gray-900 dark:text-gray-100">{isEditing ? 'ویرایش درس' : 'افزودن درس دستی'}</h2>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xl cursor-pointer">✕</button>
+        <h2 className="font-bold text-lg text-[#e0e0e8] dark:text-[#f0f0f8]">{isEditing ? 'ویرایش درس' : 'افزودن درس دستی'}</h2>
+        <button onClick={onClose} className="text-[#3a3a5a] hover:text-[#6a6a8a] dark:hover:text-[#5a5a7a] text-xl cursor-pointer">✕</button>
       </div>
 
       <div className="flex flex-col gap-4">
         {/* Course name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام درس *</label>
+          <label className="block text-sm font-medium text-[#8a8aaa] dark:text-[#a0a0c0] mb-1">نام درس *</label>
           <input
             type="text"
             value={courseName}
@@ -189,7 +189,7 @@ function ManualCourseForm({
 
         {/* Course code */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">کد درس (اختیاری)</label>
+          <label className="block text-sm font-medium text-[#8a8aaa] dark:text-[#a0a0c0] mb-1">کد درس (اختیاری)</label>
           <input
             type="text"
             value={courseCode}
@@ -202,7 +202,7 @@ function ManualCourseForm({
 
         {/* Units */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">تعداد واحد *</label>
+          <label className="block text-sm font-medium text-[#8a8aaa] dark:text-[#a0a0c0] mb-1">تعداد واحد *</label>
           <input
             type="number"
             min={1}
@@ -215,10 +215,10 @@ function ManualCourseForm({
 
         {/* Sessions */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">جلسات *</label>
+          <label className="block text-sm font-medium text-[#8a8aaa] dark:text-[#a0a0c0] mb-1">جلسات *</label>
           <div className="flex flex-col gap-2">
             {sessions.map((session, i) => (
-              <div key={i} className="flex flex-col gap-1.5 border border-gray-200 dark:border-gray-600 rounded-lg p-2">
+              <div key={i} className="flex flex-col gap-1.5 border border-[#1a1a2e] dark:border-[#2a2a4e] rounded-lg p-2">
                 <div className="flex items-center gap-2">
                   <select
                     value={session.dayOfWeek}
@@ -232,7 +232,7 @@ function ManualCourseForm({
                   {sessions.length > 1 && (
                     <button
                       onClick={() => removeSession(i)}
-                      className="text-gray-400 hover:text-danger-500 cursor-pointer text-lg mr-auto"
+                      className="text-[#3a3a5a] hover:text-[#ff0055] cursor-pointer text-lg mr-auto"
                     >✕</button>
                   )}
                 </div>
@@ -247,7 +247,7 @@ function ManualCourseForm({
                         <option key={h} value={h}>{h}</option>
                       ))}
                     </select>
-                    <span className="text-gray-400 text-sm">:</span>
+                    <span className="text-[#3a3a5a] text-sm">:</span>
                     <select
                       value={session.startMinute}
                       onChange={(e) => updateSession(i, 'startMinute', e.target.value)}
@@ -258,7 +258,7 @@ function ManualCourseForm({
                       ))}
                     </select>
                   </div>
-                  <span className="text-gray-400 text-sm">تا</span>
+                  <span className="text-[#3a3a5a] text-sm">تا</span>
                   <div className="flex items-center gap-0.5" dir="ltr">
                     <select
                       value={session.endHour}
@@ -269,7 +269,7 @@ function ManualCourseForm({
                         <option key={h} value={h}>{h}</option>
                       ))}
                     </select>
-                    <span className="text-gray-400 text-sm">:</span>
+                    <span className="text-[#3a3a5a] text-sm">:</span>
                     <select
                       value={session.endMinute}
                       onChange={(e) => updateSession(i, 'endMinute', e.target.value)}
@@ -287,7 +287,7 @@ function ManualCourseForm({
           {sessions.length < 14 && (
             <button
               onClick={addSession}
-              className="mt-2 text-xs text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium cursor-pointer"
+              className="mt-2 text-xs text-[#00f5ff] dark:text-[#00f5ff] hover:text-[#00f5ff] dark:hover:text-[#67e8f9] font-medium cursor-pointer"
             >
               + افزودن جلسه
             </button>
@@ -296,7 +296,7 @@ function ManualCourseForm({
 
         {/* Professor */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام استاد (اختیاری)</label>
+          <label className="block text-sm font-medium text-[#8a8aaa] dark:text-[#a0a0c0] mb-1">نام استاد (اختیاری)</label>
           <input
             type="text"
             value={professor}
@@ -308,7 +308,7 @@ function ManualCourseForm({
         {/* Exam date + time */}
         <div className="flex gap-3">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">تاریخ امتحان (اختیاری)</label>
+            <label className="block text-sm font-medium text-[#8a8aaa] dark:text-[#a0a0c0] mb-1">تاریخ امتحان (اختیاری)</label>
             <input
               type="text"
               value={examDate}
@@ -319,7 +319,7 @@ function ManualCourseForm({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ساعت</label>
+            <label className="block text-sm font-medium text-[#8a8aaa] dark:text-[#a0a0c0] mb-1">ساعت</label>
             <div className="flex items-center gap-0.5" dir="ltr">
               <select
                 value={examTimeHour}
@@ -331,7 +331,7 @@ function ManualCourseForm({
                   <option key={h} value={h}>{h}</option>
                 ))}
               </select>
-              <span className="text-gray-400 text-sm">:</span>
+              <span className="text-[#3a3a5a] text-sm">:</span>
               <select
                 value={examTimeMinute}
                 onChange={(e) => setExamTimeMinute(e.target.value)}
@@ -344,19 +344,19 @@ function ManualCourseForm({
             </div>
           </div>
         </div>
-        <p className="text-xs text-gray-400 dark:text-gray-500 -mt-2">
+        <p className="text-xs text-[#3a3a5a] dark:text-[#4a4a6a] -mt-2">
           بدون تاریخ امتحان، تداخل امتحان بررسی نمی‌شود
         </p>
 
         {/* Error */}
         {error && (
-          <p className="text-xs text-danger-600 dark:text-danger-400">{error}</p>
+          <p className="text-xs text-[#ff0055] dark:text-[#ff4081]">{error}</p>
         )}
 
         {/* Submit */}
         <button
           onClick={handleSubmit}
-          className="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors cursor-pointer"
+          className="w-full py-2.5 bg-[#00f5ff] hover:bg-[#00d4e0] text-[#0a0a0f] font-medium rounded-xl transition-colors cursor-pointer"
         >
           {isEditing ? 'ذخیره تغییرات' : 'افزودن به برنامه'}
         </button>

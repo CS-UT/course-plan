@@ -6,44 +6,50 @@
 @theme {
   --font-sans: "Vazirmatn", system-ui, sans-serif;
 
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  /* Neon cyan primary */
+  --color-primary-50: #ecfeff;
+  --color-primary-100: #cffafe;
+  --color-primary-200: #a5f3fc;
+  --color-primary-300: #67e8f9;
+  --color-primary-400: #22d3ee;
+  --color-primary-500: #00f5ff;
+  --color-primary-600: #00d4e0;
+  --color-primary-700: #00a3b0;
+  --color-primary-800: #007a84;
+  --color-primary-900: #004f56;
 
+  /* Neon lime accent */
   --color-accent-50: #f0fdf4;
   --color-accent-100: #dcfce7;
   --color-accent-200: #bbf7d0;
-  --color-accent-400: #4ade80;
-  --color-accent-500: #22c55e;
-  --color-accent-600: #16a34a;
+  --color-accent-400: #00ff88;
+  --color-accent-500: #00e07a;
+  --color-accent-600: #00b862;
 
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
+  /* Neon amber warning */
+  --color-warning-50: #1a1a00;
+  --color-warning-100: #332e00;
   --color-warning-400: #fbbf24;
   --color-warning-500: #f59e0b;
   --color-warning-600: #d97706;
 
-  --color-danger-50: #fef2f2;
-  --color-danger-100: #fee2e2;
-  --color-danger-400: #f87171;
-  --color-danger-500: #ef4444;
-  --color-danger-600: #dc2626;
+  /* Neon red/magenta danger */
+  --color-danger-50: #1a0010;
+  --color-danger-100: #330020;
+  --color-danger-400: #ff4081;
+  --color-danger-500: #ff0055;
+  --color-danger-600: #e0004d;
 }
 
 body {
   font-family: var(--font-sans);
   direction: rtl;
   margin: 0;
+  background-color: #0a0a0f;
+  color: #e0e0e8;
 }
 
-/* FullCalendar RTL overrides */
+/* FullCalendar RTL overrides — Neon dark */
 .fc {
   direction: rtl;
   font-family: var(--font-sans);
@@ -61,8 +67,6 @@ body {
   cursor: pointer;
 }
 
-/* Let FullCalendar handle side-by-side layout for overlapping events */
-
 .fc .fc-timegrid-col-events {
   margin: 0 2px !important;
 }
@@ -79,15 +83,31 @@ body {
 .fc .fc-scrollgrid {
   border-radius: 0.75rem;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #1a1a2e;
+  box-shadow: 0 0 20px rgba(0, 245, 255, 0.05);
 }
 
 .fc td, .fc th {
-  border-color: #e5e7eb;
+  border-color: #1a1a2e;
 }
 
 .fc .fc-timegrid-slot {
   height: 2.5rem;
+}
+
+.fc .fc-col-header-cell {
+  background-color: #0d0d18;
+  color: #00f5ff;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(0, 245, 255, 0.4);
+}
+
+.fc .fc-timegrid-slot-label {
+  color: #4a4a6a;
+}
+
+.fc .fc-timegrid-col {
+  background-color: #0a0a14;
 }
 
 @media (max-width: 639px) {
@@ -103,29 +123,30 @@ body {
   }
 }
 
-/* Dark mode FullCalendar */
+/* Dark mode FullCalendar — already dark, so "dark" is the slightly-lighter twilight mode */
 .dark .fc .fc-scrollgrid {
-  border-color: #374151;
+  border-color: #2a2a4e;
+  box-shadow: 0 0 25px rgba(0, 245, 255, 0.08);
 }
 
 .dark .fc td, .dark .fc th {
-  border-color: #374151;
+  border-color: #2a2a4e;
 }
 
 .dark .fc .fc-col-header-cell {
-  background-color: #1f2937;
-  color: #d1d5db;
+  background-color: #12122a;
+  color: #00f5ff;
 }
 
 .dark .fc .fc-timegrid-slot-label {
-  color: #9ca3af;
+  color: #5a5a8a;
 }
 
 .dark .fc .fc-timegrid-col {
-  background-color: #111827;
+  background-color: #0e0e1e;
 }
 
-/* ─── Transposed calendar (CSS grid, days=rows, hours=columns, RTL) ─── */
+/* ─── Transposed calendar (CSS grid, Neon dark) ─── */
 
 .transposed-cal {
   font-family: var(--font-sans);
@@ -135,34 +156,36 @@ body {
 .transposed-cal > div {
   border-radius: 0.75rem;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #1a1a2e;
+  box-shadow: 0 0 20px rgba(0, 245, 255, 0.05);
 }
 
 .transposed-cal-corner {
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
+  background: #0d0d18;
+  border-bottom: 1px solid #1a1a2e;
 }
 
 .transposed-cal-hour-header {
   font-size: 0.75rem;
   font-weight: 500;
-  color: #6b7280;
+  color: #4a4a6a;
   padding: 8px 0;
   text-align: center;
-  border-bottom: 1px solid #e5e7eb;
-  border-right: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border-bottom: 1px solid #1a1a2e;
+  border-right: 1px solid #1a1a2e;
+  background: #0d0d18;
 }
 
 .transposed-cal-day-label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #374151;
+  color: #00f5ff;
+  text-shadow: 0 0 8px rgba(0, 245, 255, 0.4);
   padding: 0 12px;
   text-align: center;
   white-space: nowrap;
-  border-bottom: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border-bottom: 1px solid #1a1a2e;
+  background: #0d0d18;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,7 +194,8 @@ body {
 .transposed-cal-track {
   position: relative;
   height: 52px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #1a1a2e;
+  background: #0a0a14;
 }
 
 .transposed-cal-grid {
@@ -183,7 +207,7 @@ body {
 
 .transposed-cal-gridline {
   flex: 1;
-  border-left: 1px solid #f3f4f6;
+  border-left: 1px solid #12121f;
 }
 
 .transposed-cal-gridline:first-child {
@@ -203,17 +227,18 @@ body {
   overflow: hidden;
   cursor: pointer;
   z-index: 1;
-  transition: filter 0.15s;
+  transition: filter 0.15s, box-shadow 0.15s;
 }
 
 .transposed-cal-event--conflict {
   border-right-width: 3px;
   border-right-style: solid;
-  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 0, 85, 0.4);
 }
 
 .transposed-cal-event:hover {
-  filter: brightness(0.93);
+  filter: brightness(1.15);
+  box-shadow: 0 0 12px rgba(0, 245, 255, 0.15);
 }
 
 .transposed-cal-event-name {
@@ -236,36 +261,37 @@ body {
 
 /* Dark mode transposed calendar */
 .dark .transposed-cal > div {
-  border-color: #374151;
+  border-color: #2a2a4e;
 }
 
 .dark .transposed-cal-corner {
-  background: #1f2937;
-  border-bottom-color: #374151;
+  background: #12122a;
+  border-bottom-color: #2a2a4e;
 }
 
 .dark .transposed-cal-hour-header {
-  color: #9ca3af;
-  border-bottom-color: #374151;
-  border-right-color: #374151;
-  background: #1f2937;
+  color: #5a5a8a;
+  border-bottom-color: #2a2a4e;
+  border-right-color: #2a2a4e;
+  background: #12122a;
 }
 
 .dark .transposed-cal-day-label {
-  color: #d1d5db;
-  border-bottom-color: #374151;
-  background: #1f2937;
+  color: #00f5ff;
+  border-bottom-color: #2a2a4e;
+  background: #12122a;
 }
 
 .dark .transposed-cal-track {
-  border-bottom-color: #374151;
+  border-bottom-color: #2a2a4e;
+  background: #0e0e1e;
 }
 
 .dark .transposed-cal-gridline {
-  border-left-color: #1f2937;
+  border-left-color: #1a1a30;
 }
 
-/* ─── Conflict warning badge (shared between both views) ─── */
+/* ─── Conflict warning badge ─── */
 
 .conflict-badge {
   position: absolute;
@@ -277,22 +303,22 @@ body {
   filter: saturate(2);
 }
 
-/* FullCalendar slot selection highlight — behind events */
+/* FullCalendar slot selection highlight — neon */
 .fc .fc-highlight {
-  background-color: rgba(37, 99, 235, 0.12);
-  border: 1.5px dashed rgba(37, 99, 235, 0.4);
+  background-color: rgba(0, 245, 255, 0.08);
+  border: 1.5px dashed rgba(0, 245, 255, 0.3);
   border-radius: 0.375rem;
   z-index: 0 !important;
 }
 
 .dark .fc .fc-highlight {
-  background-color: rgba(96, 165, 250, 0.12);
-  border-color: rgba(96, 165, 250, 0.35);
+  background-color: rgba(0, 245, 255, 0.1);
+  border-color: rgba(0, 245, 255, 0.35);
 }
 
 /* FullCalendar conflict event indicator */
 .fc .fc-timegrid-event.fc-event--conflict {
-  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 0, 85, 0.4);
 }
 
 @media (max-width: 639px) {
@@ -312,4 +338,10 @@ body {
   .transposed-cal-event-prof {
     font-size: 0.55rem;
   }
+}
+
+/* Neon glow animation for primary elements */
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(0, 245, 255, 0.2), 0 0 10px rgba(0, 245, 255, 0.1); }
+  50% { box-shadow: 0 0 10px rgba(0, 245, 255, 0.3), 0 0 20px rgba(0, 245, 255, 0.15); }
 }

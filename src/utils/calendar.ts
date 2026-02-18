@@ -1,21 +1,21 @@
 import type { SelectedCourse } from '@/types';
 import { hasTimeConflict } from './conflicts';
 
-// Colors for different courses on the calendar
+// Neon dark course colors — vibrant backgrounds on deep dark base
 const COURSE_COLORS = [
-  { bg: '#dbeafe', border: '#3b82f6', text: '#1e3a8a' },
-  { bg: '#dcfce7', border: '#22c55e', text: '#14532d' },
-  { bg: '#fef3c7', border: '#f59e0b', text: '#78350f' },
-  { bg: '#fce7f3', border: '#ec4899', text: '#831843' },
-  { bg: '#e0e7ff', border: '#6366f1', text: '#312e81' },
-  { bg: '#fed7aa', border: '#f97316', text: '#7c2d12' },
-  { bg: '#ccfbf1', border: '#14b8a6', text: '#134e4a' },
-  { bg: '#fae8ff', border: '#d946ef', text: '#701a75' },
-  { bg: '#e2e8f0', border: '#64748b', text: '#1e293b' },
-  { bg: '#fecdd3', border: '#f43f5e', text: '#881337' },
+  { bg: '#0a1929', border: '#00f5ff', text: '#00f5ff' },   // neon cyan
+  { bg: '#0a1a0f', border: '#00ff88', text: '#00ff88' },   // neon lime
+  { bg: '#1a0a1f', border: '#ff00ff', text: '#ff00ff' },   // neon magenta
+  { bg: '#1a1a0a', border: '#ffff00', text: '#ffff00' },   // neon yellow
+  { bg: '#0a0f1a', border: '#4d8aff', text: '#6da3ff' },   // neon blue
+  { bg: '#1a0f0a', border: '#ff6600', text: '#ff8833' },   // neon orange
+  { bg: '#0f1a1a', border: '#00e5a0', text: '#00e5a0' },   // neon teal
+  { bg: '#1a0a14', border: '#ff4081', text: '#ff4081' },   // neon pink
+  { bg: '#14140a', border: '#c8c800', text: '#e0e000' },   // neon gold
+  { bg: '#0f0a1a', border: '#a855f7', text: '#c084fc' },   // neon purple
 ];
 
-const HOVER_COLOR = { bg: '#f3f4f6', border: '#9ca3af', text: '#6b7280' };
+const HOVER_COLOR = { bg: '#12121f', border: '#4a4a6a', text: '#6a6a8a' };
 
 // FullCalendar uses a base date for timeGridWeek. We use a fixed Saturday.
 // 2023-12-30 is a Saturday (شنبه)
