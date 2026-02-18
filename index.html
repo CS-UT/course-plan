@@ -7,6 +7,16 @@
     <meta name="description" content="برنامه‌ریزی انتخاب واحد دانشکده ریاضی، آمار و علوم کامپیوتر دانشگاه تهران" />
     <title>برنامه‌ریزی انتخاب واحد</title>
     <script type="text/javascript">
+      // Suppress ResizeObserver loop errors (benign, caused by FullCalendar layout)
+      // These show as false-positive JS errors in Clarity and break recordings.
+      window.addEventListener('error', function(e) {
+        if (e.message && e.message.indexOf('ResizeObserver') !== -1) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        }
+      });
+    </script>
+    <script type="text/javascript">
       try{(function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;

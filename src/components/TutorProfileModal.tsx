@@ -173,6 +173,8 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
     import('@/data/tutors.json').then((m) => {
       tutorsCache = m.default as TutorProfile[];
       setTutors(tutorsCache);
+    }).catch(() => {
+      // Dynamic import can fail on slow connections or if chunk is missing
     });
   }, [open, tutorId]);
 
