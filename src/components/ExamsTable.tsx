@@ -40,11 +40,11 @@ export function ExamsTable({ onEditCourse }: Props) {
   }
 
   return (
-    <div className="mt-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
+    <div className="mt-3 bg-white/80 dark:bg-gray-900/50 rounded-2xl border border-purple-200/30 dark:border-purple-500/15 overflow-hidden transition-colors shadow-lg shadow-purple-500/5">
       {/* Desktop table */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+          <thead className="bg-gradient-to-r from-violet-50/50 to-pink-50/50 dark:from-violet-900/20 dark:to-pink-900/20 text-purple-700 dark:text-purple-300">
             <tr>
               <th className="px-3 py-2 text-right font-medium">کد</th>
               <th className="px-3 py-2 text-right font-medium">نام درس</th>
@@ -55,14 +55,14 @@ export function ExamsTable({ onEditCourse }: Props) {
               <th className="px-3 py-2 text-center font-medium">عملیات</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+          <tbody className="divide-y divide-purple-100/30 dark:divide-purple-500/10">
             {sorted.map((course) => {
               const key = `${course.courseCode}-${course.group}`;
               const hasConflict = conflictingPairs.has(key);
               return (
                 <tr
                   key={key}
-                  className={hasConflict ? 'bg-danger-50 dark:bg-danger-500/10' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}
+                  className={hasConflict ? 'bg-pink-50/50 dark:bg-pink-500/10' : 'hover:bg-purple-50/30 dark:hover:bg-purple-900/10'}
                 >
                   <td className="px-3 py-2 tabular-nums">{toPersianDigits(course.courseCode)}</td>
                   <td className="px-3 py-2 font-medium">{course.courseName}</td>
@@ -99,7 +99,7 @@ export function ExamsTable({ onEditCourse }: Props) {
               );
             })}
           </tbody>
-          <tfoot className="bg-gray-50 dark:bg-gray-700 font-medium">
+          <tfoot className="bg-gradient-to-r from-violet-50/50 to-pink-50/50 dark:from-violet-900/20 dark:to-pink-900/20 font-medium">
             <tr>
               <td className="px-3 py-2" colSpan={3}>جمع</td>
               <td className="px-3 py-2">{toPersianDigits(totalUnits)}</td>
@@ -110,14 +110,14 @@ export function ExamsTable({ onEditCourse }: Props) {
       </div>
 
       {/* Mobile card layout */}
-      <div className="sm:hidden divide-y divide-gray-100 dark:divide-gray-700">
+      <div className="sm:hidden divide-y divide-purple-100/30 dark:divide-purple-500/10">
         {sorted.map((course) => {
           const key = `${course.courseCode}-${course.group}`;
           const hasConflict = conflictingPairs.has(key);
           return (
             <div
               key={key}
-              className={`p-3 text-sm ${hasConflict ? 'bg-danger-50 dark:bg-danger-500/10' : ''}`}
+              className={`p-3 text-sm ${hasConflict ? 'bg-pink-50/50 dark:bg-pink-500/10' : ''}`}
             >
               <div className="flex justify-between items-start gap-2">
                 <div className="min-w-0">
@@ -154,7 +154,7 @@ export function ExamsTable({ onEditCourse }: Props) {
             </div>
           );
         })}
-        <div className="p-3 bg-gray-50 dark:bg-gray-700 text-sm font-medium flex justify-between">
+        <div className="p-3 bg-gradient-to-r from-violet-50/50 to-pink-50/50 dark:from-violet-900/20 dark:to-pink-900/20 text-sm font-medium flex justify-between">
           <span>جمع</span>
           <span>{toPersianDigits(totalUnits)} واحد</span>
         </div>

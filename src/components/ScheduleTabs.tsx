@@ -19,8 +19,8 @@ export function ScheduleTabs() {
             onClick={() => setCurrentScheduleId(s.id)}
             className={`px-4 py-1.5 text-sm rounded-t-lg font-medium transition-colors cursor-pointer ${
               s.id === currentScheduleId
-                ? 'bg-white dark:bg-gray-800 text-primary-700 dark:text-primary-300 border border-b-0 border-gray-200 dark:border-gray-700'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? 'bg-white/80 dark:bg-gray-900/50 text-purple-700 dark:text-purple-300 border border-b-0 border-purple-200/50 dark:border-purple-500/20 shadow-sm shadow-purple-500/5'
+                : 'bg-purple-50/30 dark:bg-purple-900/10 text-purple-500 dark:text-purple-400 hover:bg-purple-100/50 dark:hover:bg-purple-900/20'
             }`}
           >
             برنامه {toPersianDigits(s.id + 1)}
@@ -39,7 +39,7 @@ export function ScheduleTabs() {
 
       <button
         onClick={createSchedule}
-        className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+        className="px-3 py-1.5 text-sm text-purple-400 dark:text-purple-400 hover:text-purple-600 dark:hover:text-purple-300 hover:bg-purple-100/50 dark:hover:bg-purple-500/10 rounded-xl transition-colors cursor-pointer"
         title="برنامه جدید"
       >
         +
@@ -47,7 +47,7 @@ export function ScheduleTabs() {
 
       <button
         onClick={duplicateSchedule}
-        className="px-3 py-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+        className="px-3 py-1.5 text-xs text-purple-400 dark:text-purple-400 hover:text-purple-600 dark:hover:text-purple-300 hover:bg-purple-100/50 dark:hover:bg-purple-500/10 rounded-xl transition-colors cursor-pointer"
         title="کپی برنامه فعلی"
       >
         کپی

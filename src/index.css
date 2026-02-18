@@ -6,23 +6,23 @@
 @theme {
   --font-sans: "Vazirmatn", system-ui, sans-serif;
 
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  --color-primary-50: #faf5ff;
+  --color-primary-100: #f3e8ff;
+  --color-primary-200: #e9d5ff;
+  --color-primary-300: #d8b4fe;
+  --color-primary-400: #c084fc;
+  --color-primary-500: #a855f7;
+  --color-primary-600: #9333ea;
+  --color-primary-700: #7e22ce;
+  --color-primary-800: #6b21a8;
+  --color-primary-900: #581c87;
 
-  --color-accent-50: #f0fdf4;
-  --color-accent-100: #dcfce7;
-  --color-accent-200: #bbf7d0;
-  --color-accent-400: #4ade80;
-  --color-accent-500: #22c55e;
-  --color-accent-600: #16a34a;
+  --color-accent-50: #fdf2f8;
+  --color-accent-100: #fce7f3;
+  --color-accent-200: #fbcfe8;
+  --color-accent-400: #f472b6;
+  --color-accent-500: #ec4899;
+  --color-accent-600: #db2777;
 
   --color-warning-50: #fffbeb;
   --color-warning-100: #fef3c7;
@@ -41,275 +41,77 @@ body {
   font-family: var(--font-sans);
   direction: rtl;
   margin: 0;
+  min-height: 100vh;
 }
 
-/* FullCalendar RTL overrides */
-.fc {
-  direction: rtl;
-  font-family: var(--font-sans);
-}
-
-.fc .fc-col-header-cell-cushion,
-.fc .fc-timegrid-slot-label-cushion {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-}
-
-.fc .fc-timegrid-event {
-  border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-}
-
-/* Let FullCalendar handle side-by-side layout for overlapping events */
-
-.fc .fc-timegrid-col-events {
-  margin: 0 2px !important;
-}
-
-.fc .fc-timegrid-event .fc-event-main {
-  padding: 2px 6px;
-  overflow: hidden;
-}
-
-.fc .fc-toolbar {
-  display: none !important;
-}
+/* FullCalendar — Aurora Gradient */
+.fc { direction: rtl; font-family: var(--font-sans); }
+.fc .fc-col-header-cell-cushion, .fc .fc-timegrid-slot-label-cushion { font-family: var(--font-sans); font-size: 0.8rem; }
+.fc .fc-timegrid-event { border-radius: 0.75rem; border: none; cursor: pointer; }
+.fc .fc-timegrid-col-events { margin: 0 2px !important; }
+.fc .fc-timegrid-event .fc-event-main { padding: 2px 6px; overflow: hidden; }
+.fc .fc-toolbar { display: none !important; }
 
 .fc .fc-scrollgrid {
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e9d5ff;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08);
 }
 
-.fc td, .fc th {
-  border-color: #e5e7eb;
-}
-
-.fc .fc-timegrid-slot {
-  height: 2.5rem;
-}
+.fc td, .fc th { border-color: #ede9fe; }
+.fc .fc-col-header-cell { background: linear-gradient(135deg, #f5f3ff, #fdf2f8); color: #6b21a8; }
+.fc .fc-timegrid-slot-label { color: #7c3aed; }
+.fc .fc-timegrid-col { background: rgba(255, 255, 255, 0.6); }
+.fc .fc-timegrid-slot { height: 2.5rem; }
 
 @media (max-width: 639px) {
-  .fc .fc-timegrid-slot {
-    height: 2rem;
-  }
-  .fc .fc-col-header-cell-cushion,
-  .fc .fc-timegrid-slot-label-cushion {
-    font-size: 0.7rem;
-  }
-  .fc .fc-timegrid-event .fc-event-main {
-    padding: 1px 3px;
-  }
+  .fc .fc-timegrid-slot { height: 2rem; }
+  .fc .fc-col-header-cell-cushion, .fc .fc-timegrid-slot-label-cushion { font-size: 0.7rem; }
+  .fc .fc-timegrid-event .fc-event-main { padding: 1px 3px; }
 }
 
-/* Dark mode FullCalendar */
-.dark .fc .fc-scrollgrid {
-  border-color: #374151;
-}
+/* Dark FullCalendar — Aurora */
+.dark .fc .fc-scrollgrid { border-color: rgba(139, 92, 246, 0.2); box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1); }
+.dark .fc td, .dark .fc th { border-color: rgba(139, 92, 246, 0.15); }
+.dark .fc .fc-col-header-cell { background: linear-gradient(135deg, rgba(88, 28, 135, 0.4), rgba(157, 23, 77, 0.3)); color: #d8b4fe; }
+.dark .fc .fc-timegrid-slot-label { color: #c4b5fd; }
+.dark .fc .fc-timegrid-col { background: rgba(15, 5, 44, 0.3); }
 
-.dark .fc td, .dark .fc th {
-  border-color: #374151;
-}
+/* ─── Transposed calendar — Aurora ─── */
+.transposed-cal { font-family: var(--font-sans); direction: rtl; }
+.transposed-cal > div { border-radius: 1rem; overflow: hidden; border: 1px solid #e9d5ff; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08); }
+.transposed-cal-corner { background: linear-gradient(135deg, #f5f3ff, #fdf2f8); border-bottom: 1px solid #e9d5ff; }
+.transposed-cal-hour-header { font-size: 0.75rem; font-weight: 500; color: #7c3aed; padding: 8px 0; text-align: center; border-bottom: 1px solid #e9d5ff; border-right: 1px solid #e9d5ff; background: linear-gradient(135deg, #f5f3ff, #fdf2f8); }
+.transposed-cal-day-label { font-size: 0.8rem; font-weight: 600; color: #6b21a8; padding: 0 12px; text-align: center; white-space: nowrap; border-bottom: 1px solid #e9d5ff; background: linear-gradient(135deg, #f5f3ff, #fdf2f8); display: flex; align-items: center; justify-content: center; }
+.transposed-cal-track { position: relative; height: 52px; border-bottom: 1px solid #ede9fe; background: rgba(255, 255, 255, 0.5); }
+.transposed-cal-grid { position: absolute; inset: 0; display: flex; direction: ltr; }
+.transposed-cal-gridline { flex: 1; border-left: 1px solid #f5f3ff; }
+.transposed-cal-gridline:first-child { border-left: none; }
+.transposed-cal-event { position: absolute; top: 3px; bottom: 3px; border-radius: 0.5rem; border-right: 3px solid; padding: 2px 8px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; cursor: pointer; z-index: 1; transition: all 0.2s; }
+.transposed-cal-event--conflict { border-right-width: 3px; border-right-style: solid; box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3); }
+.transposed-cal-event:hover { filter: brightness(0.95); box-shadow: 0 2px 10px rgba(139, 92, 246, 0.2); }
+.transposed-cal-event-name { font-size: 0.7rem; font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.transposed-cal-event-prof { font-size: 0.6rem; opacity: 0.8; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-.dark .fc .fc-col-header-cell {
-  background-color: #1f2937;
-  color: #d1d5db;
-}
+/* Dark transposed — Aurora */
+.dark .transposed-cal > div { border-color: rgba(139, 92, 246, 0.2); box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1); }
+.dark .transposed-cal-corner { background: linear-gradient(135deg, rgba(88, 28, 135, 0.4), rgba(157, 23, 77, 0.3)); border-bottom-color: rgba(139, 92, 246, 0.2); }
+.dark .transposed-cal-hour-header { color: #c4b5fd; border-bottom-color: rgba(139, 92, 246, 0.15); border-right-color: rgba(139, 92, 246, 0.15); background: linear-gradient(135deg, rgba(88, 28, 135, 0.3), rgba(157, 23, 77, 0.2)); }
+.dark .transposed-cal-day-label { color: #d8b4fe; border-bottom-color: rgba(139, 92, 246, 0.15); background: linear-gradient(135deg, rgba(88, 28, 135, 0.3), rgba(157, 23, 77, 0.2)); }
+.dark .transposed-cal-track { border-bottom-color: rgba(139, 92, 246, 0.1); background: rgba(15, 5, 44, 0.2); }
+.dark .transposed-cal-gridline { border-left-color: rgba(139, 92, 246, 0.06); }
 
-.dark .fc .fc-timegrid-slot-label {
-  color: #9ca3af;
-}
+.conflict-badge { position: absolute; top: 1px; left: 2px; font-size: 0.6rem; line-height: 1; z-index: 2; filter: saturate(2); }
 
-.dark .fc .fc-timegrid-col {
-  background-color: #111827;
-}
-
-/* ─── Transposed calendar (CSS grid, days=rows, hours=columns, RTL) ─── */
-
-.transposed-cal {
-  font-family: var(--font-sans);
-  direction: rtl;
-}
-
-.transposed-cal > div {
-  border-radius: 0.75rem;
-  overflow: hidden;
-  border: 1px solid #e5e7eb;
-}
-
-.transposed-cal-corner {
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.transposed-cal-hour-header {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #6b7280;
-  padding: 8px 0;
-  text-align: center;
-  border-bottom: 1px solid #e5e7eb;
-  border-right: 1px solid #e5e7eb;
-  background: #f9fafb;
-}
-
-.transposed-cal-day-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #374151;
-  padding: 0 12px;
-  text-align: center;
-  white-space: nowrap;
-  border-bottom: 1px solid #e5e7eb;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.transposed-cal-track {
-  position: relative;
-  height: 52px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.transposed-cal-grid {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  direction: ltr;
-}
-
-.transposed-cal-gridline {
-  flex: 1;
-  border-left: 1px solid #f3f4f6;
-}
-
-.transposed-cal-gridline:first-child {
-  border-left: none;
-}
-
-.transposed-cal-event {
-  position: absolute;
-  top: 3px;
-  bottom: 3px;
-  border-radius: 0.375rem;
-  border-right: 3px solid;
-  padding: 2px 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-  cursor: pointer;
-  z-index: 1;
-  transition: filter 0.15s;
-}
-
-.transposed-cal-event--conflict {
-  border-right-width: 3px;
-  border-right-style: solid;
-  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3);
-}
-
-.transposed-cal-event:hover {
-  filter: brightness(0.93);
-}
-
-.transposed-cal-event-name {
-  font-size: 0.7rem;
-  font-weight: 700;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.transposed-cal-event-prof {
-  font-size: 0.6rem;
-  opacity: 0.8;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Dark mode transposed calendar */
-.dark .transposed-cal > div {
-  border-color: #374151;
-}
-
-.dark .transposed-cal-corner {
-  background: #1f2937;
-  border-bottom-color: #374151;
-}
-
-.dark .transposed-cal-hour-header {
-  color: #9ca3af;
-  border-bottom-color: #374151;
-  border-right-color: #374151;
-  background: #1f2937;
-}
-
-.dark .transposed-cal-day-label {
-  color: #d1d5db;
-  border-bottom-color: #374151;
-  background: #1f2937;
-}
-
-.dark .transposed-cal-track {
-  border-bottom-color: #374151;
-}
-
-.dark .transposed-cal-gridline {
-  border-left-color: #1f2937;
-}
-
-/* ─── Conflict warning badge (shared between both views) ─── */
-
-.conflict-badge {
-  position: absolute;
-  top: 1px;
-  left: 2px;
-  font-size: 0.6rem;
-  line-height: 1;
-  z-index: 2;
-  filter: saturate(2);
-}
-
-/* FullCalendar slot selection highlight — behind events */
-.fc .fc-highlight {
-  background-color: rgba(37, 99, 235, 0.12);
-  border: 1.5px dashed rgba(37, 99, 235, 0.4);
-  border-radius: 0.375rem;
-  z-index: 0 !important;
-}
-
-.dark .fc .fc-highlight {
-  background-color: rgba(96, 165, 250, 0.12);
-  border-color: rgba(96, 165, 250, 0.35);
-}
-
-/* FullCalendar conflict event indicator */
-.fc .fc-timegrid-event.fc-event--conflict {
-  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3);
-}
+.fc .fc-highlight { background-color: rgba(168, 85, 247, 0.12); border: 1.5px dashed rgba(168, 85, 247, 0.4); border-radius: 0.5rem; z-index: 0 !important; }
+.dark .fc .fc-highlight { background-color: rgba(192, 132, 252, 0.12); border-color: rgba(192, 132, 252, 0.35); }
+.fc .fc-timegrid-event.fc-event--conflict { box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3); }
 
 @media (max-width: 639px) {
-  .transposed-cal-hour-header {
-    font-size: 0.65rem;
-  }
-  .transposed-cal-day-label {
-    font-size: 0.7rem;
-    padding: 0 6px;
-  }
-  .transposed-cal-track {
-    height: 44px;
-  }
-  .transposed-cal-event-name {
-    font-size: 0.6rem;
-  }
-  .transposed-cal-event-prof {
-    font-size: 0.55rem;
-  }
+  .transposed-cal-hour-header { font-size: 0.65rem; }
+  .transposed-cal-day-label { font-size: 0.7rem; padding: 0 6px; }
+  .transposed-cal-track { height: 44px; }
+  .transposed-cal-event-name { font-size: 0.6rem; }
+  .transposed-cal-event-prof { font-size: 0.55rem; }
 }

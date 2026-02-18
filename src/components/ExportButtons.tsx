@@ -187,10 +187,10 @@ export function ExportButtons() {
   }
 
   const btnClass =
-    'text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-wait whitespace-nowrap';
+    'text-xs text-purple-500 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 px-2.5 py-1.5 rounded-xl hover:bg-purple-100/50 dark:hover:bg-purple-500/10 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-wait whitespace-nowrap';
 
   const calendarBtnClass =
-    'flex items-center gap-1.5 text-xs font-medium text-white bg-gradient-to-l from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-500 dark:hover:to-blue-600 px-3 py-1.5 rounded-lg shadow-sm hover:shadow transition-all cursor-pointer whitespace-nowrap';
+    'flex items-center gap-1.5 text-xs font-medium text-white bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 hover:from-violet-600 hover:via-fuchsia-600 hover:to-pink-600 px-3 py-1.5 rounded-xl shadow-md shadow-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 transition-all cursor-pointer whitespace-nowrap';
 
   return (
     <div className="flex items-center gap-1.5">
