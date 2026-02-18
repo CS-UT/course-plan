@@ -144,7 +144,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   }
 
   const selectClass =
-    'px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
+    'px-2 py-1.5 text-xs border border-white/30 dark:border-white/10 rounded-lg backdrop-blur-md bg-white/40 dark:bg-white/10 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
 
   // Reset department filter when switching tabs since departments differ per tab
   function handleTabChange(tab: CourseTab) {
@@ -156,13 +156,13 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   return (
     <div className="flex flex-col gap-3">
       {/* Tab bar */}
-      <div className="flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1 gap-1">
+      <div className="flex rounded-xl backdrop-blur-md bg-white/20 dark:bg-white/5 p-1 gap-1 border border-white/20 dark:border-white/10">
         <button
           onClick={() => handleTabChange('specialized')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
             activeTab === 'specialized'
-              ? 'bg-white dark:bg-gray-700 text-primary-700 dark:text-primary-300 shadow-sm'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              ? 'backdrop-blur-xl bg-white/50 dark:bg-white/10 text-primary-700 dark:text-primary-300 shadow-sm shadow-black/5'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
           }`}
         >
           تخصصی
@@ -171,8 +171,8 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
           onClick={() => handleTabChange('general')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
             activeTab === 'general'
-              ? 'bg-white dark:bg-gray-700 text-primary-700 dark:text-primary-300 shadow-sm'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              ? 'backdrop-blur-xl bg-white/50 dark:bg-white/10 text-primary-700 dark:text-primary-300 shadow-sm shadow-black/5'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
           }`}
         >
           عمومی
@@ -184,12 +184,12 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
         placeholder="جستجوی درس، کد یا استاد..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
+        className="w-full px-4 py-2.5 border border-white/30 dark:border-white/10 rounded-xl backdrop-blur-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent bg-white/40 dark:bg-white/5 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
       />
 
       <button
         onClick={onOpenManualEntry}
-        className="w-full px-4 py-2 text-sm font-medium border border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:border-primary-400 dark:hover:border-primary-500 transition-colors cursor-pointer"
+        className="w-full px-4 py-2 text-sm font-medium border border-dashed border-white/30 dark:border-white/10 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-white/10 hover:border-primary-400/50 dark:hover:border-primary-400/30 transition-colors cursor-pointer"
       >
         + افزودن درس دستی
       </button>
@@ -211,7 +211,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
       </div>
 
       {showFilters && (
-        <div className="flex flex-col gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col gap-2 p-3 backdrop-blur-md bg-white/20 dark:bg-white/5 rounded-xl border border-white/20 dark:border-white/10">
           <div className="flex flex-wrap gap-2">
             <select
               value={filters.day}
@@ -283,7 +283,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
       )}
 
       {slotFilter && (
-        <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 rounded-lg text-xs text-primary-700 dark:text-primary-300">
+        <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 backdrop-blur-md bg-primary-500/10 dark:bg-primary-400/10 border border-primary-300/30 dark:border-primary-400/20 rounded-lg text-xs text-primary-700 dark:text-primary-300">
           <span className="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
             {dayName(slotFilter.dayOfWeek)} {toPersianDigits(slotFilter.startTime)}-{toPersianDigits(slotFilter.endTime)}
@@ -359,10 +359,10 @@ function CourseCard({
     <div
       className={`p-3 rounded-xl border text-sm transition-all cursor-pointer ${
         selected
-          ? 'bg-primary-50 dark:bg-primary-900/30 border-primary-300 dark:border-primary-700 ring-1 ring-primary-200 dark:ring-primary-800'
+          ? 'backdrop-blur-xl bg-primary-500/10 dark:bg-primary-400/10 border-primary-300/40 dark:border-primary-400/20 ring-1 ring-primary-300/30 dark:ring-primary-400/20 shadow-lg shadow-primary-500/10'
           : hasConflict
-            ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-warning-50 dark:hover:bg-warning-600/10 hover:border-warning-300 dark:hover:border-warning-600'
-            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:border-gray-300 dark:hover:border-gray-600'
+            ? 'backdrop-blur-xl bg-white/40 dark:bg-white/5 border-white/20 dark:border-white/10 hover:bg-warning-50/50 dark:hover:bg-warning-600/10 hover:border-warning-300/40 dark:hover:border-warning-500/30'
+            : 'backdrop-blur-xl bg-white/40 dark:bg-white/5 border-white/20 dark:border-white/10 hover:bg-white/50 dark:hover:bg-white/10 hover:border-white/30 dark:hover:border-white/15'
       }`}
       onClick={onToggle}
       onMouseEnter={onHover}
@@ -399,12 +399,12 @@ function CourseCard({
 
       <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-gray-500 dark:text-gray-400">
         {course.sessions.map((s, i) => (
-          <span key={i} className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">
+          <span key={i} className="bg-white/25 dark:bg-white/10 px-1.5 py-0.5 rounded backdrop-blur-sm">
             {dayName(s.dayOfWeek)} {toPersianDigits(s.startTime)}-{toPersianDigits(s.endTime)}
           </span>
         ))}
         {genderLabel && (
-          <span className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">{genderLabel}</span>
+          <span className="bg-white/25 dark:bg-white/10 px-1.5 py-0.5 rounded backdrop-blur-sm">{genderLabel}</span>
         )}
       </div>
 
@@ -427,7 +427,7 @@ function CourseCard({
       )}
 
       {hasConflict && !selected && (
-        <div className="mt-2 text-xs text-warning-600 bg-warning-50 dark:bg-warning-600/10 rounded px-2 py-1">
+        <div className="mt-2 text-xs text-warning-600 bg-warning-50/60 dark:bg-warning-600/10 rounded backdrop-blur-sm px-2 py-1">
           {timeConflicts.length > 0 && (
             <div>تداخل زمانی با: {timeConflicts.map((c) => c.courseName).join('، ')}</div>
           )}

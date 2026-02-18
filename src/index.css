@@ -41,9 +41,10 @@ body {
   font-family: var(--font-sans);
   direction: rtl;
   margin: 0;
+  min-height: 100vh;
 }
 
-/* FullCalendar RTL overrides */
+/* FullCalendar RTL overrides — Glassmorphism */
 .fc {
   direction: rtl;
   font-family: var(--font-sans);
@@ -56,12 +57,11 @@ body {
 }
 
 .fc .fc-timegrid-event {
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   border: none;
   cursor: pointer;
+  backdrop-filter: blur(4px);
 }
-
-/* Let FullCalendar handle side-by-side layout for overlapping events */
 
 .fc .fc-timegrid-col-events {
   margin: 0 2px !important;
@@ -77,13 +77,28 @@ body {
 }
 
 .fc .fc-scrollgrid {
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
 }
 
 .fc td, .fc th {
-  border-color: #e5e7eb;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.fc .fc-col-header-cell {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+}
+
+.fc .fc-timegrid-slot-label {
+  color: #64748b;
+}
+
+.fc .fc-timegrid-col {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .fc .fc-timegrid-slot {
@@ -103,29 +118,30 @@ body {
   }
 }
 
-/* Dark mode FullCalendar */
+/* Dark mode FullCalendar — Glass */
 .dark .fc .fc-scrollgrid {
-  border-color: #374151;
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.4);
 }
 
 .dark .fc td, .dark .fc th {
-  border-color: #374151;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .dark .fc .fc-col-header-cell {
-  background-color: #1f2937;
-  color: #d1d5db;
+  background: rgba(30, 41, 59, 0.5);
+  color: #cbd5e1;
 }
 
 .dark .fc .fc-timegrid-slot-label {
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .dark .fc .fc-timegrid-col {
-  background-color: #111827;
+  background: rgba(15, 23, 42, 0.2);
 }
 
-/* ─── Transposed calendar (CSS grid, days=rows, hours=columns, RTL) ─── */
+/* ─── Transposed calendar — Glassmorphism ─── */
 
 .transposed-cal {
   font-family: var(--font-sans);
@@ -133,25 +149,27 @@ body {
 }
 
 .transposed-cal > div {
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
 }
 
 .transposed-cal-corner {
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .transposed-cal-hour-header {
   font-size: 0.75rem;
   font-weight: 500;
-  color: #6b7280;
+  color: #64748b;
   padding: 8px 0;
   text-align: center;
-  border-bottom: 1px solid #e5e7eb;
-  border-right: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .transposed-cal-day-label {
@@ -161,8 +179,8 @@ body {
   padding: 0 12px;
   text-align: center;
   white-space: nowrap;
-  border-bottom: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,7 +189,7 @@ body {
 .transposed-cal-track {
   position: relative;
   height: 52px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .transposed-cal-grid {
@@ -183,7 +201,7 @@ body {
 
 .transposed-cal-gridline {
   flex: 1;
-  border-left: 1px solid #f3f4f6;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .transposed-cal-gridline:first-child {
@@ -194,7 +212,7 @@ body {
   position: absolute;
   top: 3px;
   bottom: 3px;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   border-right: 3px solid;
   padding: 2px 8px;
   display: flex;
@@ -204,6 +222,7 @@ body {
   cursor: pointer;
   z-index: 1;
   transition: filter 0.15s;
+  backdrop-filter: blur(4px);
 }
 
 .transposed-cal-event--conflict {
@@ -234,38 +253,39 @@ body {
   text-overflow: ellipsis;
 }
 
-/* Dark mode transposed calendar */
+/* Dark mode transposed calendar — Glass */
 .dark .transposed-cal > div {
-  border-color: #374151;
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.4);
 }
 
 .dark .transposed-cal-corner {
-  background: #1f2937;
-  border-bottom-color: #374151;
+  background: rgba(30, 41, 59, 0.5);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .dark .transposed-cal-hour-header {
-  color: #9ca3af;
-  border-bottom-color: #374151;
-  border-right-color: #374151;
-  background: #1f2937;
+  color: #94a3b8;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  border-right-color: rgba(255, 255, 255, 0.08);
+  background: rgba(30, 41, 59, 0.4);
 }
 
 .dark .transposed-cal-day-label {
-  color: #d1d5db;
-  border-bottom-color: #374151;
-  background: #1f2937;
+  color: #cbd5e1;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  background: rgba(30, 41, 59, 0.4);
 }
 
 .dark .transposed-cal-track {
-  border-bottom-color: #374151;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .dark .transposed-cal-gridline {
-  border-left-color: #1f2937;
+  border-left-color: rgba(255, 255, 255, 0.05);
 }
 
-/* ─── Conflict warning badge (shared between both views) ─── */
+/* ─── Conflict warning badge ─── */
 
 .conflict-badge {
   position: absolute;
@@ -277,7 +297,7 @@ body {
   filter: saturate(2);
 }
 
-/* FullCalendar slot selection highlight — behind events */
+/* FullCalendar slot selection highlight */
 .fc .fc-highlight {
   background-color: rgba(37, 99, 235, 0.12);
   border: 1.5px dashed rgba(37, 99, 235, 0.4);

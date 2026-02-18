@@ -43,10 +43,10 @@ function courseToSessions(course: Course): SessionInput[] {
 }
 
 const inputClass =
-  'w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-400 focus:border-transparent';
+  'w-full px-3 py-2 text-sm border border-white/30 dark:border-white/10 rounded-xl backdrop-blur-md bg-white/40 dark:bg-white/10 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-400 focus:border-transparent';
 
 const selectClass =
-  'px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
+  'px-2 py-2 text-sm border border-white/30 dark:border-white/10 rounded-xl backdrop-blur-md bg-white/40 dark:bg-white/10 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
 
 export function ManualCourseModal({ open, onClose, onSubmit, editingCourse }: Props) {
   if (!open) return null;
@@ -57,9 +57,9 @@ export function ManualCourseModal({ open, onClose, onSubmit, editingCourse }: Pr
     : 'new';
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md max-h-[90vh] overflow-y-auto p-5"
+        className="backdrop-blur-2xl bg-white/70 dark:bg-gray-900/70 rounded-3xl shadow-2xl shadow-black/10 border border-white/30 dark:border-white/10 w-full max-w-md max-h-[90vh] overflow-y-auto p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <ManualCourseForm
@@ -218,7 +218,7 @@ function ManualCourseForm({
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">جلسات *</label>
           <div className="flex flex-col gap-2">
             {sessions.map((session, i) => (
-              <div key={i} className="flex flex-col gap-1.5 border border-gray-200 dark:border-gray-600 rounded-lg p-2">
+              <div key={i} className="flex flex-col gap-1.5 border border-white/25 dark:border-white/10 rounded-xl p-2 backdrop-blur-sm bg-white/10 dark:bg-white/5">
                 <div className="flex items-center gap-2">
                   <select
                     value={session.dayOfWeek}
@@ -356,7 +356,7 @@ function ManualCourseForm({
         {/* Submit */}
         <button
           onClick={handleSubmit}
-          className="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors cursor-pointer"
+          className="w-full py-2.5 backdrop-blur-md bg-primary-500/80 hover:bg-primary-600/80 text-white font-medium rounded-xl shadow-lg shadow-primary-500/20 border border-primary-400/30 transition-colors cursor-pointer"
         >
           {isEditing ? 'ذخیره تغییرات' : 'افزودن به برنامه'}
         </button>
