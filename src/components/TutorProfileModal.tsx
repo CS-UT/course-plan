@@ -26,20 +26,20 @@ interface Props {
 function RatingBar({ value, label }: { value: number; label: string }) {
   const pct = (value / 10) * 100;
   const color =
-    value >= 7 ? 'bg-green-500' : value >= 4 ? 'bg-yellow-500' : 'bg-red-500';
+    value >= 7 ? 'bg-accent-500' : value >= 4 ? 'bg-warning-400' : 'bg-red-500';
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-gray-600 dark:text-gray-400 w-28 shrink-0 text-start">
+      <span className="text-sm text-[#6B5540] dark:text-[#9C8B7A] w-28 shrink-0 text-start">
         {label}
       </span>
-      <div className="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div className="flex-1 h-3 bg-[#F0E6D8] dark:bg-[#3D352E] rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all ${color}`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-10 text-start tabular-nums" dir="ltr">
+      <span className="text-sm font-medium text-[#6B5540] dark:text-[#9C8B7A] w-10 text-start tabular-nums" dir="ltr">
         {toPersianDigits(value.toString())}/۱۰
       </span>
     </div>
@@ -87,10 +87,10 @@ function ReviewCard({ review }: { review: TutorReview }) {
                 return (
                   <span
                     key={key}
-                    className={`text-sm px-2.5 py-1 rounded-lg ${
+                    className={`text-sm px-2.5 py-1 rounded-xl ${
                       val
-                        ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+                        ? 'bg-accent-50 dark:bg-accent-500/10 text-accent-600 dark:text-accent-400'
+                        : 'bg-[#F0E6D8] dark:bg-[#3D352E] text-[#B8A898] dark:text-[#6B5D50]'
                     }`}
                   >
                     {val ? '✅' : '❌'} {display}
@@ -107,10 +107,10 @@ function ReviewCard({ review }: { review: TutorReview }) {
         <div className="flex flex-col gap-2.5">
           {Object.entries(review.sections!).map(([key, content]) => (
             <div key={key}>
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <h4 className="text-sm font-semibold text-[#6B5540] dark:text-[#9C8B7A] mb-1">
                 {SECTION_LABELS[key] || key}
               </h4>
-              <div className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2.5 leading-relaxed whitespace-pre-line">
+              <div className="text-sm text-[#6B5540] dark:text-[#9C8B7A] bg-[#FAF7F2] dark:bg-[#1C1816] rounded-xl px-3 py-2.5 leading-relaxed whitespace-pre-line">
                 {content}
               </div>
             </div>
@@ -122,7 +122,7 @@ function ReviewCard({ review }: { review: TutorReview }) {
       {review.comments.length > 0 && (
         <div className="flex flex-col gap-2">
           {(hasRatings || hasSections) && (
-            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h4 className="text-sm font-semibold text-[#6B5540] dark:text-[#9C8B7A]">
               نظرات دانشجویان
             </h4>
           )}
@@ -130,7 +130,7 @@ function ReviewCard({ review }: { review: TutorReview }) {
             {review.comments.map((c, i) => (
               <div
                 key={i}
-                className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2.5 leading-relaxed whitespace-pre-line"
+                className="text-sm text-[#6B5540] dark:text-[#9C8B7A] bg-[#FAF7F2] dark:bg-[#1C1816] rounded-xl px-3 py-2.5 leading-relaxed whitespace-pre-line"
               >
                 {c}
               </div>
@@ -141,7 +141,7 @@ function ReviewCard({ review }: { review: TutorReview }) {
 
       {/* Link to original Telegram message + date */}
       {(review.messageId || review.date) && (
-        <div className="flex items-center justify-between gap-2 text-xs text-gray-400 dark:text-gray-500">
+        <div className="flex items-center justify-between gap-2 text-xs text-[#B8A898] dark:text-[#6B5D50]">
           {review.messageId ? (
             <a
               href={`https://t.me/UTeacherz/${review.messageId}`}
@@ -193,13 +193,13 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md max-h-[90vh] overflow-y-auto p-5"
+        className="bg-[#FFF8F0] dark:bg-[#2A2420] rounded-2xl shadow-xl shadow-amber-900/10 border border-[#E8DED2] dark:border-[#3D352E] w-full max-w-md max-h-[90vh] overflow-y-auto p-5"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex justify-between items-start mb-3">
           <div>
-            <h2 className="font-bold text-lg text-gray-900 dark:text-gray-100">
+            <h2 className="font-bold text-lg text-[#3D2B1F] dark:text-[#E8DED2]">
               {tutor.profileUrl ? (
                 <a
                   href={tutor.profileUrl}
@@ -215,7 +215,7 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
               )}
             </h2>
             {(tutor.rank || tutor.workplace) && (
-              <div className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              <div className="text-sm text-[#8B7355] dark:text-[#9C8B7A] mt-0.5">
                 {tutor.rank && <span>{tutor.rank}</span>}
                 {tutor.rank && tutor.workplace && <span> · </span>}
                 {tutor.workplace && <span>{tutor.workplace}</span>}
@@ -224,7 +224,7 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xl cursor-pointer shrink-0 mr-0 ml-2"
+            className="text-[#B8A898] hover:text-[#6B5540] dark:hover:text-[#9C8B7A] text-xl cursor-pointer shrink-0 mr-0 ml-2"
           >
             ✕
           </button>
@@ -237,10 +237,10 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
               <button
                 key={i}
                 onClick={() => setActiveReviewIdx(i)}
-                className={`text-sm px-3 py-1.5 rounded-lg cursor-pointer transition-colors ${
+                className={`text-sm px-3 py-1.5 rounded-xl cursor-pointer transition-colors ${
                   i === activeReviewIdx
                     ? 'bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 font-medium'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    : 'bg-[#F0E6D8] dark:bg-[#3D352E] text-[#6B5540] dark:text-[#9C8B7A] hover:bg-[#E8DED2] dark:hover:bg-[#4A403A]'
                 }`}
               >
                 {r.courseName || `نظر ${toPersianDigits((i + 1).toString())}`}
@@ -251,7 +251,7 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
 
         {/* Single course label */}
         {review.courseName && tutor.reviews.length <= 1 && (
-          <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+          <div className="text-sm text-[#8B7355] dark:text-[#9C8B7A] mb-3">
             درس: {review.courseName}
           </div>
         )}
@@ -259,9 +259,9 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
         <ReviewCard review={review} />
 
         {/* Source note */}
-        <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-xs text-gray-400 dark:text-gray-500">
-            منبع: <a href="https://t.me/UTeacherz" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600 dark:hover:text-gray-300">@UTeacherz</a>
+        <div className="mt-4 pt-3 border-t border-[#E8DED2] dark:border-[#3D352E]">
+          <p className="text-xs text-[#B8A898] dark:text-[#6B5D50]">
+            منبع: <a href="https://t.me/UTeacherz" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#6B5540] dark:hover:text-[#9C8B7A]">@UTeacherz</a>
           </p>
         </div>
       </div>

@@ -33,36 +33,36 @@ export function ExamsTable({ onEditCourse }: Props) {
 
   if (selectedCourses.length === 0) {
     return (
-      <div className="mt-3 text-sm text-gray-400 dark:text-gray-500 text-center py-6">
+      <div className="mt-3 text-sm text-[#B8A898] dark:text-[#6B5D50] text-center py-6">
         هنوز درسی انتخاب نشده
       </div>
     );
   }
 
   return (
-    <div className="mt-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
+    <div className="mt-3 bg-[#FFF8F0] dark:bg-[#2A2420] rounded-2xl border border-[#E8DED2] dark:border-[#3D352E] overflow-hidden transition-colors shadow-sm shadow-amber-900/5">
       {/* Desktop table */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+          <thead className="bg-[#F0E6D8] dark:bg-[#3D352E] text-[#6B5540] dark:text-[#9C8B7A]">
             <tr>
-              <th className="px-3 py-2 text-right font-medium">کد</th>
-              <th className="px-3 py-2 text-right font-medium">نام درس</th>
-              <th className="px-3 py-2 text-right font-medium">گروه</th>
-              <th className="px-3 py-2 text-right font-medium">واحد</th>
-              <th className="px-3 py-2 text-right font-medium">استاد</th>
-              <th className="px-3 py-2 text-right font-medium">زمان امتحان</th>
-              <th className="px-3 py-2 text-center font-medium">عملیات</th>
+              <th className="px-3 py-2 text-right font-semibold">کد</th>
+              <th className="px-3 py-2 text-right font-semibold">نام درس</th>
+              <th className="px-3 py-2 text-right font-semibold">گروه</th>
+              <th className="px-3 py-2 text-right font-semibold">واحد</th>
+              <th className="px-3 py-2 text-right font-semibold">استاد</th>
+              <th className="px-3 py-2 text-right font-semibold">زمان امتحان</th>
+              <th className="px-3 py-2 text-center font-semibold">عملیات</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+          <tbody className="divide-y divide-[#F0E6D8] dark:divide-[#3D352E]">
             {sorted.map((course) => {
               const key = `${course.courseCode}-${course.group}`;
               const hasConflict = conflictingPairs.has(key);
               return (
                 <tr
                   key={key}
-                  className={hasConflict ? 'bg-danger-50 dark:bg-danger-500/10' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}
+                  className={hasConflict ? 'bg-danger-50 dark:bg-danger-500/10' : 'hover:bg-[#FAF7F2] dark:hover:bg-[#342C25]'}
                 >
                   <td className="px-3 py-2 tabular-nums">{toPersianDigits(course.courseCode)}</td>
                   <td className="px-3 py-2 font-medium">{course.courseName}</td>
@@ -81,14 +81,14 @@ export function ExamsTable({ onEditCourse }: Props) {
                     <div className="flex items-center justify-center gap-1.5">
                       <button
                         onClick={() => onEditCourse(course)}
-                        className="text-gray-400 hover:text-primary-500 transition-colors cursor-pointer"
+                        className="text-[#B8A898] hover:text-primary-500 transition-colors cursor-pointer"
                         title="ویرایش"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                       </button>
                       <button
                         onClick={() => removeCourse(course.courseCode, course.group)}
-                        className="text-gray-400 hover:text-danger-500 transition-colors cursor-pointer"
+                        className="text-[#B8A898] hover:text-danger-500 transition-colors cursor-pointer"
                         title="حذف"
                       >
                         ✕
@@ -99,7 +99,7 @@ export function ExamsTable({ onEditCourse }: Props) {
               );
             })}
           </tbody>
-          <tfoot className="bg-gray-50 dark:bg-gray-700 font-medium">
+          <tfoot className="bg-[#F0E6D8] dark:bg-[#3D352E] font-semibold">
             <tr>
               <td className="px-3 py-2" colSpan={3}>جمع</td>
               <td className="px-3 py-2">{toPersianDigits(totalUnits)}</td>
@@ -110,7 +110,7 @@ export function ExamsTable({ onEditCourse }: Props) {
       </div>
 
       {/* Mobile card layout */}
-      <div className="sm:hidden divide-y divide-gray-100 dark:divide-gray-700">
+      <div className="sm:hidden divide-y divide-[#F0E6D8] dark:divide-[#3D352E]">
         {sorted.map((course) => {
           const key = `${course.courseCode}-${course.group}`;
           const hasConflict = conflictingPairs.has(key);
@@ -121,22 +121,22 @@ export function ExamsTable({ onEditCourse }: Props) {
             >
               <div className="flex justify-between items-start gap-2">
                 <div className="min-w-0">
-                  <div className="font-medium text-gray-900 dark:text-gray-100">{course.courseName}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  <div className="font-medium text-[#3D2B1F] dark:text-[#E8DED2]">{course.courseName}</div>
+                  <div className="text-xs text-[#8B7355] dark:text-[#9C8B7A] mt-0.5">
                     {course.professor} · گروه {toPersianDigits(course.group)} · {toPersianDigits(course.unitCount)} واحد
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => onEditCourse(course)}
-                    className="text-gray-400 hover:text-primary-500 transition-colors cursor-pointer p-1 -m-1"
+                    className="text-[#B8A898] hover:text-primary-500 transition-colors cursor-pointer p-1 -m-1"
                     title="ویرایش"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   </button>
                   <button
                     onClick={() => removeCourse(course.courseCode, course.group)}
-                    className="text-gray-400 hover:text-danger-500 transition-colors cursor-pointer p-1 -m-1"
+                    className="text-[#B8A898] hover:text-danger-500 transition-colors cursor-pointer p-1 -m-1"
                     title="حذف"
                   >
                     ✕
@@ -144,7 +144,7 @@ export function ExamsTable({ onEditCourse }: Props) {
                 </div>
               </div>
               {course.examDate && (
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 tabular-nums">
+                <div className="text-xs text-[#8B7355] dark:text-[#9C8B7A] mt-1.5 tabular-nums">
                   امتحان: {toPersianDigits(course.examDate)} - {toPersianDigits(course.examTime)}
                   {hasConflict && (
                     <span className="mr-2 text-danger-600 dark:text-danger-400 font-medium">⚠ تداخل</span>
@@ -154,7 +154,7 @@ export function ExamsTable({ onEditCourse }: Props) {
             </div>
           );
         })}
-        <div className="p-3 bg-gray-50 dark:bg-gray-700 text-sm font-medium flex justify-between">
+        <div className="p-3 bg-[#F0E6D8] dark:bg-[#3D352E] text-sm font-semibold flex justify-between">
           <span>جمع</span>
           <span>{toPersianDigits(totalUnits)} واحد</span>
         </div>

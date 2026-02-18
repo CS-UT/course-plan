@@ -166,13 +166,13 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 relative transition-colors">
+    <div className="bg-[#FFF8F0] dark:bg-[#2A2420] rounded-2xl shadow-lg shadow-amber-900/5 border border-[#E8DED2] dark:border-[#3D352E] p-3 relative transition-colors">
       {/* Rotate toggle — top bar */}
       <div className="flex justify-start mb-2">
         <button
           onClick={handleToggleRotation}
           data-export-exclude
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs text-[#8B7355] dark:text-[#9C8B7A] hover:bg-[#F0E6D8] dark:hover:bg-[#3D352E] transition-colors cursor-pointer"
           title={rotated ? 'نمای عادی' : 'چرخش ۹۰ درجه'}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -185,12 +185,12 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
 
       {/* Slot selection hint */}
       {!slotHintDismissed && !slotFilter && !rotated && (
-        <div className="hidden lg:flex items-center gap-2 mb-2 px-1 text-xs text-gray-400 dark:text-gray-500" data-export-exclude>
+        <div className="hidden lg:flex items-center gap-2 mb-2 px-1 text-xs text-[#B8A898] dark:text-[#6B5D50]" data-export-exclude>
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
           <span>روی خانه‌های خالی بکشید تا دروس همان ساعت فیلتر شوند</span>
           <button
             onClick={dismissSlotHint}
-            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer p-0.5"
+            className="text-[#B8A898] dark:text-[#6B5D50] hover:text-[#6B5540] dark:hover:text-[#9C8B7A] cursor-pointer p-0.5"
             title="بستن"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -201,13 +201,13 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
       {/* Slot filter indicator */}
       {slotFilter && (
         <div className="hidden lg:flex items-center gap-2 mb-2 px-1" data-export-exclude>
-          <span className="text-xs text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 rounded-lg px-2.5 py-1.5 flex items-center gap-1.5">
+          <span className="text-xs text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 rounded-xl px-2.5 py-1.5 flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
             فیلتر: {dayName(slotFilter.dayOfWeek)} {toPersianDigits(slotFilter.startTime)} تا {toPersianDigits(slotFilter.endTime)}
           </span>
           <button
             onClick={clearSlotFilter}
-            className="text-xs text-gray-500 dark:text-gray-400 hover:text-danger-600 dark:hover:text-danger-400 cursor-pointer p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="text-xs text-[#8B7355] dark:text-[#9C8B7A] hover:text-danger-600 dark:hover:text-danger-400 cursor-pointer p-1 rounded-xl hover:bg-[#F0E6D8] dark:hover:bg-[#3D352E] transition-colors"
             title="پاک کردن فیلتر"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -272,13 +272,13 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
       {tooltip.visible && tooltip.content && (
         <div
           ref={tooltipRef}
-          className="fixed z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3 text-sm w-64"
+          className="fixed z-50 bg-[#FFF8F0] dark:bg-[#2A2420] rounded-2xl shadow-lg shadow-amber-900/10 border border-[#E8DED2] dark:border-[#3D352E] p-3 text-sm w-64"
           style={{ left: tooltip.x, top: tooltip.y }}
         >
-          <div className="font-bold text-gray-900 dark:text-gray-100 mb-1">
+          <div className="font-bold text-[#3D2B1F] dark:text-[#E8DED2] mb-1">
             {tooltip.content.courseName}
           </div>
-          <div className="text-gray-600 dark:text-gray-300 space-y-0.5">
+          <div className="text-[#6B5540] dark:text-[#9C8B7A] space-y-0.5">
             <div>استاد: {tooltip.content.professor}</div>
             <div>کد: {toPersianDigits(tooltip.content.courseCode)}-{toPersianDigits(tooltip.content.group)}</div>
             <div>واحد: {toPersianDigits(tooltip.content.unitCount)}</div>
@@ -290,7 +290,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
               </div>
             )}
             {tooltip.content.notes && (
-              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">{tooltip.content.notes}</div>
+              <div className="mt-1 text-xs text-[#8B7355] dark:text-[#6B5D50]">{tooltip.content.notes}</div>
             )}
           </div>
           <div className="mt-2 flex gap-2">
@@ -304,7 +304,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
                   onEditCourse(course);
                 }
               }}
-              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 hover:bg-primary-100 dark:hover:bg-primary-900/50 rounded-lg transition-colors cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 hover:bg-primary-100 dark:hover:bg-primary-900/50 rounded-xl transition-colors cursor-pointer"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               ویرایش
@@ -315,7 +315,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
                 setTooltip((t) => ({ ...t, visible: false }));
                 removeCourse(courseCode, group);
               }}
-              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-danger-600 dark:text-danger-400 bg-danger-50 dark:bg-danger-500/10 hover:bg-danger-100 dark:hover:bg-danger-500/20 rounded-lg transition-colors cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-danger-600 dark:text-danger-400 bg-danger-50 dark:bg-danger-500/10 hover:bg-danger-100 dark:hover:bg-danger-500/20 rounded-xl transition-colors cursor-pointer"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
               حذف
@@ -328,18 +328,18 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
       {tappedCourse && (
         <div className="fixed inset-0 z-50 bg-black/30" onClick={() => setTappedCourse(null)}>
           <div
-            className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl p-5 pb-8 shadow-xl"
+            className="absolute bottom-0 left-0 right-0 bg-[#FFF8F0] dark:bg-[#2A2420] rounded-t-2xl p-5 pb-8 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drag handle */}
-            <div className="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4" />
+            <div className="w-10 h-1 bg-[#E8DED2] dark:bg-[#3D352E] rounded-full mx-auto mb-4" />
 
             {/* Course info */}
             <div className="mb-4">
-              <div className="font-bold text-base text-gray-900 dark:text-gray-100">
+              <div className="font-bold text-base text-[#3D2B1F] dark:text-[#E8DED2]">
                 {tappedCourse.courseName}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-300 mt-1 space-y-0.5">
+              <div className="text-sm text-[#6B5540] dark:text-[#9C8B7A] mt-1 space-y-0.5">
                 {tappedCourse.professor && <div>استاد: {tappedCourse.professor}</div>}
                 <div>کد: {toPersianDigits(tappedCourse.courseCode)}-{toPersianDigits(tappedCourse.group)}</div>
                 <div>واحد: {toPersianDigits(tappedCourse.unitCount)}</div>
@@ -376,7 +376,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
               </button>
               <button
                 onClick={() => setTappedCourse(null)}
-                className="w-full px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors cursor-pointer"
+                className="w-full px-4 py-3 text-sm font-medium text-[#8B7355] dark:text-[#9C8B7A] hover:bg-[#F0E6D8] dark:hover:bg-[#3D352E] rounded-xl transition-colors cursor-pointer"
               >
                 انصراف
               </button>
@@ -390,7 +390,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
 
 /* ─── Transposed Calendar (days=rows, hours=columns, native RTL) ─── */
 
-const HOVER_COLOR = { bg: '#f3f4f6', border: '#9ca3af', text: '#6b7280' };
+const HOVER_COLOR = { bg: '#F5EDE3', border: '#B8A898', text: '#8B7355' };
 
 const DAYS: { dow: number; label: string }[] = [
   { dow: 6, label: 'شنبه' },
@@ -636,7 +636,7 @@ function TransposedCalendar({
                             );
                             if (course) onEditCourse(course);
                           }}
-                          className="p-1 bg-white/90 dark:bg-gray-800/90 rounded hover:bg-white dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                          className="p-1 bg-white/90 dark:bg-[#2A2420]/90 rounded hover:bg-white dark:hover:bg-[#3D352E] transition-colors cursor-pointer"
                           title="ویرایش"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary-600 dark:text-primary-400"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -646,7 +646,7 @@ function TransposedCalendar({
                             e.stopPropagation();
                             onRemoveCourse(evt.courseCode, evt.group);
                           }}
-                          className="p-1 bg-white/90 dark:bg-gray-800/90 rounded hover:bg-white dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                          className="p-1 bg-white/90 dark:bg-[#2A2420]/90 rounded hover:bg-white dark:hover:bg-[#3D352E] transition-colors cursor-pointer"
                           title="حذف"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-danger-600 dark:text-danger-400"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>

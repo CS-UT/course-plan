@@ -32,7 +32,7 @@ export function ExportButtons() {
       const dataUrl = await toJpeg(el, {
         quality: 0.92,
         pixelRatio: 2,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#FFF8F0',
         filter: exportFilter,
       });
 
@@ -59,7 +59,7 @@ export function ExportButtons() {
     try {
       // Try Web Share API first (mobile)
       if (navigator.share) {
-        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#ffffff', filter: exportFilter });
+        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#FFF8F0', filter: exportFilter });
         const res = await fetch(dataUrl);
         const blob = await res.blob();
         const file = new File([blob], `schedule-${currentScheduleId + 1}.png`, {
@@ -74,7 +74,7 @@ export function ExportButtons() {
 
       // Fallback: copy to clipboard
       try {
-        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#ffffff', filter: exportFilter });
+        const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#FFF8F0', filter: exportFilter });
         const res = await fetch(dataUrl);
         const blob = await res.blob();
         await navigator.clipboard.write([
@@ -90,7 +90,7 @@ export function ExportButtons() {
       const dataUrl = await toJpeg(el, {
         quality: 0.92,
         pixelRatio: 2,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#FFF8F0',
         filter: exportFilter,
       });
       const link = document.createElement('a');
@@ -187,10 +187,10 @@ export function ExportButtons() {
   }
 
   const btnClass =
-    'text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-wait whitespace-nowrap';
+    'text-xs text-[#8B7355] dark:text-[#9C8B7A] hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded-xl hover:bg-[#F0E6D8] dark:hover:bg-[#3D352E] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-wait whitespace-nowrap';
 
   const calendarBtnClass =
-    'flex items-center gap-1.5 text-xs font-medium text-white bg-gradient-to-l from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-500 dark:hover:to-blue-600 px-3 py-1.5 rounded-lg shadow-sm hover:shadow transition-all cursor-pointer whitespace-nowrap';
+    'flex items-center gap-1.5 text-xs font-semibold text-white bg-gradient-to-l from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 dark:from-primary-600 dark:to-primary-700 dark:hover:from-primary-500 dark:hover:to-primary-600 px-3 py-1.5 rounded-xl shadow-sm shadow-amber-900/10 hover:shadow transition-all cursor-pointer whitespace-nowrap';
 
   return (
     <div className="flex items-center gap-1.5">
