@@ -33,7 +33,7 @@ function RatingBar({ value, label }: { value: number; label: string }) {
       <span className="text-sm text-gray-600 dark:text-gray-400 w-28 shrink-0 text-start">
         {label}
       </span>
-      <div className="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div className="flex-1 h-3 bg-[#FFD700] dark:bg-[#854d0e] rounded-sm border-2 border-black dark:border-white overflow-hidden">
         <div
           className={`h-full rounded-full transition-all ${color}`}
           style={{ width: `${pct}%` }}
@@ -89,8 +89,8 @@ function ReviewCard({ review }: { review: TutorReview }) {
                     key={key}
                     className={`text-sm px-2.5 py-1 rounded-lg ${
                       val
-                        ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+                        ? 'bg-[#32CD32]/20 dark:bg-[#32CD32]/10 text-black dark:text-[#32CD32] border border-black dark:border-white font-bold'
+                        : 'bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-500 border border-black dark:border-white'
                     }`}
                   >
                     {val ? '✅' : '❌'} {display}
@@ -110,7 +110,7 @@ function ReviewCard({ review }: { review: TutorReview }) {
               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {SECTION_LABELS[key] || key}
               </h4>
-              <div className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2.5 leading-relaxed whitespace-pre-line">
+              <div className="text-sm text-gray-600 dark:text-gray-400 bg-[#FFD700]/10 dark:bg-[#FFD700]/5 rounded-md border border-black dark:border-white px-3 py-2.5 leading-relaxed whitespace-pre-line">
                 {content}
               </div>
             </div>
@@ -130,7 +130,7 @@ function ReviewCard({ review }: { review: TutorReview }) {
             {review.comments.map((c, i) => (
               <div
                 key={i}
-                className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2.5 leading-relaxed whitespace-pre-line"
+                className="text-sm text-gray-600 dark:text-gray-400 bg-[#FFD700]/10 dark:bg-[#FFD700]/5 rounded-md border border-black dark:border-white px-3 py-2.5 leading-relaxed whitespace-pre-line"
               >
                 {c}
               </div>
@@ -189,11 +189,11 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md max-h-[90vh] overflow-y-auto p-5"
+        className="bg-[#FAFAF5] dark:bg-[#1a1a1a] rounded-md shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] border-3 border-black dark:border-white w-full max-w-md max-h-[90vh] overflow-y-auto p-5"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -239,8 +239,8 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
                 onClick={() => setActiveReviewIdx(i)}
                 className={`text-sm px-3 py-1.5 rounded-lg cursor-pointer transition-colors ${
                   i === activeReviewIdx
-                    ? 'bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 font-medium'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    ? 'bg-[#FFD700] dark:bg-[#854d0e] text-black dark:text-yellow-100 font-extrabold border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+                    : 'bg-white dark:bg-[#2a2a2a] text-black dark:text-white border-2 border-black dark:border-white hover:bg-[#FFD700]/20 font-bold'
                 }`}
               >
                 {r.courseName || `نظر ${toPersianDigits((i + 1).toString())}`}
@@ -259,7 +259,7 @@ export function TutorProfileModal({ open, onClose, tutorId }: Props) {
         <ReviewCard review={review} />
 
         {/* Source note */}
-        <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-4 pt-3 border-t-2 border-black dark:border-white">
           <p className="text-xs text-gray-400 dark:text-gray-500">
             منبع: <a href="https://t.me/UTeacherz" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600 dark:hover:text-gray-300">@UTeacherz</a>
           </p>

@@ -187,10 +187,10 @@ export function ExportButtons() {
   }
 
   const btnClass =
-    'text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-wait whitespace-nowrap';
+    'text-xs text-black dark:text-white hover:text-black px-2.5 py-1.5 rounded-md border-2 border-black dark:border-white hover:bg-[#FFD700] dark:hover:bg-[#854d0e] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait whitespace-nowrap font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]';
 
   const calendarBtnClass =
-    'flex items-center gap-1.5 text-xs font-medium text-white bg-gradient-to-l from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-500 dark:hover:to-blue-600 px-3 py-1.5 rounded-lg shadow-sm hover:shadow transition-all cursor-pointer whitespace-nowrap';
+    'flex items-center gap-1.5 text-xs font-extrabold text-black bg-[#00BFFF] hover:bg-[#00BFFF]/80 dark:bg-[#00BFFF] dark:hover:bg-[#00BFFF]/80 px-3 py-1.5 rounded-md border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all cursor-pointer whitespace-nowrap';
 
   return (
     <div className="flex items-center gap-1.5">

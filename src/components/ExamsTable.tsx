@@ -40,11 +40,11 @@ export function ExamsTable({ onEditCourse }: Props) {
   }
 
   return (
-    <div className="mt-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
+    <div className="mt-3 bg-white dark:bg-[#2a2a2a] rounded-md border-3 border-black dark:border-white overflow-hidden transition-colors shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]">
       {/* Desktop table */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+          <thead className="bg-[#FFD700] dark:bg-[#854d0e] text-black dark:text-yellow-100 font-bold">
             <tr>
               <th className="px-3 py-2 text-right font-medium">کد</th>
               <th className="px-3 py-2 text-right font-medium">نام درس</th>
@@ -55,14 +55,14 @@ export function ExamsTable({ onEditCourse }: Props) {
               <th className="px-3 py-2 text-center font-medium">عملیات</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+          <tbody className="divide-y-2 divide-black dark:divide-white">
             {sorted.map((course) => {
               const key = `${course.courseCode}-${course.group}`;
               const hasConflict = conflictingPairs.has(key);
               return (
                 <tr
                   key={key}
-                  className={hasConflict ? 'bg-danger-50 dark:bg-danger-500/10' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}
+                  className={hasConflict ? 'bg-[#FF1493]/15 dark:bg-[#FF1493]/10' : 'hover:bg-[#FFD700]/10 dark:hover:bg-[#FFD700]/5'}
                 >
                   <td className="px-3 py-2 tabular-nums">{toPersianDigits(course.courseCode)}</td>
                   <td className="px-3 py-2 font-medium">{course.courseName}</td>
@@ -99,7 +99,7 @@ export function ExamsTable({ onEditCourse }: Props) {
               );
             })}
           </tbody>
-          <tfoot className="bg-gray-50 dark:bg-gray-700 font-medium">
+          <tfoot className="bg-[#FFD700] dark:bg-[#854d0e] font-extrabold text-black dark:text-yellow-100">
             <tr>
               <td className="px-3 py-2" colSpan={3}>جمع</td>
               <td className="px-3 py-2">{toPersianDigits(totalUnits)}</td>
@@ -110,14 +110,14 @@ export function ExamsTable({ onEditCourse }: Props) {
       </div>
 
       {/* Mobile card layout */}
-      <div className="sm:hidden divide-y divide-gray-100 dark:divide-gray-700">
+      <div className="sm:hidden divide-y-2 divide-black dark:divide-white">
         {sorted.map((course) => {
           const key = `${course.courseCode}-${course.group}`;
           const hasConflict = conflictingPairs.has(key);
           return (
             <div
               key={key}
-              className={`p-3 text-sm ${hasConflict ? 'bg-danger-50 dark:bg-danger-500/10' : ''}`}
+              className={`p-3 text-sm ${hasConflict ? 'bg-[#FF1493]/15 dark:bg-[#FF1493]/10' : ''}`}
             >
               <div className="flex justify-between items-start gap-2">
                 <div className="min-w-0">
@@ -154,7 +154,7 @@ export function ExamsTable({ onEditCourse }: Props) {
             </div>
           );
         })}
-        <div className="p-3 bg-gray-50 dark:bg-gray-700 text-sm font-medium flex justify-between">
+        <div className="p-3 bg-[#FFD700] dark:bg-[#854d0e] text-sm font-extrabold text-black dark:text-yellow-100 flex justify-between">
           <span>جمع</span>
           <span>{toPersianDigits(totalUnits)} واحد</span>
         </div>

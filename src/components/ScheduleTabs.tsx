@@ -19,8 +19,8 @@ export function ScheduleTabs() {
             onClick={() => setCurrentScheduleId(s.id)}
             className={`px-4 py-1.5 text-sm rounded-t-lg font-medium transition-colors cursor-pointer ${
               s.id === currentScheduleId
-                ? 'bg-white dark:bg-gray-800 text-primary-700 dark:text-primary-300 border border-b-0 border-gray-200 dark:border-gray-700'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? 'bg-[#FFD700] dark:bg-[#854d0e] text-black dark:text-yellow-100 border-2 border-b-0 border-black dark:border-white shadow-[2px_-2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_-2px_0px_0px_rgba(255,255,255,0.25)] font-extrabold'
+                : 'bg-white dark:bg-[#2a2a2a] text-black dark:text-gray-300 border-2 border-b-0 border-black dark:border-white hover:bg-[#FFD700]/30 dark:hover:bg-[#854d0e]/30 font-bold'
             }`}
           >
             برنامه {toPersianDigits(s.id + 1)}
@@ -39,7 +39,7 @@ export function ScheduleTabs() {
 
       <button
         onClick={createSchedule}
-        className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+        className="px-3 py-1.5 text-sm text-black dark:text-white hover:text-black hover:bg-[#FFD700] border-2 border-black dark:border-white rounded-md shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-bold transition-colors cursor-pointer"
         title="برنامه جدید"
       >
         +
@@ -47,7 +47,7 @@ export function ScheduleTabs() {
 
       <button
         onClick={duplicateSchedule}
-        className="px-3 py-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+        className="px-3 py-1.5 text-xs text-black dark:text-white hover:text-black hover:bg-[#FFD700] border-2 border-black dark:border-white rounded-md shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] font-bold transition-colors cursor-pointer"
         title="کپی برنامه فعلی"
       >
         کپی
