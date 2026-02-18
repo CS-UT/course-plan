@@ -277,11 +277,12 @@ body {
   filter: saturate(2);
 }
 
-/* FullCalendar slot selection highlight */
+/* FullCalendar slot selection highlight — behind events */
 .fc .fc-highlight {
   background-color: rgba(37, 99, 235, 0.12);
   border: 1.5px dashed rgba(37, 99, 235, 0.4);
   border-radius: 0.375rem;
+  z-index: 0 !important;
 }
 
 .dark .fc .fc-highlight {
