@@ -54,11 +54,11 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
     if (!slotHintDismissed) dismissSlotHint();
   }
 
-  // Clear FullCalendar highlight whenever the atom is cleared (from anywhere)
+  // Clear FullCalendar highlight whenever the filter atom changes.
+  // The selection highlight can render on top of course events, so always
+  // remove it — the filter indicator badge above the calendar is enough.
   useEffect(() => {
-    if (!slotFilter) {
-      calendarRef.current?.getApi().unselect();
-    }
+    calendarRef.current?.getApi().unselect();
   }, [slotFilter]);
 
   function clearSlotFilter() {
