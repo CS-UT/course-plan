@@ -32,13 +32,31 @@
   font-size: 0.8rem;
 }
 
-.driver-popover-footer button {
-  font-size: 0.8rem;
-  padding: 5px 12px;
-  border-radius: 0.375rem;
+.driver-popover-footer {
+  gap: 0.5rem;
+  align-items: center;
 }
 
-/* Light mode next button — primary blue (dark mode already styled below) */
+.driver-popover-footer button {
+  font-family: "Vazirmatn", system-ui, sans-serif !important;
+  font-size: 0.8rem;
+  padding: 6px 18px;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  font-weight: 500;
+  text-shadow: none;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+/* Light mode prev button */
+.driver-popover-navigation-btns .driver-popover-prev-btn {
+  background-color: #f3f4f6;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+/* Light mode next button — primary blue */
 .driver-popover-navigation-btns .driver-popover-next-btn {
   background-color: #3b82f6;
   color: #ffffff;
@@ -67,9 +85,9 @@
   color: #94a3b8;
 }
 
-.dark .driver-popover-navigation-btns button {
-  background: transparent;
-  color: #94a3b8;
+.dark .driver-popover-navigation-btns .driver-popover-prev-btn {
+  background: #334155;
+  color: #cbd5e1;
   border-color: #475569;
 }
 
@@ -111,8 +129,9 @@
 }
 
 [dir="rtl"] .driver-popover-close-btn {
-  left: unset;
-  right: 8px;
+  left: 8px;
+  right: unset;
+  top: 8px;
 }
 
 [dir="rtl"] .driver-popover-progress-text {
