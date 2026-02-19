@@ -7,6 +7,7 @@ import { ScheduleTabs } from '@/components/ScheduleTabs';
 import { ExamsTable } from '@/components/ExamsTable';
 import { ExportButtons } from '@/components/ExportButtons';
 import { ManualCourseModal } from '@/components/ManualCourseModal';
+import { WelcomeModal } from '@/components/onboarding';
 import { useSchedule } from '@/hooks/useSchedule';
 import { toPersianDigits } from '@/utils/persian';
 
@@ -81,6 +82,10 @@ function App() {
   function handleModalClose() {
     setShowManualEntry(false);
     setEditingCourse(null);
+  }
+
+  function handleStartTour() {
+    console.log('Tour requested -- will be wired in Phase 3/4');
   }
 
   return (
@@ -180,6 +185,9 @@ function App() {
         onSubmit={handleEditSubmit}
         editingCourse={editingCourse}
       />
+
+      {/* Welcome modal for first-time visitors */}
+      <WelcomeModal onStartTour={handleStartTour} />
     </div>
   );
 }
