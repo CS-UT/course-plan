@@ -46,7 +46,7 @@ export function WelcomeModal({ onStartTour }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
+    <div data-export-exclude className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
       <div
         className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-sm overflow-hidden"
         onClick={(e) => e.stopPropagation()}
