@@ -49,7 +49,7 @@ function MobileBanner() {
           setDismissed(true);
           try { sessionStorage.setItem('plan-mobile-banner-dismissed', 'true'); } catch { /* ignore */ }
         }}
-        className="text-primary-600 dark:text-primary-400 text-xs shrink-0 cursor-pointer font-medium"
+        className="text-primary-600 dark:text-primary-400 text-xs shrink-0 cursor-pointer font-medium px-3 py-1.5 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-800/50 active:bg-primary-200 dark:active:bg-primary-800 transition-colors"
       >
         متوجه شدم
       </button>
