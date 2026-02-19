@@ -12,7 +12,7 @@ Deliver a two-phase onboarding experience (welcome carousel + interactive coach 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Install driver.js, create dark mode + RTL CSS overrides, set up persistence atoms and project structure
+- [x] **Phase 1: Foundation** - Install driver.js, create dark mode + RTL CSS overrides, set up persistence atoms and project structure
 - [ ] **Phase 2: Welcome Modal** - Build responsive carousel modal with feature slides, skip/start-tour actions, and theme support
 - [ ] **Phase 3: Coach Marks Tour** - Configure driver.js tour with device-aware steps, spotlight overlay, Persian navigation, and progress indicator
 - [ ] **Phase 4: Integration & Polish** - Wire onboarding into App.tsx, add help button, guard against export capture, verify end-to-end flow
@@ -32,8 +32,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans (Wave 1: both parallel)
 
 Plans:
-- [ ] 01-01-PLAN.md -- Install driver.js, create CSS overrides (dark mode + RTL + font), tour step definitions, persistence atom, barrel export
-- [ ] 01-02-PLAN.md -- Add data-tour attributes to 7 target elements across 5 components, visual verification checkpoint
+- [x] 01-01-PLAN.md -- Install driver.js, create CSS overrides (dark mode + RTL + font), tour step definitions, persistence atom, barrel export
+- [x] 01-02-PLAN.md -- Add data-tour attributes to 7 target elements across 5 components, visual verification checkpoint
 
 ### Phase 2: Welcome Modal
 **Goal**: First-time visitors see a polished, skippable carousel modal that introduces app features and offers entry into the interactive tour
@@ -86,7 +86,7 @@ Note: Phases 2 and 3 can execute in parallel since both depend only on Phase 1.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Planned | - |
+| 1. Foundation | 2/2 | Complete | 2026-02-19 |
 | 2. Welcome Modal | 0/? | Not started | - |
 | 3. Coach Marks Tour | 0/? | Not started | - |
 | 4. Integration & Polish | 0/? | Not started | - |
