@@ -78,20 +78,20 @@ export function ExamsTable({ onEditCourse }: Props) {
                     )}
                   </td>
                   <td className="px-3 py-2 text-center">
-                    <div className="flex items-center justify-center gap-1.5">
+                    <div className="flex items-center justify-center gap-1">
                       <button
                         onClick={() => onEditCourse(course)}
-                        className="text-gray-400 hover:text-primary-500 transition-colors cursor-pointer"
+                        className="text-gray-400 hover:text-primary-500 transition-colors cursor-pointer p-1.5 -m-0.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
                         title="ویرایش"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                       </button>
                       <button
                         onClick={() => removeCourse(course.courseCode, course.group)}
-                        className="text-gray-400 hover:text-danger-500 transition-colors cursor-pointer"
+                        className="text-gray-400 hover:text-danger-500 transition-colors cursor-pointer p-1.5 -m-0.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
                         title="حذف"
                       >
-                        ✕
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                       </button>
                     </div>
                   </td>
@@ -126,20 +126,20 @@ export function ExamsTable({ onEditCourse }: Props) {
                     {course.professor} · گروه {toPersianDigits(course.group)} · {toPersianDigits(course.unitCount)} واحد
                   </div>
                 </div>
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-0.5 shrink-0">
                   <button
                     onClick={() => onEditCourse(course)}
-                    className="text-gray-400 hover:text-primary-500 transition-colors cursor-pointer p-1 -m-1"
+                    className="text-gray-400 hover:text-primary-500 active:text-primary-600 transition-colors cursor-pointer p-2 -m-1 rounded-lg"
                     title="ویرایش"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   </button>
                   <button
                     onClick={() => removeCourse(course.courseCode, course.group)}
-                    className="text-gray-400 hover:text-danger-500 transition-colors cursor-pointer p-1 -m-1"
+                    className="text-gray-400 hover:text-danger-500 active:text-danger-600 transition-colors cursor-pointer p-2 -m-1 rounded-lg"
                     title="حذف"
                   >
-                    ✕
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   </button>
                 </div>
               </div>
