@@ -7,7 +7,7 @@ import { ScheduleTabs } from '@/components/ScheduleTabs';
 import { ExamsTable } from '@/components/ExamsTable';
 import { ExportButtons } from '@/components/ExportButtons';
 import { ManualCourseModal } from '@/components/ManualCourseModal';
-import { WelcomeModal, startTour } from '@/components/onboarding';
+import { startTour } from '@/components/onboarding';
 import { useSchedule } from '@/hooks/useSchedule';
 import { toPersianDigits } from '@/utils/persian';
 
@@ -82,10 +82,6 @@ function App() {
   function handleModalClose() {
     setShowManualEntry(false);
     setEditingCourse(null);
-  }
-
-  function handleStartTour() {
-    startTour();
   }
 
   return (
@@ -197,8 +193,6 @@ function App() {
         editingCourse={editingCourse}
       />
 
-      {/* Welcome modal for first-time visitors */}
-      <WelcomeModal onStartTour={handleStartTour} />
     </div>
   );
 }
