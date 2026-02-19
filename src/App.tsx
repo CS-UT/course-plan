@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import coursesData from '@/data/courses.json';
 import type { CoursesData, Course } from '@/types';
 import { CourseSearch } from '@/components/CourseSearch';
@@ -96,6 +97,14 @@ function App() {
             <span className="text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-3 py-1 rounded-full whitespace-nowrap">
               {toPersianDigits(schedule.totalUnits)} واحد
             </span>
+            <Link
+              to="/roadmap"
+              className="hidden sm:flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              title="چارت دروس"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              چارت دروس
+            </Link>
             <a
               href="https://github.com/CS-UT/course-plan"
               target="_blank"

@@ -1,9 +1,11 @@
 import { StrictMode, Component } from 'react';
 import type { ReactNode, ErrorInfo } from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'jotai';
 import './index.css';
 import App from './App.tsx';
+import { RoadmapPage } from './components/RoadmapPage.tsx';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
@@ -39,7 +41,12 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
       <Provider>
-        <App />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/roadmap" element={<RoadmapPage />} />
+          </Routes>
+        </BrowserRouter>
       </Provider>
     </ErrorBoundary>
   </StrictMode>,
