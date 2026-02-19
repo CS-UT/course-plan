@@ -45,10 +45,10 @@ Plans:
   3. User can click "Start Tour" on the last slide (or any slide) to dismiss the modal and trigger the coach marks tour
   4. User can click "Skip" to dismiss the modal entirely without launching the tour
   5. Modal renders correctly on both mobile (< 640px) and desktop viewports, and matches the active theme (light or dark)
-**Plans**: TBD
+**Plans**: 1 plan (Wave 1)
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md -- Create WelcomeModal carousel component with 4 Persian feature slides, integrate into App.tsx
 
 ### Phase 3: Coach Marks Tour
 **Goal**: Users who launch the tour see an interactive step-by-step walkthrough that spotlights real UI elements with device-appropriate steps, clear navigation, and progress feedback
@@ -87,6 +87,6 @@ Note: Phases 2 and 3 can execute in parallel since both depend only on Phase 1.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete | 2026-02-19 |
-| 2. Welcome Modal | 0/? | Not started | - |
+| 2. Welcome Modal | 0/1 | Not started | - |
 | 3. Coach Marks Tour | 0/? | Not started | - |
 | 4. Integration & Polish | 0/? | Not started | - |
