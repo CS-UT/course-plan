@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 Phase: 3 of 4 (Coach Marks) -- COMPLETE
 Plan: 1 of 1 in current phase -- ALL DONE
 Status: Phase 3 complete
-Last activity: 2026-02-19 -- Completed 03-01-PLAN.md (Tour engine with startTour)
+Last activity: 2026-02-19 - Completed quick task 1: Fix coach marks popover styling
 
 Progress: [████████░░] 85%
 
@@ -70,6 +70,12 @@ None yet.
 - [RESOLVED] [Research]: Tailwind CSS v4 layer system may affect driver.js default styles -- VERIFIED: unlayered import before tailwindcss works correctly
 - [RESOLVED] [Research]: Persian progress text in driver.js uses Western digits -- RESOLVED: onPopoverRender + toPersianDigits converts digits at render time
 - [RESOLVED] [Research]: All Persian copy for carousel slides and tour tooltips needs to be authored -- DONE: 4 slides authored in welcomeSlides.ts
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Fix coach marks popover styling: Vazirmatn font, better text style, rounded corners for UI consistency | 2026-02-19 | 51ea089 | [1-fix-coach-marks-popover-styling-vazirmat](./quick/1-fix-coach-marks-popover-styling-vazirmat/) |
 
 ## Session Continuity
 
