@@ -12,7 +12,7 @@ export function ScheduleTabs() {
   } = useSchedule();
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div data-tour="schedule-tabs" className="flex items-center gap-2 flex-wrap">
       {schedules.map((s) => (
         <div key={s.id} className="flex items-center">
           <button

@@ -166,7 +166,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 relative transition-colors">
+    <div data-tour="calendar" className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 relative transition-colors">
       {/* Rotate toggle — top bar */}
       <div className="flex justify-start mb-2">
         <button

@@ -193,7 +193,7 @@ export function ExportButtons() {
     'flex items-center gap-1.5 text-xs font-medium text-white bg-gradient-to-l from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-500 dark:hover:to-blue-600 px-3 py-1.5 rounded-lg shadow-sm hover:shadow transition-all cursor-pointer whitespace-nowrap';
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div data-tour="export-buttons" className="flex items-center gap-1.5">
       <input
         ref={fileInputRef}
         type="file"

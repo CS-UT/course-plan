@@ -154,7 +154,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div data-tour="course-search" className="flex flex-col gap-3">
       {/* Tab bar */}
       <div className="flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1 gap-1">
         <button
