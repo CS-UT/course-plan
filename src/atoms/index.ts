@@ -15,3 +15,5 @@ export interface SlotFilter {
 }
 
 export const slotFilterAtom = atom<SlotFilter | null>(null);
+
+export const onboardingCompletedAtom = atomWithStorage<boolean>('plan-onboarding-v1', false);
