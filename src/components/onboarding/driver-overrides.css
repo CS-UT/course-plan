@@ -1,0 +1,81 @@
+/* driver.js base styles — must remain unlayered (higher specificity than Tailwind) */
+@import "driver.js/dist/driver.css";
+
+/* ─── Font override ─── */
+.driver-popover {
+  font-family: "Vazirmatn", system-ui, sans-serif;
+}
+
+/* ─── Dark mode overrides ─── */
+.dark .driver-popover {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+.dark .driver-popover-title {
+  color: #f1f5f9;
+}
+
+.dark .driver-popover-description {
+  color: #cbd5e1;
+}
+
+.dark .driver-popover-close-btn {
+  color: #94a3b8;
+}
+
+.dark .driver-popover-footer .driver-popover-progress-text {
+  color: #94a3b8;
+}
+
+.dark .driver-popover-navigation-btns button {
+  background: transparent;
+  color: #94a3b8;
+  border-color: #475569;
+}
+
+.dark .driver-popover-navigation-btns .driver-popover-next-btn {
+  background: #3b82f6;
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+/* Dark mode arrow directions */
+.dark .driver-popover-arrow-side-top {
+  border-bottom-color: #1e293b;
+}
+
+.dark .driver-popover-arrow-side-bottom {
+  border-top-color: #1e293b;
+}
+
+.dark .driver-popover-arrow-side-left {
+  border-right-color: #1e293b;
+}
+
+.dark .driver-popover-arrow-side-right {
+  border-left-color: #1e293b;
+}
+
+/* ─── RTL overrides ─── */
+[dir="rtl"] .driver-popover {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .driver-popover-footer {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .driver-popover-navigation-btns {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .driver-popover-close-btn {
+  left: unset;
+  right: 8px;
+}
+
+[dir="rtl"] .driver-popover-progress-text {
+  direction: rtl;
+}

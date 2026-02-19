@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap');
+@import "./components/onboarding/driver-overrides.css";
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
