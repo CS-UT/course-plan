@@ -79,3 +79,10 @@
 [dir="rtl"] .driver-popover-progress-text {
   direction: rtl;
 }
+
+/* ─── Mobile viewport safety ─── */
+@media (max-width: 480px) {
+  .driver-popover {
+    max-width: calc(100vw - 24px);
+  }
+}
