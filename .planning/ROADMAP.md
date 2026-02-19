@@ -60,10 +60,10 @@ Plans:
   3. Each step shows a Persian progress indicator (e.g., "۲ از ۵") and Next/Previous/Done buttons with Persian labels
   4. User can dismiss the tour at any step via a close button or the Escape key
   5. Tour popovers remain fully visible within the viewport on all screen sizes without clipping
-**Plans**: TBD
+**Plans**: 1 plan (Wave 1)
 
 Plans:
-- [ ] 03-01: TBD
+- [ ] 03-01-PLAN.md -- Create startTour() function with device-aware step filtering, Persian labels/progress, mobile viewport CSS safety
 
 ### Phase 4: Integration & Polish
 **Goal**: The complete onboarding flow works end-to-end in production -- first visit triggers welcome then optional tour, returning visits see nothing, and any user can relaunch via the help button
@@ -88,5 +88,5 @@ Note: Phases 2 and 3 can execute in parallel since both depend only on Phase 1.
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete | 2026-02-19 |
 | 2. Welcome Modal | 0/1 | Not started | - |
-| 3. Coach Marks Tour | 0/? | Not started | - |
+| 3. Coach Marks Tour | 0/1 | Not started | - |
 | 4. Integration & Polish | 0/? | Not started | - |
