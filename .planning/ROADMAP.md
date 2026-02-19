@@ -73,10 +73,10 @@ Plans:
   1. A returning user (localStorage flag set) never sees the welcome modal on page load
   2. A "?" help button is visible in the header and clicking it relaunches the coach marks tour for any user at any time
   3. Onboarding overlays and popovers are excluded from schedule image export (JPG download produces a clean image with no onboarding artifacts)
-**Plans**: TBD
+**Plans**: 1 plan (Wave 1)
 
 Plans:
-- [ ] 04-01: TBD
+- [ ] 04-01-PLAN.md -- Wire startTour into App.tsx, add "?" help button to header, add defensive export-exclude to WelcomeModal, verify end-to-end flow
 
 ## Progress
 
