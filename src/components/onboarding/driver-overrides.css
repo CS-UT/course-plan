@@ -2,8 +2,47 @@
 @import "driver.js/dist/driver.css";
 
 /* ─── Font override ─── */
-.driver-popover {
+/* driver.js applies font-family via `.driver-popover *` (star selector)
+   and title/description use `font:` shorthand which resets font-family.
+   Override both the parent and all children to ensure Vazirmatn renders. */
+.driver-popover,
+.driver-popover * {
   font-family: "Vazirmatn", system-ui, sans-serif;
+}
+
+/* ─── Rounded corners (match app card radius) ─── */
+.driver-popover {
+  border-radius: 0.75rem;
+}
+
+/* ─── Text styling for Persian readability ─── */
+.driver-popover-title {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.driver-popover-description {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+.driver-popover-progress-text {
+  font-size: 0.8rem;
+}
+
+.driver-popover-footer button {
+  font-size: 0.8rem;
+  padding: 5px 12px;
+  border-radius: 0.375rem;
+}
+
+/* Light mode next button — primary blue (dark mode already styled below) */
+.driver-popover-navigation-btns .driver-popover-next-btn {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border-color: #3b82f6;
 }
 
 /* ─── Dark mode overrides ─── */
