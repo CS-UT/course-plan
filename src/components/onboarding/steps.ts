@@ -36,7 +36,17 @@ export const tourSteps: TourStepDef[] = [
       'برنامه هفتگی شما اینجا نمایش داده می‌شود. روی خانه‌های خالی بکشید تا دروس آن ساعت فیلتر شوند.',
     side: 'top',
     align: 'center',
-    device: 'both',
+    device: 'desktop',
+  },
+  {
+    id: 'calendar-mobile',
+    targetSelector: '[data-tour="calendar-mobile"]',
+    title: 'برنامه هفتگی',
+    description:
+      'برنامه هفتگی شما اینجا نمایش داده می‌شود. می‌توانید برنامه را به چپ و راست بکشید.',
+    side: 'bottom',
+    align: 'center',
+    device: 'mobile',
   },
   {
     id: 'schedule-tabs',
@@ -64,7 +74,17 @@ export const tourSteps: TourStepDef[] = [
       'برنامه را به صورت تصویر، فایل JSON یا لینک تقویم گوگل خروجی بگیرید.',
     side: 'bottom',
     align: 'end',
-    device: 'both',
+    device: 'desktop',
+  },
+  {
+    id: 'export-buttons-mobile',
+    targetSelector: '[data-tour="export-buttons-mobile"]',
+    title: 'خروجی و اشتراک‌گذاری',
+    description:
+      'برنامه را به صورت تصویر، فایل JSON یا لینک تقویم گوگل خروجی بگیرید.',
+    side: 'bottom',
+    align: 'start',
+    device: 'mobile',
   },
   {
     id: 'dark-mode',

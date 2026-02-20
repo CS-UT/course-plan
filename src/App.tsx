@@ -98,6 +98,12 @@ function App() {
               {toPersianDigits(schedule.totalUnits)} واحد
             </span>
             <a
+              href="https://roadmap.csut.ir"
+              className="text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium transition-colors hidden sm:inline"
+            >
+              نقشه راه
+            </a>
+            <a
               href="https://github.com/CS-UT/course-plan"
               target="_blank"
               rel="noopener noreferrer"
@@ -130,7 +136,7 @@ function App() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
               )}
             </button>
-            <div className="hidden sm:block">
+            <div data-tour="export-buttons" className="hidden sm:block">
               <ExportButtons />
             </div>
           </div>
@@ -145,7 +151,7 @@ function App() {
         <div className="flex items-center justify-between">
           <ScheduleTabs />
         </div>
-        <div className="sm:hidden flex items-center gap-1.5 overflow-x-auto">
+        <div data-tour="export-buttons-mobile" className="sm:hidden flex items-center gap-1.5 overflow-x-auto">
           <ExportButtons />
         </div>
       </div>
@@ -164,7 +170,7 @@ function App() {
         {/* Main - Schedule Grid */}
         <main className="flex-1 min-w-0">
           {/* Horizontally scrollable on mobile */}
-          <div className="overflow-x-auto -mx-4 px-4 lg:mx-0 lg:px-0">
+          <div data-tour="calendar-mobile" className="overflow-x-auto -mx-4 px-4 lg:mx-0 lg:px-0">
             <div id="schedule-export-area" className="min-w-[640px]">
               <WeeklySchedule hoveredCourse={hoveredCourse} onEditCourse={handleEditCourse} />
             </div>
