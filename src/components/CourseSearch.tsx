@@ -101,7 +101,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
       result = result.filter((c) => c.sessions.some((s) => s.dayOfWeek === dayNum));
     }
     if (filters.gender) {
-      result = result.filter((c) => c.gender === filters.gender);
+      result = result.filter((c) => c.gender === filters.gender || c.gender === 'mixed');
     }
     if (filters.department) {
       result = result.filter((c) => getDepartment(c) === filters.department);
@@ -232,7 +232,6 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
                 <option value="">جنسیت</option>
                 <option value="male">پسران</option>
                 <option value="female">دختران</option>
-                <option value="mixed">مختلط</option>
               </select>
             )}
             {activeTab === 'general' && (
