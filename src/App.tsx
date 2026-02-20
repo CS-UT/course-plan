@@ -101,7 +101,7 @@ function App() {
               href="https://roadmap.csut.ir"
               className="text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium transition-colors hidden sm:inline"
             >
-              نقشه راه
+              نقشه راه دروس
             </a>
             <a
               href="https://github.com/CS-UT/course-plan"
