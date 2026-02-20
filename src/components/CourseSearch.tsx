@@ -149,7 +149,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   // Reset department filter when switching tabs since departments differ per tab
   function handleTabChange(tab: CourseTab) {
     setActiveTab(tab);
-    setFilters((f) => ({ ...f, department: '', courseCode: '' }));
+    setFilters((f) => ({ ...f, gender: '', department: '', courseCode: '' }));
     if (tab === 'general') setShowFilters(true);
   }
 
