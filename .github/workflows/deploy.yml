@@ -1,11 +1,8 @@
-name: Build & Deploy
+name: Build
 on:
   push:
     branches: [main, master]
   workflow_dispatch:
-
-env:
-  IMAGE: ghcr.io/${{ github.repository }}
 
 jobs:
   build:
@@ -16,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Lowercase image name
-        run: echo "IMAGE_LC=${IMAGE,,}" >> $GITHUB_ENV
+        run: echo "IMAGE_LC=ghcr.io/${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -29,19 +26,3 @@ jobs:
           tags: |
             ${{ env.IMAGE_LC }}:latest
             ${{ env.IMAGE_LC }}:${{ github.sha }}
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    steps:
-      - name: Deploy with zero-downtime rollout
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ vars.DEPLOY_HOST }}
-          username: ${{ vars.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          script: |
-            docker pull ${{ env.IMAGE_LC }}:latest
-            cd ~/services/${{ vars.SERVICE_NAME }}
-            docker rollout ${{ vars.COMPOSE_SERVICE }}
