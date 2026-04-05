@@ -1,0 +1,47 @@
+name: Build & Deploy
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lowercase image name
+        run: echo "IMAGE_LC=${IMAGE,,}" >> $GITHUB_ENV
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_LC }}:latest
+            ${{ env.IMAGE_LC }}:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.DEPLOY_HOST }}
+          username: ${{ vars.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            docker pull ${{ env.IMAGE_LC }}:latest
+            cd ~/services/${{ vars.SERVICE_NAME }}
+            docker compose up -d --force-recreate
