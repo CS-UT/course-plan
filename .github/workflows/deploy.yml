@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     steps:
-      - name: Deploy to server
+      - name: Deploy with zero-downtime rollout
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ vars.DEPLOY_HOST }}
@@ -44,4 +44,4 @@ jobs:
           script: |
             docker pull ${{ env.IMAGE_LC }}:latest
             cd ~/services/${{ vars.SERVICE_NAME }}
-            docker compose up -d --force-recreate
+            docker rollout ${{ vars.COMPOSE_SERVICE }}
