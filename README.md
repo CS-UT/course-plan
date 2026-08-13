@@ -44,9 +44,9 @@ Course data comes from EMS Report #212. The scraper is a browser console script 
    ```bash
    node scripts/merge-courses.mjs
    ```
-   This reads all JSON files from `src/data/gathered_data/`, expands the compact scraped format into the full Course schema, and writes `src/data/courses.json`.
+   This reads all JSON files from `src/data/gathered_data/`, preserves the existing عمومی offerings, combines them with the active semester's faculty schedule in `src/data/semester-14051-specialized.json`, and writes `src/data/courses.json`.
 
-3. Update the semester label if needed — edit `semesterLabel` in `scripts/merge-courses.mjs`.
+3. For a new faculty timetable, update `src/data/semester-14051-specialized.json`. Relative exam days are stored in `examDay` until the faculty publishes calendar dates.
 
 ## Updating Tutor Reviews
 

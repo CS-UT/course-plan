@@ -12,7 +12,8 @@ export interface Course {
   gender: 'male' | 'female' | 'mixed';
   professor: string;
   sessions: CourseSession[];
-  examDate: string;  // "1405/04/20" Jalali
+  examDate: string;  // Jalali date when the university publishes one
+  examDay?: number;  // Relative day after the general exam when dates are pending
   examTime: string;  // "10:00"
   location: string;
   prerequisites: string;

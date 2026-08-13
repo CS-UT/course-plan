@@ -44,6 +44,7 @@ export interface CalendarEvent {
     unitCount: number;
     location: string;
     examDate: string;
+    examDay?: number;
     examTime: string;
     prerequisites: string;
     notes: string;
@@ -112,6 +113,7 @@ export function coursesToEvents(
           unitCount: course.unitCount,
           location: course.location,
           examDate: course.examDate,
+          examDay: course.examDay,
           examTime: course.examTime,
           prerequisites: course.prerequisites,
           notes: course.notes,

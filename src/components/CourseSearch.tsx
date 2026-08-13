@@ -6,6 +6,8 @@ import { useSchedule } from '@/hooks/useSchedule';
 import { findTimeConflicts, findExamConflicts } from '@/utils/conflicts';
 import { TutorProfileModal } from './TutorProfileModal';
 import { slotFilterAtom } from '@/atoms';
+import { formatExamSchedule } from '@/utils/exams';
+import { getCourseIdentityLabel } from '@/utils/courses';
 import tutorNameMap from '@/data/tutor-name-map.json';
 
 interface Props {
@@ -353,6 +355,7 @@ function CourseCard({
 }) {
   const genderLabel = course.gender === 'male' ? 'پسران' : course.gender === 'female' ? 'دختران' : '';
   const tutorId = (tutorNameMap as Record<string, string>)[course.professor] ?? null;
+  const examSchedule = formatExamSchedule(course);
 
   return (
     <div
@@ -388,7 +391,7 @@ function CourseCard({
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
           <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums">
-            {toPersianDigits(course.courseCode)}-{toPersianDigits(course.group)}
+            {toPersianDigits(getCourseIdentityLabel(course.courseCode, course.group))}
           </span>
           <span className="text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded">
             {toPersianDigits(course.unitCount)} واحد
@@ -407,9 +410,9 @@ function CourseCard({
         )}
       </div>
 
-      {course.examDate && (
+      {examSchedule && (
         <div className="mt-1.5 text-xs text-gray-400 dark:text-gray-500">
-          امتحان: {toPersianDigits(course.examDate)} ساعت {toPersianDigits(course.examTime)}
+          امتحان: {toPersianDigits(examSchedule)}
         </div>
       )}
 

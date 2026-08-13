@@ -3,6 +3,8 @@ import type { Course } from '@/types';
 import { useSchedule } from '@/hooks/useSchedule';
 import { toPersianDigits } from '@/utils/persian';
 import { hasExamConflict } from '@/utils/conflicts';
+import { compareExamSlots, formatExamSchedule } from '@/utils/exams';
+import { getCourseCodeLabel } from '@/utils/courses';
 
 interface Props {
   onEditCourse: (course: Course) => void;
@@ -12,10 +14,7 @@ export function ExamsTable({ onEditCourse }: Props) {
   const { selectedCourses, removeCourse, totalUnits } = useSchedule();
 
   const sorted = useMemo(() => {
-    return [...selectedCourses].sort((a, b) => {
-      if (a.examDate !== b.examDate) return a.examDate.localeCompare(b.examDate);
-      return a.examTime.localeCompare(b.examTime);
-    });
+    return [...selectedCourses].sort(compareExamSlots);
   }, [selectedCourses]);
 
   const conflictingPairs = useMemo(() => {
@@ -64,15 +63,13 @@ export function ExamsTable({ onEditCourse }: Props) {
                   key={key}
                   className={hasConflict ? 'bg-danger-50 dark:bg-danger-500/10' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}
                 >
-                  <td className="px-3 py-2 tabular-nums">{toPersianDigits(course.courseCode)}</td>
+                  <td className="px-3 py-2 tabular-nums">{toPersianDigits(getCourseCodeLabel(course.courseCode))}</td>
                   <td className="px-3 py-2 font-medium">{course.courseName}</td>
                   <td className="px-3 py-2">{toPersianDigits(course.group)}</td>
                   <td className="px-3 py-2">{toPersianDigits(course.unitCount)}</td>
                   <td className="px-3 py-2">{course.professor}</td>
                   <td className="px-3 py-2 tabular-nums">
-                    {course.examDate
-                      ? `${toPersianDigits(course.examDate)} - ${toPersianDigits(course.examTime)}`
-                      : '—'}
+                    {toPersianDigits(formatExamSchedule(course)) || '—'}
                     {hasConflict && (
                       <span className="mr-2 text-danger-600 dark:text-danger-400 text-xs font-medium">⚠ تداخل</span>
                     )}
@@ -143,9 +140,9 @@ export function ExamsTable({ onEditCourse }: Props) {
                   </button>
                 </div>
               </div>
-              {course.examDate && (
+              {formatExamSchedule(course) && (
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 tabular-nums">
-                  امتحان: {toPersianDigits(course.examDate)} - {toPersianDigits(course.examTime)}
+                  امتحان: {toPersianDigits(formatExamSchedule(course))}
                   {hasConflict && (
                     <span className="mr-2 text-danger-600 dark:text-danger-400 font-medium">⚠ تداخل</span>
                   )}

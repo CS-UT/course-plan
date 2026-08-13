@@ -8,6 +8,8 @@ import type { Course, SelectedCourse } from '@/types';
 import { useSchedule } from '@/hooks/useSchedule';
 import { coursesToEvents, BASE_SATURDAY, COURSE_COLORS } from '@/utils/calendar';
 import { toPersianDigits, dayName } from '@/utils/persian';
+import { formatExamSchedule } from '@/utils/exams';
+import { getCourseIdentityLabel } from '@/utils/courses';
 import { slotFilterAtom } from '@/atoms';
 
 interface Props {
@@ -280,13 +282,13 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
           </div>
           <div className="text-gray-600 dark:text-gray-300 space-y-0.5">
             <div>استاد: {tooltip.content.professor}</div>
-            <div>کد: {toPersianDigits(tooltip.content.courseCode)}-{toPersianDigits(tooltip.content.group)}</div>
+            <div>{toPersianDigits(getCourseIdentityLabel(tooltip.content.courseCode, tooltip.content.group))}</div>
             <div>واحد: {toPersianDigits(tooltip.content.unitCount)}</div>
             {tooltip.content.location && <div>محل: {tooltip.content.location}</div>}
             {tooltip.content.prerequisites && <div>{tooltip.content.prerequisites}</div>}
-            {tooltip.content.examDate && (
+            {formatExamSchedule(tooltip.content) && (
               <div>
-                امتحان: {toPersianDigits(tooltip.content.examDate)} - {toPersianDigits(tooltip.content.examTime)}
+                امتحان: {toPersianDigits(formatExamSchedule(tooltip.content))}
               </div>
             )}
             {tooltip.content.notes && (
@@ -341,11 +343,11 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-300 mt-1 space-y-0.5">
                 {tappedCourse.professor && <div>استاد: {tappedCourse.professor}</div>}
-                <div>کد: {toPersianDigits(tappedCourse.courseCode)}-{toPersianDigits(tappedCourse.group)}</div>
+                <div>{toPersianDigits(getCourseIdentityLabel(tappedCourse.courseCode, tappedCourse.group))}</div>
                 <div>واحد: {toPersianDigits(tappedCourse.unitCount)}</div>
-                {tappedCourse.examDate && (
+                {formatExamSchedule(tappedCourse) && (
                   <div>
-                    امتحان: {toPersianDigits(tappedCourse.examDate)} - {toPersianDigits(tappedCourse.examTime)}
+                    امتحان: {toPersianDigits(formatExamSchedule(tappedCourse))}
                   </div>
                 )}
               </div>
@@ -417,6 +419,7 @@ interface TransposedEvent {
   unitCount: number;
   location: string;
   examDate: string;
+  examDay?: number;
   examTime: string;
   prerequisites: string;
   notes: string;
@@ -504,6 +507,7 @@ function buildTransposedEvents(
         unitCount: course.unitCount,
         location: course.location,
         examDate: course.examDate,
+        examDay: course.examDay,
         examTime: course.examTime,
         prerequisites: course.prerequisites,
         notes: course.notes,

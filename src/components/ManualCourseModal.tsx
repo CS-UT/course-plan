@@ -156,6 +156,7 @@ function ManualCourseForm({
         endTime: `${s.endHour}:${s.endMinute}`,
       })),
       examDate: toEnglishDigits(examDate.trim()),
+      examDay: examDate.trim() ? undefined : editingCourse?.examDay,
       examTime,
       location: editingCourse?.location ?? '',
       prerequisites: editingCourse?.prerequisites ?? '',

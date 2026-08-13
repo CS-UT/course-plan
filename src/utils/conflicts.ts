@@ -1,4 +1,5 @@
 import type { Course, CourseSession } from '@/types';
+import { getExamSlotKey } from '@/utils/exams';
 
 export function hasTimeConflict(a: CourseSession, b: CourseSession): boolean {
   if (a.dayOfWeek !== b.dayOfWeek) return false;
@@ -6,8 +7,8 @@ export function hasTimeConflict(a: CourseSession, b: CourseSession): boolean {
 }
 
 export function hasExamConflict(a: Course, b: Course): boolean {
-  if (!a.examDate || !b.examDate) return false;
-  return a.examDate === b.examDate && a.examTime === b.examTime;
+  const aKey = getExamSlotKey(a);
+  return aKey !== '' && aKey === getExamSlotKey(b);
 }
 
 export function findTimeConflicts(

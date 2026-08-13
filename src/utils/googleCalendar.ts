@@ -1,10 +1,11 @@
 import moment from 'moment-jalaali';
 import type { SelectedCourse } from '@/types';
+import { getCourseExamLabel } from '@/utils/exams';
 
-// Semester 14042 = نیمسال دوم ۱۴۰۴-۱۴۰۵
-// Approximate: Bahman 1404 (Feb 2026) to Khordad 1405 (June 2026)
-const SEMESTER_START_JALALI = '1404/11/18'; // ~Feb 7, 2026
-const SEMESTER_END_JALALI = '1405/03/31';   // ~Jun 21, 2026
+// Semester 14051 = نیمسال اول ۱۴۰۵-۱۴۰۶
+// Classes: 4 Mehr 1405 through the start of final exams on 24 Dey 1405.
+const SEMESTER_START_JALALI = '1405/07/04';
+const SEMESTER_END_JALALI = '1405/10/23';
 
 // dayOfWeek mapping to iCalendar BYDAY values
 const DAY_TO_ICAL: Record<number, string> = {
@@ -64,6 +65,7 @@ export function generateICS(courses: SelectedCourse[]): string {
 
   for (const course of courses) {
     if (course.mode === 'hover') continue;
+    const examLabel = getCourseExamLabel(course);
 
     for (let i = 0; i < course.sessions.length; i++) {
       const session = course.sessions[i];
@@ -78,7 +80,7 @@ export function generateICS(courses: SelectedCourse[]): string {
       const description = [
         `استاد: ${course.professor}`,
         course.location ? `محل: ${course.location}` : '',
-        course.examDate ? `امتحان: ${course.examDate} ساعت ${course.examTime}` : '',
+        examLabel ? `امتحان: ${examLabel} ساعت ${course.examTime}` : '',
         course.notes ? `توضیحات: ${course.notes}` : '',
       ].filter(Boolean).join('\\n');
 

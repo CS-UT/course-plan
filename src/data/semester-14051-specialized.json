@@ -1,0 +1,604 @@
+{
+  "semester": "14051",
+  "semesterLabel": "نیمسال اول ۱۴۰۵-۱۴۰۶",
+  "examScheduleBasis": "روزهای پس از آزمون عمومی، مطابق برنامه امتحانی دانشکده",
+  "courses": [
+    {
+      "courseCode": "6103262",
+      "group": 1,
+      "courseName": "ریاضی عمومی 1",
+      "unitCount": 4,
+      "professor": "تعیین نشده",
+      "sessions": [{ "dayOfWeek": 6, "startTime": "08:00", "endTime": "10:00" }],
+      "examDay": 8,
+      "examTime": "08:00",
+      "notes": "نام استاد در برنامه دانشکده اعلام نشده است."
+    },
+    {
+      "courseCode": "6103778",
+      "group": 1,
+      "courseName": "جبر خطی",
+      "unitCount": 4,
+      "professor": "قادرمرزی امیر",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 1, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 7,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "1110160",
+      "group": 1,
+      "courseName": "فیزیک عمومی 1",
+      "unitCount": 3,
+      "professor": "تعیین نشده",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 1, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 2,
+      "examTime": "08:00",
+      "notes": "نام استاد در برنامه دانشکده اعلام نشده است."
+    },
+    {
+      "courseCode": "6103096",
+      "group": 1,
+      "courseName": "آنالیز ریاضی 2",
+      "unitCount": 4,
+      "professor": "آیت اله زاده شیرازی فاطمه",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 1, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 8,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103829",
+      "group": 1,
+      "courseName": "رگرسیون 1",
+      "unitCount": 3,
+      "professor": "امینی سیدمرتضی",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 1, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 7,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "نظریه جبری گراف مقدماتی",
+      "unitCount": 4,
+      "professor": "غرقانی نرگس",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 1, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 2,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "زیست شناسی",
+      "unitCount": 2,
+      "professor": "سیدامیر مرعشی",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 1, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 3,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "سیستم های شی گرا",
+      "unitCount": 3,
+      "professor": "ارجمند بیگدلی",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 1, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 8,
+      "examTime": "10:00"
+    },
+    {
+      "courseCode": "6103614",
+      "group": 1,
+      "courseName": "اصول سیستم های عامل",
+      "unitCount": 4,
+      "professor": "ضیائی تبار فاطمه",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 1, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 7,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "مبانی علم اقتصاد",
+      "unitCount": 3,
+      "professor": "محمدولی کیانمهر",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 1, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 2,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "مبانی جامعه شناسی",
+      "unitCount": 3,
+      "professor": "پروائی شیوا",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 1, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 3,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "نظریه اندازه و کاربردها",
+      "unitCount": 4,
+      "professor": "بهمانی رضا",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 1, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 8,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "ریاضیات زیستی",
+      "unitCount": 4,
+      "professor": "رکنی لموکی غلامرضا",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 1, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 7,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103779",
+      "group": 1,
+      "courseName": "احتمال 2",
+      "unitCount": 4,
+      "professor": "شجاعی علی آبادی سیدرحمت",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 1, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 2,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "توابع مختلط",
+      "unitCount": 4,
+      "professor": "آیت اله زاده شیرازی فاطمه",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 1, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 3,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "طرح آزمایش ها 2",
+      "unitCount": 3,
+      "professor": "رضائی قهرودی زهرا",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 1, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 8,
+      "examTime": "10:00"
+    },
+    {
+      "courseCode": "6103095",
+      "group": 1,
+      "courseName": "آنالیز ریاضی 1",
+      "unitCount": 4,
+      "professor": "رضاوند رضا",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 1, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 2,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103777",
+      "group": 1,
+      "courseName": "احتمال 1",
+      "unitCount": 4,
+      "professor": "شجاعی علی آبادی سیدرحمت",
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 1, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 3,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103063",
+      "group": 1,
+      "courseName": "آمار ریاضی 2",
+      "unitCount": 3,
+      "professor": "حقیقی فیروزه",
+      "sessions": [
+        { "dayOfWeek": 1, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 3, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 8,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "روش های ناپارامتری",
+      "unitCount": 3,
+      "professor": "حقیقی فیروزه",
+      "sessions": [
+        { "dayOfWeek": 1, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 3, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 7,
+      "examTime": "10:00"
+    },
+    {
+      "courseCode": "6103777",
+      "group": 2,
+      "courseName": "احتمال 1",
+      "unitCount": 4,
+      "professor": "شجاعی علی آبادی سیدرحمت",
+      "sessions": [{ "dayOfWeek": 1, "startTime": "15:00", "endTime": "17:00" }],
+      "examDay": 3,
+      "examTime": "08:00",
+      "notes": "استاد این گروه در برنامه هفتگی «د. شجاعی یا د. مومنی» درج شده است؛ هماهنگ کننده امتحان د. شجاعی است."
+    },
+    {
+      "group": 1,
+      "courseName": "بهینه سازی خطی 1",
+      "unitCount": 4,
+      "professor": "مجید سلیمانی دامنه",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 5,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103204",
+      "group": 1,
+      "courseName": "جبر 1",
+      "unitCount": 4,
+      "professor": "عامری رضا",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 2, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 9,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "بیوانفورماتیک مقدماتی",
+      "unitCount": 3,
+      "professor": "پردیس کاووسی، خلیل بردی فتوحی فر",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 4,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "یادگیری آماری مقدماتی",
+      "unitCount": 3,
+      "professor": "صفری عبداله",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 6,
+      "examTime": "10:00"
+    },
+    {
+      "courseCode": "6103386",
+      "group": 1,
+      "courseName": "مبانی کامپیوتر و برنامه سازی",
+      "unitCount": 4,
+      "professor": "گنج تابش محمد",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 1,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "نظریه گراف و کاربردها",
+      "unitCount": 4,
+      "professor": "محمدنوری مرتضی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 2, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 9,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103811",
+      "group": 1,
+      "courseName": "روش های آماری",
+      "unitCount": 3,
+      "professor": "قاسم پورملومه مرضیه",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 4,
+      "examTime": "10:00"
+    },
+    {
+      "courseCode": "6103778",
+      "group": 2,
+      "courseName": "جبر خطی",
+      "unitCount": 4,
+      "professor": "سبزرو حسین",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 6,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "هوش مصنوعی",
+      "unitCount": 3,
+      "professor": "ساجدی هدیه",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 1,
+      "examTime": "10:00"
+    },
+    {
+      "courseCode": "6103800",
+      "group": 1,
+      "courseName": "ساختمان داده ها و الگوریتم",
+      "unitCount": 4,
+      "professor": "توسلی شقایق",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 2, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 9,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "نظریه محاسبه",
+      "unitCount": 3,
+      "professor": "علی زاده مجید",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 4,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "طراحی و تحلیل الگوریتم ها",
+      "unitCount": 4,
+      "professor": "گنج تابش محمد",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 6,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "نظریه مقدماتی اعداد",
+      "unitCount": 4,
+      "professor": "قادرمرزی امیر",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 1,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "آزمایشگاه ریاضی",
+      "unitCount": 2,
+      "professor": "غریبی زینب",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 2, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 9,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "مباحثی در آمار (تحلیل فرآیندهای کسب و کاری)",
+      "unitCount": 3,
+      "professor": "میلاد بابازاده بهستانی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 4,
+      "examTime": "10:00",
+      "notes": "مدرس: دانشجوی دکتری رشته صنایع دانشگاه تهران."
+    },
+    {
+      "courseCode": "6103384",
+      "group": 1,
+      "courseName": "مبانی ریاضیات",
+      "unitCount": 4,
+      "professor": "محمدباقر اسدی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 6,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "سری های زمانی 1",
+      "unitCount": 3,
+      "professor": "صفری عبداله",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 1,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "حسابگری زیستی",
+      "unitCount": 3,
+      "professor": "باباعلی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "13:00", "endTime": "15:00" },
+        { "dayOfWeek": 2, "startTime": "13:00", "endTime": "15:00" }
+      ],
+      "examDay": 9,
+      "examTime": "10:00"
+    },
+    {
+      "group": 1,
+      "courseName": "هندسه دیفرانسیل خم ها و رویه ها",
+      "unitCount": 4,
+      "professor": "کمالی نژاد علی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 4,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103263",
+      "group": 1,
+      "courseName": "ریاضی عمومی 2",
+      "unitCount": 4,
+      "professor": "صدری نسرین",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 6,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103844",
+      "group": 1,
+      "courseName": "محاسبات علمی",
+      "unitCount": 4,
+      "professor": "کامرانی مینو",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 1,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103790",
+      "group": 1,
+      "courseName": "داده کاوی",
+      "unitCount": 3,
+      "professor": "احمدیان (دانشجوی دکتری)",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 4,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "روش های نمونه گیری 2",
+      "unitCount": 3,
+      "professor": "نجفی (مدعو)",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 2, "startTime": "08:00", "endTime": "10:00" }
+      ],
+      "examDay": 6,
+      "examTime": "10:00"
+    },
+    {
+      "courseCode": "1120033",
+      "group": 1,
+      "courseName": "معادلات دیفرانسیل",
+      "unitCount": 3,
+      "professor": "صدری نسرین",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 1,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "1120033",
+      "group": 2,
+      "courseName": "معادلات دیفرانسیل",
+      "unitCount": 3,
+      "professor": "خواجه صالحانی مهدی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 4,
+      "examTime": "08:00"
+    },
+    {
+      "group": 1,
+      "courseName": "توپولوژی جبری مقدماتی",
+      "unitCount": 4,
+      "professor": "زارع هادی",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "10:00", "endTime": "12:00" },
+        { "dayOfWeek": 2, "startTime": "10:00", "endTime": "12:00" }
+      ],
+      "examDay": 1,
+      "examTime": "08:00"
+    },
+    {
+      "courseCode": "6103127",
+      "group": 1,
+      "courseName": "برنامه سازی پیشرفته",
+      "unitCount": 4,
+      "professor": "احمدیان (دانشجوی دکتری)",
+      "sessions": [
+        { "dayOfWeek": 0, "startTime": "15:00", "endTime": "17:00" },
+        { "dayOfWeek": 2, "startTime": "15:00", "endTime": "17:00" }
+      ],
+      "examDay": 6,
+      "examTime": "10:00"
+    }
+  ]
+}
