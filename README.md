@@ -2,7 +2,7 @@
 
 برنامه‌ریزی هفتگی دروس دانشکده ریاضی، آمار و علوم کامپیوتر دانشگاه تهران.
 
-Static client-side app — no backend. Course data is a static JSON file scraped from the university's EMS system. Tutor reviews are parsed from the [@UTeacherz](https://t.me/UTeacherz) Telegram channel.
+Static client-side app — no backend. Course data is a static JSON file scraped from the university's EMS system. Tutor reviews were parsed from the [@UTeacherz](https://t.me/UTeacherz) Telegram channel (deleted in 1405 for an unknown reason; the channel and post links no longer work).
 
 ## Setup
 
@@ -50,12 +50,12 @@ Course data comes from EMS Report #212. The scraper is a browser console script 
 
 ## Updating Tutor Reviews
 
-Tutor reviews are sourced from the [@UTeacherz](https://t.me/UTeacherz) Telegram channel. The parser script extracts reviews from a Telegram chat export and matches tutors to professors in `courses.json`.
+Tutor reviews were sourced from the [@UTeacherz](https://t.me/UTeacherz) Telegram channel (deleted in 1405 for an unknown reason; the channel and post links no longer work). The parser script extracts reviews from an existing Telegram chat export and matches tutors to professors in `courses.json`.
 
 ### Step 1: Export the Telegram channel
 
 1. Open **Telegram Desktop** (not mobile — only Desktop supports JSON export)
-2. Open the [@UTeacherz](https://t.me/UTeacherz) channel
+2. Use an existing export of the [@UTeacherz](https://t.me/UTeacherz) channel (deleted in 1405 for an unknown reason)
 3. Click the three-dot menu (⋮) at the top right → **Export chat history**
 4. In the export dialog:
    - Uncheck all media types (photos, videos, etc.) — only messages are needed
