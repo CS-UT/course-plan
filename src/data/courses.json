@@ -7270,6 +7270,11 @@
           "dayOfWeek": 6,
           "startTime": "08:00",
           "endTime": "10:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "08:00",
+          "endTime": "10:00"
         }
       ],
       "examDate": "",

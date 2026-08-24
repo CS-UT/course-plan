@@ -9,7 +9,10 @@
       "courseName": "ریاضی عمومی 1",
       "unitCount": 4,
       "professor": "تعیین نشده",
-      "sessions": [{ "dayOfWeek": 6, "startTime": "08:00", "endTime": "10:00" }],
+      "sessions": [
+        { "dayOfWeek": 6, "startTime": "08:00", "endTime": "10:00" },
+        { "dayOfWeek": 1, "startTime": "08:00", "endTime": "10:00" }
+      ],
       "examDay": 8,
       "examTime": "08:00",
       "notes": "نام استاد در برنامه دانشکده اعلام نشده است."
