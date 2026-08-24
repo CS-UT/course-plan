@@ -146,7 +146,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
   }
 
   const selectClass =
-    'px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
+    'min-w-0 max-w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
 
   // Reset department filter when switching tabs since departments differ per tab
   function handleTabChange(tab: CourseTab) {

@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
 /**
- * Merge university-wide courses from the latest EMS scrape with the
- * faculty-published specialized schedule for the active semester.
+ * Import account-specific EMS scrapes for the active semester.
  *
  * gathered_data files use the compact schema (plain array of objects with
  * short keys). This script expands them into the full Course object format
  * that the app expects.
  *
- * EMS files are processed in alphabetical order — later files override
- * earlier ones for the same (code, group) key. The resulting عمومی rows are
- * kept, while تخصصی rows are replaced by semester-14051-specialized.json.
+ * Files in gathered_data are ordered snapshots. Active-semester snapshots are
+ * unioned because Report #212 hides courses already passed by each student.
+ * Later snapshots override earlier ones for the same (code, group) key.
+ * عمومی rows come only from the official EMS report. تخصصی rows prefer EMS,
+ * while faculty-PDF rows missing from EMS are retained as supplemental rows.
  *
  * Usage: node scripts/merge-courses.mjs
  */
@@ -21,8 +22,9 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const GATHERED_DIR = join(__dirname, '..', 'src', 'data', 'gathered_data');
-const SPECIALIZED_FILE = join(__dirname, '..', 'src', 'data', 'semester-14051-specialized.json');
+const SEMESTER_METADATA_FILE = join(__dirname, '..', 'src', 'data', 'semester-14051-specialized.json');
 const OUTPUT_FILE = join(__dirname, '..', 'src', 'data', 'courses.json');
+const ACTIVE_SNAPSHOT_START = '007.json';
 
 const GENDER_MAP = { 'پسران': 'male', 'دختران': 'female', 'مخت': 'mixed' };
 
@@ -35,7 +37,11 @@ function normalizePersian(str) {
     .replace(/أ/g, 'ا')   // Arabic alef with hamza above
     .replace(/إ/g, 'ا')   // Arabic alef with hamza below
     .replace(/ؤ/g, 'و')   // Arabic waw with hamza
-    .replace(/ة/g, 'ه');  // Arabic taa marbuta → heh
+    .replace(/ة/g, 'ه')   // Arabic taa marbuta → heh
+    .replace(/[۰-۹]/g, digit => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)))
+    .replace(/[٠-٩]/g, digit => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)))
+    .replace(/[\s\u200c\u00a0]+/g, ' ')
+    .trim();
 }
 
 function parseSession(s) {
@@ -89,19 +95,18 @@ function isGeneralCourse(course) {
 }
 
 function expandSpecializedCourse(course, index, templatesByName) {
-  const template = templatesByName.get(normalizePersian(course.courseName).trim());
+  const normalizedName = normalizePersian(course.courseName).trim();
+  const template = templatesByName.get(normalizedName);
   const internalCode = `local-14051-${String(index + 1).padStart(3, '0')}`;
 
   return {
     courseCode: course.courseCode || template?.courseCode || internalCode,
     group: course.group,
-    courseName: normalizePersian(course.courseName),
+    courseName: normalizedName,
     unitCount: course.unitCount ?? template?.unitCount ?? 0,
     gender: course.gender || template?.gender || 'mixed',
     professor: normalizePersian(course.professor),
     sessions: course.sessions,
-    // The faculty PDF publishes relative exam days (day 1...day 10 after the
-    // general exam) and intentionally leaves calendar dates blank.
     examDate: '',
     examDay: course.examDay,
     examTime: course.examTime,
@@ -122,48 +127,68 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`Found ${files.length} source file(s):`);
+  const activeFiles = files.filter(file => file >= ACTIVE_SNAPSHOT_START);
+  if (activeFiles.length === 0) {
+    console.error(`No active EMS snapshots found at or after ${ACTIVE_SNAPSHOT_START}`);
+    process.exit(1);
+  }
 
-  const merged = new Map();
-  for (const file of files) {
-    const raw = await readFile(join(GATHERED_DIR, file), 'utf-8');
-    const courses = JSON.parse(raw);
-    console.log(`  ${file}: ${courses.length} courses`);
-
-    for (const course of courses) {
+  const officialRows = new Map();
+  for (const file of activeFiles) {
+    const snapshot = JSON.parse(await readFile(join(GATHERED_DIR, file), 'utf-8'));
+    console.log(`Reading active EMS snapshot ${file}: ${snapshot.length} courses`);
+    for (const course of snapshot) {
       const key = `${course.code}-${course.group}`;
-      merged.set(key, course);
+      // Preserve optional metadata omitted by a later scrape, while preferring
+      // every field that the later account actually supplied.
+      officialRows.set(key, { ...officialRows.get(key), ...course });
+    }
+  }
+  const officialCourses = Array.from(officialRows.values()).map(expandCourse);
+  const semesterMetadata = JSON.parse(await readFile(SEMESTER_METADATA_FILE, 'utf-8'));
+
+  // Older EMS snapshots are used only as metadata templates for PDF rows that
+  // lack a stable code or other details. They never reintroduce عمومی rows.
+  const templatesByName = new Map();
+  for (const file of files) {
+    const snapshot = JSON.parse(await readFile(join(GATHERED_DIR, file), 'utf-8'));
+    for (const course of snapshot.map(expandCourse)) {
+      templatesByName.set(normalizePersian(course.courseName).trim(), course);
     }
   }
 
-  const legacyCourses = Array.from(merged.values()).map(expandCourse);
-  const templatesByName = new Map(
-    legacyCourses.map(course => [normalizePersian(course.courseName).trim(), course]),
-  );
-  const specializedSource = JSON.parse(await readFile(SPECIALIZED_FILE, 'utf-8'));
-  const specializedCourses = specializedSource.courses.map((course, index) =>
+  const pdfSpecializedCourses = semesterMetadata.courses.map((course, index) =>
     expandSpecializedCourse(course, index, templatesByName),
   );
-  let generalCourses = legacyCourses.filter(isGeneralCourse);
-  try {
-    // عمومی offerings are outside this semester update. Preserve the current
-    // app records exactly instead of refreshing them from the faculty files.
-    const currentOutput = JSON.parse(await readFile(OUTPUT_FILE, 'utf-8'));
-    const currentGeneralCourses = currentOutput.courses.filter(isGeneralCourse);
-    if (currentGeneralCourses.length > 0) generalCourses = currentGeneralCourses;
-  } catch {
-    // First build: fall back to عمومی rows expanded from the gathered EMS data.
-  }
+  const officialSpecialized = officialCourses.filter(course => !isGeneralCourse(course));
+  const officialSpecializedKeys = new Set(
+    officialSpecialized.map(course => `${course.courseCode}-${course.group}`),
+  );
+  const officialSpecializedNames = new Set(
+    officialSpecialized.map(course =>
+      `${normalizePersian(course.courseName).trim()}-${course.group}`
+    ),
+  );
+  const supplementalSpecialized = pdfSpecializedCourses.filter(course =>
+    !officialSpecializedKeys.has(`${course.courseCode}-${course.group}`)
+    && !officialSpecializedNames.has(`${normalizePersian(course.courseName).trim()}-${course.group}`)
+  );
+  const courses = [...officialCourses, ...supplementalSpecialized];
+  const specializedCount = courses.filter(course => !isGeneralCourse(course)).length;
+  const generalCount = courses.length - specializedCount;
+
+  console.log(`Combined ${activeFiles.length} active EMS snapshots: ${officialCourses.length} unique courses`);
+  console.log(`Retaining ${supplementalSpecialized.length} PDF-only specialized courses`);
 
   const output = {
-    semester: specializedSource.semester,
-    semesterLabel: specializedSource.semesterLabel,
+    semester: semesterMetadata.semester,
+    semesterLabel: semesterMetadata.semesterLabel,
     department: 'دانشکده ریاضی، آمار و علوم کامپیوتر',
-    courses: [...specializedCourses, ...generalCourses],
+    courses,
   };
 
   await writeFile(OUTPUT_FILE, JSON.stringify(output, null, 2) + '\n', 'utf-8');
-  console.log(`\nMerged ${specializedCourses.length} specialized + ${generalCourses.length} general courses → ${OUTPUT_FILE}`);
+  console.log(`Imported ${specializedCount} specialized + ${generalCount} general courses → ${OUTPUT_FILE}`);
 }
 
 main().catch(err => {

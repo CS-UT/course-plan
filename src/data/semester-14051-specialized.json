@@ -253,17 +253,6 @@
       "examTime": "10:00"
     },
     {
-      "courseCode": "6103777",
-      "group": 2,
-      "courseName": "احتمال 1",
-      "unitCount": 4,
-      "professor": "شجاعی علی آبادی سیدرحمت",
-      "sessions": [{ "dayOfWeek": 1, "startTime": "15:00", "endTime": "17:00" }],
-      "examDay": 3,
-      "examTime": "08:00",
-      "notes": "استاد این گروه در برنامه هفتگی «د. شجاعی یا د. مومنی» درج شده است؛ هماهنگ کننده امتحان د. شجاعی است."
-    },
-    {
       "group": 1,
       "courseName": "بهینه سازی خطی 1",
       "unitCount": 4,

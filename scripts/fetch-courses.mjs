@@ -1,16 +1,19 @@
 /**
  * Browser Console Scraper for UT EMS Report #212
  *
- * USAGE:
- * 1. Open Chrome and navigate to:
- *    https://ems2.ut.ac.ir/browser/fa/#/pages?fid=212&ftype=1&seq=0&subfrm=&sguid=a14c4d27-9c7d-474d-a8fa-77ba71cb171e&TrmType=2#212
- * 2. Log in with your SSO credentials
- * 3. Wait for the first page of data to load (you should see the course table)
- * 4. Open Chrome DevTools (F12) → Console tab
- * 5. Paste the entire contents of this script and press Enter
- * 6. Wait for it to iterate through all pages
- * 7. A courses.json file will be automatically downloaded
- * 8. Copy it to src/data/gathered_data/ and run: node scripts/merge-courses.mjs
+ * SEND THESE INSTRUCTIONS AND THIS ENTIRE FILE TO THE PERSON HELPING YOU:
+ * 1. In Chrome, sign in to EMS and open:
+ *    https://ems2.ut.ac.ir/browser/fa/#/pages?fid=212&ftype=1&seq=0&subfrm=&sguid=bbf5f331-5c32-42a5-b826-9fdbe25933cb&TrmType=2#212
+ * 2. Wait until the course table and its page count are visible.
+ * 3. Open DevTools (F12 or Cmd+Option+I) → Console.
+ * 4. Paste this entire file and press Enter. If Chrome blocks pasting, type
+ *    "allow pasting" manually first, press Enter, and then paste the script.
+ * 5. Do not change pages while it runs. Wait for the success message.
+ * 6. Send the downloaded ut-ems-report-212-YYYY-MM-DD.json file.
+ *
+ * The JSON contains course data only. This script does not export credentials,
+ * cookies, the student's name, or their student number. Report #212 is still
+ * account-specific, so use an account that has passed as few courses as possible.
  *
  * NpGrid column layout (from EMS2 Beheshan report #212):
  *   col 0:  شماره و گروه درس   (90px)   — e.g. "8101234-01"
@@ -132,7 +135,12 @@
     if (genderText.includes('مرد') || genderText.includes('برادر')) gender = 'پسران';
     else if (genderText.includes('زن') || genderText.includes('خواهر')) gender = 'دختران';
 
-    const professor = cells[6]?.textContent?.trim() || '';
+    // Preserve multiple professors, which EMS renders as separate <br> lines.
+    const professor = (cells[6]?.innerText || '')
+      .split(/\n+/)
+      .map(name => name.trim())
+      .filter(Boolean)
+      .join('، ');
 
     const scheduleText = persianToEnglish(cells[7]?.textContent?.trim() || '');
     const sessions = parseSessionsText(scheduleText);
@@ -207,13 +215,17 @@
     const allTables = grid.querySelectorAll('table');
     for (const table of allTables) {
       if (table === headerTable) continue;
-      const rows = table.querySelectorAll('tbody tr');
-      if (rows.length > 0) return Array.from(rows);
+      const rows = Array.from(table.querySelectorAll(':scope > tbody > tr'))
+        .filter(row => row.getBoundingClientRect().height > 0);
+      if (rows.length > 0) return rows;
     }
 
     // Fallback
     const allRows = document.querySelectorAll('table tbody tr');
-    return Array.from(allRows).filter(r => r.querySelectorAll('td').length >= 9);
+    return Array.from(allRows).filter(r =>
+      r.getBoundingClientRect().height > 0
+      && Array.from(r.children).filter(cell => cell.tagName === 'TD').length >= 9
+    );
   }
 
   // Get the NpGrid Knockout ViewModel (the most reliable way to navigate)
@@ -289,22 +301,27 @@
 
   const allCourses = new Map();
   const pageInfo = getPageInfo();
-  const totalPages = pageInfo?.total || 1;
+  if (!pageInfo?.total) {
+    throw new Error('Could not read the EMS page count. Wait for the report to load fully and try again.');
+  }
+  const totalPages = pageInfo.total;
+  let completedPages = 0;
 
   console.log(`Found ${totalPages} page(s) to scrape`);
 
   for (let page = 1; page <= totalPages; page++) {
     console.log(`Scraping page ${page}/${totalPages}...`);
 
-    // Navigate to the target page (skip for first page, we're already there)
-    if (page > 1) {
+    const currentPage = getPageInfo()?.current;
+
+    // This also makes the script safe to start while EMS is showing any page.
+    if (currentPage !== page) {
       const currentRows = getTableRows();
       const prevFirstCell = currentRows[0]?.querySelector('td')?.textContent?.trim();
 
       const navigated = goToPage(page);
       if (!navigated) {
-        console.warn(`Could not navigate to page ${page}. Stopping.`);
-        break;
+        throw new Error(`Could not navigate to EMS page ${page}.`);
       }
 
       // Wait for new data
@@ -317,8 +334,7 @@
         const rows2 = getTableRows();
         const nowFirst = rows2[0]?.querySelector('td')?.textContent?.trim();
         if (nowFirst === prevFirstCell) {
-          console.warn(`Page ${page} still shows same data. Stopping.`);
-          break;
+          throw new Error(`EMS page ${page} did not load. No partial file was downloaded.`);
         }
       }
     } else {
@@ -327,11 +343,13 @@
 
     const rows = getTableRows();
     let pageCount = 0;
+    let parsedCount = 0;
 
     for (const row of rows) {
       try {
         const course = parseTableRow(row);
         if (course) {
+          parsedCount++;
           const key = `${course.code}-${course.group}`;
           if (!allCourses.has(key)) {
             allCourses.set(key, course);
@@ -343,7 +361,16 @@
       }
     }
 
+    if (parsedCount === 0) {
+      throw new Error(`No course rows were parsed on EMS page ${page}. No partial file was downloaded.`);
+    }
+
+    completedPages++;
     console.log(`  Found ${pageCount} new courses on page ${page} (total so far: ${allCourses.size})`);
+  }
+
+  if (completedPages !== totalPages) {
+    throw new Error(`Only ${completedPages} of ${totalPages} pages were scraped. No partial file was downloaded.`);
   }
 
   const coursesArray = Array.from(allCourses.values());
@@ -355,14 +382,16 @@
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'courses.json';
+  const date = new Date().toISOString().slice(0, 10);
+  const filename = `ut-ems-report-212-${date}.json`;
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 
-  console.log('Downloaded courses.json');
-  console.log('Copy the file to: src/data/gathered_data/ then run: node scripts/merge-courses.mjs');
+  console.log(`Downloaded ${filename}`);
+  console.log('Please send this JSON file to the person who requested the course list.');
 
   return output;
 })();

@@ -23,7 +23,7 @@ Course data comes from EMS Report #212. The scraper is a browser console script 
 
 1. Open Chrome and go to the EMS report page:
    ```
-   https://ems2.ut.ac.ir/browser/fa/#/pages?fid=212&ftype=1&seq=0&subfrm=&sguid=a14c4d27-9c7d-474d-a8fa-77ba71cb171e&TrmType=2#212
+   https://ems2.ut.ac.ir/browser/fa/#/pages?fid=212&ftype=1&seq=0&subfrm=&sguid=bbf5f331-5c32-42a5-b826-9fdbe25933cb&TrmType=2#212
    ```
 2. Log in with your SSO credentials
 3. Wait for the first page of the course table to fully load
@@ -38,15 +38,15 @@ Course data comes from EMS Report #212. The scraper is a browser console script 
    ```bash
    cp ~/Downloads/courses.json src/data/gathered_data/007.json
    ```
-   Files are processed in alphabetical order — later files override earlier ones for the same course+group. Name them sequentially (001.json, 002.json, ...).
+   Name snapshots sequentially (001.json, 002.json, ...). Because Report #212 hides courses each student has already passed, collect exports from multiple accounts when possible. Set `ACTIVE_SNAPSHOT_START` in `scripts/merge-courses.mjs` to the first snapshot for the current semester; all snapshots from that file onward are unioned, and later files win for duplicate course/group rows.
 
 2. Run the merge script:
    ```bash
    node scripts/merge-courses.mjs
    ```
-   This reads all JSON files from `src/data/gathered_data/`, preserves the existing عمومی offerings, combines them with the active semester's faculty schedule in `src/data/semester-14051-specialized.json`, and writes `src/data/courses.json`.
+   This combines the current semester's EMS snapshots, prefers EMS for matching تخصصی offerings, retains تخصصی rows found only in the faculty PDF, and writes `src/data/courses.json`.
 
-3. For a new faculty timetable, update `src/data/semester-14051-specialized.json`. Relative exam days are stored in `examDay` until the faculty publishes calendar dates.
+3. For a new semester, update `src/data/semester-14051-specialized.json`. Its PDF-derived course rows supplement تخصصی offerings that are missing from the student-specific EMS report; EMS wins whenever the two sources match.
 
 ## Updating Tutor Reviews
 
