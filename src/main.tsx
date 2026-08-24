@@ -2,7 +2,6 @@ import { StrictMode, Component } from 'react';
 import type { ReactNode, ErrorInfo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'jotai';
-import './index.css';
 import App from './App.tsx';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
