@@ -44,9 +44,9 @@ Course data comes from EMS Report #212. The scraper is a browser console script 
    ```bash
    node scripts/merge-courses.mjs
    ```
-   This combines the current semester's EMS snapshots, prefers EMS for matching تخصصی offerings, retains تخصصی rows found only in the faculty PDF, and writes `src/data/courses.json`.
+   This combines the current semester's EMS snapshots for عمومی offerings, then replaces تخصصی offerings with the final, deduplicated faculty-schedule rows in `src/data/semester-14051-specialized.json`, and writes `src/data/courses.json`.
 
-3. For a new semester, update `src/data/semester-14051-specialized.json`. Its PDF-derived course rows supplement تخصصی offerings that are missing from the student-specific EMS report; EMS wins whenever the two sources match.
+3. For a new semester, update `src/data/semester-14051-specialized.json` from the final faculty weekly and exam schedules. These rows are authoritative for تخصصی offerings and replace EMS تخصصی rows, so the file must contain the complete deduplicated list for the semester.
 
 ## Updating Tutor Reviews
 

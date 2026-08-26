@@ -4,32 +4,6 @@
   "department": "دانشکده ریاضی، آمار و علوم کامپیوتر",
   "courses": [
     {
-      "courseCode": "1110172",
-      "group": 1,
-      "courseName": "مبانی علم اقتصاد",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "کیان مهر محمدولی",
-      "sessions": [
-        {
-          "dayOfWeek": 6,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        },
-        {
-          "dayOfWeek": 1,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        }
-      ],
-      "examDate": "1405/10/27",
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "",
-      "notes": "",
-      "grade": ""
-    },
-    {
       "courseCode": "1120006",
       "group": 3,
       "courseName": "اخلاق اسلامی (مبانی و مفاهیم)",
@@ -4846,32 +4820,6 @@
       "grade": ""
     },
     {
-      "courseCode": "1120033",
-      "group": 2,
-      "courseName": "معادلات دیفرانسیل",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "خواجه صالحانی مهدی",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        }
-      ],
-      "examDate": "1405/10/29",
-      "examTime": "08:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103263 ریاضی عمومی 2 | معادل: 6103405 معادلات دیفرانسیل",
-      "notes": "",
-      "grade": ""
-    },
-    {
       "courseCode": "1120034",
       "group": 1,
       "courseName": "سواد مالی و اقتصاد فردی",
@@ -5016,239 +4964,6 @@
       "location": "",
       "prerequisites": "",
       "notes": "کلاس به صورت مجازی و در سامانه ایلرن برگزار می شود. امتحان این درس در سامانه یادگیری الکترونیکی (ایلرن) برگزار می شود.",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103095",
-      "group": 1,
-      "courseName": "آنالیز ریاضی 1",
-      "unitCount": 4,
-      "gender": "mixed",
-      "professor": "رضاوند رضا",
-      "sessions": [
-        {
-          "dayOfWeek": 6,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        },
-        {
-          "dayOfWeek": 1,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        }
-      ],
-      "examDate": "1405/10/27",
-      "examTime": "08:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103262 ریاضی عمومی 1, 6103384 مبانی ریاضیات | معادل: 6103268 مبانی آنالیز ریاضی",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103139",
-      "group": 1,
-      "courseName": "پروژه",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "اساتید گروه آموزشی",
-      "sessions": [],
-      "examDate": "",
-      "examTime": "",
-      "location": "",
-      "prerequisites": "",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103692",
-      "group": 1,
-      "courseName": "روش های ناپارامتری",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "حقیقی فیروزه",
-      "sessions": [
-        {
-          "dayOfWeek": 1,
-          "startTime": "10:00",
-          "endTime": "12:00"
-        },
-        {
-          "dayOfWeek": 3,
-          "startTime": "10:00",
-          "endTime": "12:00"
-        }
-      ],
-      "examDate": "1405/11/04",
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103779 احتمال 2",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103779",
-      "group": 1,
-      "courseName": "احتمال 2",
-      "unitCount": 4,
-      "gender": "mixed",
-      "professor": "شجاعی علی آبادی سیدرحمت",
-      "sessions": [
-        {
-          "dayOfWeek": 6,
-          "startTime": "10:00",
-          "endTime": "12:00"
-        },
-        {
-          "dayOfWeek": 1,
-          "startTime": "10:00",
-          "endTime": "12:00"
-        }
-      ],
-      "examDate": "1405/11/04",
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103777 احتمال 1 | معادل: 6103727 احتمال 2 | معادل: 6103075 آمار و احتمال 2",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103809",
-      "group": 1,
-      "courseName": "بیوانفورماتیک مقدماتی",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "فتوحی سیاه پیرانی علیرضا، کاوسی کاوه",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        }
-      ],
-      "examDate": "1405/10/29",
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103800 ساختمان داده ها و الگوریتم, 6103848 زیست شناسی عمومی",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103820",
-      "group": 1,
-      "courseName": "حسابگری زیستی",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "باباعلی باقر",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        }
-      ],
-      "examDate": "1405/11/06",
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103127 برنامه سازی پیشرفته",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103847",
-      "group": 1,
-      "courseName": "آزمایشگاه ریاضی",
-      "unitCount": 2,
-      "gender": "mixed",
-      "professor": "جمشیدی آرتا امیر",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        }
-      ],
-      "examDate": "1405/10/28",
-      "examTime": "08:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103386 مبانی کامپیوتر و برنامه سازی",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103890",
-      "group": 1,
-      "courseName": "توابع مختلط",
-      "unitCount": 4,
-      "gender": "mixed",
-      "professor": "آیت اله زاده شیرازی فاطمه",
-      "sessions": [
-        {
-          "dayOfWeek": 6,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        },
-        {
-          "dayOfWeek": 1,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        }
-      ],
-      "examDate": "1405/10/28",
-      "examTime": "08:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103095 آنالیز ریاضی 1 | هم نیاز: 6103096 آنالیز ریاضی 2",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "1110160",
-      "group": 1,
-      "courseName": "فیزیک عمومی 1",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "تقی نواز فرید",
-      "sessions": [
-        {
-          "dayOfWeek": 6,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        },
-        {
-          "dayOfWeek": 1,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        }
-      ],
-      "examDate": "1405/10/27",
-      "examTime": "08:00",
-      "location": "",
-      "prerequisites": "",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "1110184",
-      "group": 1,
-      "courseName": "کارآموزی",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "اساتید گروه آموزشی",
-      "sessions": [],
-      "examDate": "",
-      "examTime": "",
-      "location": "",
-      "prerequisites": "",
-      "notes": "مختص دانشجویان ورودی 400 به بعد",
       "grade": ""
     },
     {
@@ -7045,136 +6760,6 @@
       "grade": ""
     },
     {
-      "courseCode": "6103204",
-      "group": 1,
-      "courseName": "جبر 1",
-      "unitCount": 4,
-      "gender": "mixed",
-      "professor": "عامری رضا",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        }
-      ],
-      "examDate": "1405/11/06",
-      "examTime": "08:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103384 مبانی ریاضیات | معادل: 6103083 مبانی جبر",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103800",
-      "group": 1,
-      "courseName": "ساختمان داده ها و الگوریتم",
-      "unitCount": 4,
-      "gender": "mixed",
-      "professor": "توسلی شقایق",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        }
-      ],
-      "examDate": "1405/11/06",
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103127 برنامه سازی پیشرفته",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103811",
-      "group": 1,
-      "courseName": "روش های آماری",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "قاسم پورملومه مرضیه",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "13:00",
-          "endTime": "15:00"
-        }
-      ],
-      "examDate": "1405/11/06",
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103777 احتمال 1",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103830",
-      "group": 1,
-      "courseName": "مبانی جامعه شناسی",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "پروائی شیوا",
-      "sessions": [
-        {
-          "dayOfWeek": 6,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        },
-        {
-          "dayOfWeek": 1,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        }
-      ],
-      "examDate": "1405/10/28",
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103841",
-      "group": 1,
-      "courseName": "نظریه محاسبه",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "علی زاده مجید",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "15:00",
-          "endTime": "17:00"
-        }
-      ],
-      "examDate": "1405/10/29",
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103566 مبانی نظریه محاسبه",
-      "notes": "",
-      "grade": ""
-    },
-    {
       "courseCode": "1120026",
       "group": 1,
       "courseName": "آشنایی با ارزش های دفاع مقدس",
@@ -7259,12 +6844,12 @@
       "grade": ""
     },
     {
-      "courseCode": "6103262",
+      "courseCode": "6103096",
       "group": 1,
-      "courseName": "ریاضی عمومی 1",
+      "courseName": "آنالیز ریاضی 2",
       "unitCount": 4,
       "gender": "mixed",
-      "professor": "تعیین نشده",
+      "professor": "آیت اله زاده شیرازی فاطمه",
       "sessions": [
         {
           "dayOfWeek": 6,
@@ -7281,8 +6866,8 @@
       "examDay": 8,
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "",
-      "notes": "نام استاد در برنامه دانشکده اعلام نشده است.",
+      "prerequisites": "پیش نیاز: 6103095 آنالیز ریاضی 1 | معادل: 6103543 آنالیز ریاضی",
+      "notes": "",
       "grade": ""
     },
     {
@@ -7313,12 +6898,39 @@
       "grade": ""
     },
     {
-      "courseCode": "6103096",
+      "courseCode": "1110160",
       "group": 1,
-      "courseName": "آنالیز ریاضی 2",
-      "unitCount": 4,
+      "courseName": "فیزیک عمومی 1",
+      "unitCount": 3,
       "gender": "mixed",
-      "professor": "آیت اله زاده شیرازی فاطمه",
+      "professor": "تعیین نشده",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 2,
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "نام استاد در برنامه دانشکده اعلام نشده است.",
+      "grade": ""
+    },
+    {
+      "courseCode": "local-14051-008",
+      "group": 1,
+      "courseName": "سیستم های شی گرا",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "ارجمند بیگدلی",
       "sessions": [
         {
           "dayOfWeek": 6,
@@ -7333,9 +6945,9 @@
       ],
       "examDate": "",
       "examDay": 8,
-      "examTime": "08:00",
+      "examTime": "10:00",
       "location": "",
-      "prerequisites": "پیش نیاز: 6103095 آنالیز ریاضی 1 | معادل: 6103543 آنالیز ریاضی",
+      "prerequisites": "",
       "notes": "",
       "grade": ""
     },
@@ -7405,11 +7017,6 @@
           "dayOfWeek": 6,
           "startTime": "15:00",
           "endTime": "17:00"
-        },
-        {
-          "dayOfWeek": 1,
-          "startTime": "15:00",
-          "endTime": "17:00"
         }
       ],
       "examDate": "",
@@ -7421,12 +7028,12 @@
       "grade": ""
     },
     {
-      "courseCode": "local-14051-008",
+      "courseCode": "local-14051-012",
       "group": 1,
-      "courseName": "سیستم های شی گرا",
-      "unitCount": 3,
+      "courseName": "نظریه اندازه و کاربردها",
+      "unitCount": 4,
       "gender": "mixed",
-      "professor": "ارجمند بیگدلی",
+      "professor": "بهمانی رضا",
       "sessions": [
         {
           "dayOfWeek": 6,
@@ -7475,12 +7082,66 @@
       "grade": ""
     },
     {
-      "courseCode": "local-14051-012",
+      "courseCode": "1110172",
       "group": 1,
-      "courseName": "نظریه اندازه و کاربردها",
-      "unitCount": 4,
+      "courseName": "مبانی علم اقتصاد",
+      "unitCount": 3,
       "gender": "mixed",
-      "professor": "بهمانی رضا",
+      "professor": "محمدولی کیانمهر",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 2,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103830",
+      "group": 1,
+      "courseName": "مبانی جامعه شناسی",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "پروائی شیوا",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 3,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "local-14051-016",
+      "group": 1,
+      "courseName": "طرح آزمایش ها 2",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "رضائی قهرودی زهرا",
       "sessions": [
         {
           "dayOfWeek": 6,
@@ -7529,39 +7190,39 @@
       "grade": ""
     },
     {
-      "courseCode": "local-14051-016",
-      "group": 1,
-      "courseName": "طرح آزمایش ها 2",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "رضائی قهرودی زهرا",
-      "sessions": [
-        {
-          "dayOfWeek": 6,
-          "startTime": "08:00",
-          "endTime": "10:00"
-        },
-        {
-          "dayOfWeek": 1,
-          "startTime": "08:00",
-          "endTime": "10:00"
-        }
-      ],
-      "examDate": "",
-      "examDay": 8,
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "",
-      "notes": "",
-      "grade": ""
-    },
-    {
       "courseCode": "6103777",
       "group": 1,
       "courseName": "احتمال 1",
       "unitCount": 4,
       "gender": "mixed",
       "professor": "شجاعی علی آبادی سیدرحمت",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 2,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "معادل: 6103801 احتمال 1 | معادل: 6103071 آمار و احتمال 1",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103890",
+      "group": 1,
+      "courseName": "توابع مختلط",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "آیت اله زاده شیرازی فاطمه",
       "sessions": [
         {
           "dayOfWeek": 6,
@@ -7578,31 +7239,129 @@
       "examDay": 3,
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "معادل: 6103801 احتمال 1 | معادل: 6103071 آمار و احتمال 1",
+      "prerequisites": "",
       "notes": "",
       "grade": ""
     },
     {
-      "courseCode": "6103063",
+      "courseCode": "6103779",
       "group": 1,
-      "courseName": "آمار ریاضی 2",
-      "unitCount": 3,
+      "courseName": "احتمال 2",
+      "unitCount": 4,
       "gender": "mixed",
-      "professor": "حقیقی فیروزه",
+      "professor": "شجاعی علی آبادی سیدرحمت",
       "sessions": [
         {
-          "dayOfWeek": 1,
-          "startTime": "08:00",
-          "endTime": "10:00"
+          "dayOfWeek": 6,
+          "startTime": "10:00",
+          "endTime": "12:00"
         },
         {
-          "dayOfWeek": 3,
-          "startTime": "08:00",
-          "endTime": "10:00"
+          "dayOfWeek": 1,
+          "startTime": "10:00",
+          "endTime": "12:00"
         }
       ],
       "examDate": "",
-      "examDay": 8,
+      "examDay": 7,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103777 احتمال 1 | معادل: 6103727 احتمال 2 | معادل: 6103075 آمار و احتمال 2",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103095",
+      "group": 1,
+      "courseName": "آنالیز ریاضی 1",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "رضاوند رضا",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 2,
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103262 ریاضی عمومی 1, 6103384 مبانی ریاضیات | معادل: 6103268 مبانی آنالیز ریاضی",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103847",
+      "group": 1,
+      "courseName": "آزمایشگاه ریاضی",
+      "unitCount": 2,
+      "gender": "mixed",
+      "professor": "جمشیدی آرتا امیر",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 3,
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103386 مبانی کامپیوتر و برنامه سازی",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103262",
+      "group": 1,
+      "courseName": "ریاضی عمومی 1",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "غریبی زینب",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        },
+        {
+          "dayOfWeek": 1,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 7,
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "1110172",
+      "group": 2,
+      "courseName": "مبانی علم اقتصاد",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "محمدولی کیانمهر",
+      "sessions": [
+        {
+          "dayOfWeek": 6,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 7,
       "examTime": "08:00",
       "location": "",
       "prerequisites": "",
@@ -7637,33 +7396,6 @@
       "grade": ""
     },
     {
-      "courseCode": "local-14051-024",
-      "group": 1,
-      "courseName": "یادگیری آماری مقدماتی",
-      "unitCount": 3,
-      "gender": "mixed",
-      "professor": "صفری عبداله",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "08:00",
-          "endTime": "10:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "08:00",
-          "endTime": "10:00"
-        }
-      ],
-      "examDate": "",
-      "examDay": 6,
-      "examTime": "10:00",
-      "location": "",
-      "prerequisites": "",
-      "notes": "",
-      "grade": ""
-    },
-    {
       "courseCode": "6103386",
       "group": 1,
       "courseName": "مبانی کامپیوتر و برنامه سازی",
@@ -7691,12 +7423,12 @@
       "grade": ""
     },
     {
-      "courseCode": "local-14051-026",
+      "courseCode": "6103844",
       "group": 1,
-      "courseName": "نظریه گراف و کاربردها",
+      "courseName": "محاسبات علمی",
       "unitCount": 4,
       "gender": "mixed",
-      "professor": "محمدنوری مرتضی",
+      "professor": "کامرانی مینو",
       "sessions": [
         {
           "dayOfWeek": 0,
@@ -7710,20 +7442,47 @@
         }
       ],
       "examDate": "",
-      "examDay": 9,
+      "examDay": 3,
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "",
+      "prerequisites": "پیش نیاز: 6103778 جبر خطی",
       "notes": "",
       "grade": ""
     },
     {
-      "courseCode": "6103778",
-      "group": 2,
-      "courseName": "جبر خطی",
-      "unitCount": 4,
+      "courseCode": "6103809",
+      "group": 1,
+      "courseName": "بیوانفورماتیک مقدماتی",
+      "unitCount": 3,
       "gender": "mixed",
-      "professor": "سبزرو حسین",
+      "professor": "پردیس کاووسی، خلیل بردی فتوحی فر",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 4,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103800 ساختمان داده ها و الگوریتم, 6103848 زیست شناسی عمومی",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "local-14051-024",
+      "group": 1,
+      "courseName": "یادگیری آماری مقدماتی",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "صفری عبداله",
       "sessions": [
         {
           "dayOfWeek": 0,
@@ -7738,9 +7497,9 @@
       ],
       "examDate": "",
       "examDay": 6,
-      "examTime": "08:00",
+      "examTime": "10:00",
       "location": "",
-      "prerequisites": "پیش نیاز: 6103384 مبانی ریاضیات | معادل: 6103246 مبانی ماتریس ها و جبر خطی",
+      "prerequisites": "",
       "notes": "",
       "grade": ""
     },
@@ -7772,12 +7531,66 @@
       "grade": ""
     },
     {
-      "courseCode": "local-14051-032",
+      "courseCode": "6103800",
       "group": 1,
-      "courseName": "طراحی و تحلیل الگوریتم ها",
+      "courseName": "ساختمان داده ها و الگوریتم",
       "unitCount": 4,
       "gender": "mixed",
-      "professor": "گنج تابش محمد",
+      "professor": "توسلی شقایق",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 9,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103127 برنامه سازی پیشرفته",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103841",
+      "group": 1,
+      "courseName": "نظریه محاسبه",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "علی زاده مجید",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 4,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103566 مبانی نظریه محاسبه",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103778",
+      "group": 2,
+      "courseName": "جبر خطی",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "سبزرو حسین",
       "sessions": [
         {
           "dayOfWeek": 0,
@@ -7792,19 +7605,19 @@
       ],
       "examDate": "",
       "examDay": 6,
-      "examTime": "10:00",
+      "examTime": "08:00",
       "location": "",
-      "prerequisites": "",
+      "prerequisites": "پیش نیاز: 6103384 مبانی ریاضیات | معادل: 6103246 مبانی ماتریس ها و جبر خطی",
       "notes": "",
       "grade": ""
     },
     {
-      "courseCode": "local-14051-033",
+      "courseCode": "6103204",
       "group": 1,
-      "courseName": "نظریه مقدماتی اعداد",
+      "courseName": "جبر 1",
       "unitCount": 4,
       "gender": "mixed",
-      "professor": "قادرمرزی امیر",
+      "professor": "عامری رضا",
       "sessions": [
         {
           "dayOfWeek": 0,
@@ -7821,7 +7634,34 @@
       "examDay": 1,
       "examTime": "08:00",
       "location": "",
-      "prerequisites": "",
+      "prerequisites": "پیش نیاز: 6103384 مبانی ریاضیات | معادل: 6103083 مبانی جبر",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103820",
+      "group": 1,
+      "courseName": "حسابگری زیستی",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "باباعلی",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 9,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103127 برنامه سازی پیشرفته",
       "notes": "",
       "grade": ""
     },
@@ -7853,12 +7693,12 @@
       "grade": ""
     },
     {
-      "courseCode": "6103384",
+      "courseCode": "local-14051-032",
       "group": 1,
-      "courseName": "مبانی ریاضیات",
+      "courseName": "طراحی و تحلیل الگوریتم ها",
       "unitCount": 4,
       "gender": "mixed",
-      "professor": "محمدباقر اسدی",
+      "professor": "گنج تابش محمد",
       "sessions": [
         {
           "dayOfWeek": 0,
@@ -7873,9 +7713,9 @@
       ],
       "examDate": "",
       "examDay": 6,
-      "examTime": "08:00",
+      "examTime": "10:00",
       "location": "",
-      "prerequisites": "معادل: 6103059 مبانی علوم ریاضی | معادل: 6103059 مبانی علوم ریاضی",
+      "prerequisites": "",
       "notes": "",
       "grade": ""
     },
@@ -7907,83 +7747,29 @@
       "grade": ""
     },
     {
-      "courseCode": "local-14051-039",
+      "courseCode": "6103811",
       "group": 1,
-      "courseName": "هندسه دیفرانسیل خم ها و رویه ها",
-      "unitCount": 4,
+      "courseName": "روش های آماری",
+      "unitCount": 3,
       "gender": "mixed",
-      "professor": "کمالی نژاد علی",
+      "professor": "قاسم پورملومه مرضیه",
       "sessions": [
         {
           "dayOfWeek": 0,
-          "startTime": "15:00",
-          "endTime": "17:00"
+          "startTime": "13:00",
+          "endTime": "15:00"
         },
         {
           "dayOfWeek": 2,
-          "startTime": "15:00",
-          "endTime": "17:00"
+          "startTime": "13:00",
+          "endTime": "15:00"
         }
       ],
       "examDate": "",
-      "examDay": 4,
-      "examTime": "08:00",
+      "examDay": 9,
+      "examTime": "10:00",
       "location": "",
-      "prerequisites": "",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103263",
-      "group": 1,
-      "courseName": "ریاضی عمومی 2",
-      "unitCount": 4,
-      "gender": "mixed",
-      "professor": "صدری نسرین",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "08:00",
-          "endTime": "10:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "08:00",
-          "endTime": "10:00"
-        }
-      ],
-      "examDate": "",
-      "examDay": 6,
-      "examTime": "08:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103262 ریاضی عمومی 1",
-      "notes": "",
-      "grade": ""
-    },
-    {
-      "courseCode": "6103844",
-      "group": 1,
-      "courseName": "محاسبات علمی",
-      "unitCount": 4,
-      "gender": "mixed",
-      "professor": "کامرانی مینو",
-      "sessions": [
-        {
-          "dayOfWeek": 0,
-          "startTime": "10:00",
-          "endTime": "12:00"
-        },
-        {
-          "dayOfWeek": 2,
-          "startTime": "10:00",
-          "endTime": "12:00"
-        }
-      ],
-      "examDate": "",
-      "examDay": 1,
-      "examTime": "08:00",
-      "location": "",
-      "prerequisites": "پیش نیاز: 6103778 جبر خطی",
+      "prerequisites": "پیش نیاز: 6103777 احتمال 1",
       "notes": "",
       "grade": ""
     },
@@ -8015,12 +7801,12 @@
       "grade": ""
     },
     {
-      "courseCode": "local-14051-043",
+      "courseCode": "6103384",
       "group": 1,
-      "courseName": "روش های نمونه گیری 2",
-      "unitCount": 3,
+      "courseName": "مبانی ریاضیات",
+      "unitCount": 4,
       "gender": "mixed",
-      "professor": "نجفی (مدعو)",
+      "professor": "محمدباقر اسدی",
       "sessions": [
         {
           "dayOfWeek": 0,
@@ -8035,9 +7821,117 @@
       ],
       "examDate": "",
       "examDay": 6,
-      "examTime": "10:00",
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "معادل: 6103059 مبانی علوم ریاضی | معادل: 6103059 مبانی علوم ریاضی",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "local-14051-026",
+      "group": 1,
+      "courseName": "نظریه گراف و کاربردها",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "محمدنوری مرتضی",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 1,
+      "examTime": "08:00",
       "location": "",
       "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "local-14051-039",
+      "group": 1,
+      "courseName": "هندسه دیفرانسیل خم ها و رویه ها",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "کمالی نژاد علی",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "13:00",
+          "endTime": "15:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 9,
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "1120033",
+      "group": 2,
+      "courseName": "معادلات دیفرانسیل",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "خواجه صالحانی مهدی",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 4,
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103263 ریاضی عمومی 2 | معادل: 6103405 معادلات دیفرانسیل",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103263",
+      "group": 1,
+      "courseName": "ریاضی عمومی 2",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "صدری نسرین",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 6,
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103262 ریاضی عمومی 1",
       "notes": "",
       "grade": ""
     },
@@ -8069,6 +7963,60 @@
       "grade": ""
     },
     {
+      "courseCode": "6103127",
+      "group": 1,
+      "courseName": "برنامه سازی پیشرفته",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "احمدیان (دانشجوی دکتری)",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "15:00",
+          "endTime": "17:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 6,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103386 مبانی کامپیوتر و برنامه سازی | معادل: 6103582 اصول کامپیوتر 2",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "local-14051-043",
+      "group": 1,
+      "courseName": "روش های نمونه گیری 2",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "نجفی (مدعو)",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 6,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
       "courseCode": "local-14051-046",
       "group": 1,
       "courseName": "توپولوژی جبری مقدماتی",
@@ -8096,12 +8044,12 @@
       "grade": ""
     },
     {
-      "courseCode": "6103127",
+      "courseCode": "local-14051-033",
       "group": 1,
-      "courseName": "برنامه سازی پیشرفته",
+      "courseName": "نظریه مقدماتی اعداد",
       "unitCount": 4,
       "gender": "mixed",
-      "professor": "احمدیان (دانشجوی دکتری)",
+      "professor": "قادرمرزی امیر",
       "sessions": [
         {
           "dayOfWeek": 0,
@@ -8115,10 +8063,91 @@
         }
       ],
       "examDate": "",
-      "examDay": 6,
+      "examDay": 4,
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103262",
+      "group": 2,
+      "courseName": "ریاضی عمومی 1",
+      "unitCount": 4,
+      "gender": "mixed",
+      "professor": "کامرانی مینو",
+      "sessions": [
+        {
+          "dayOfWeek": 0,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 1,
       "examTime": "10:00",
       "location": "",
-      "prerequisites": "پیش نیاز: 6103386 مبانی کامپیوتر و برنامه سازی | معادل: 6103582 اصول کامپیوتر 2",
+      "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103063",
+      "group": 1,
+      "courseName": "آمار ریاضی 2",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "حقیقی فیروزه",
+      "sessions": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        },
+        {
+          "dayOfWeek": 3,
+          "startTime": "08:00",
+          "endTime": "10:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 8,
+      "examTime": "08:00",
+      "location": "",
+      "prerequisites": "",
+      "notes": "",
+      "grade": ""
+    },
+    {
+      "courseCode": "6103692",
+      "group": 1,
+      "courseName": "روش های ناپارامتری",
+      "unitCount": 3,
+      "gender": "mixed",
+      "professor": "حقیقی فیروزه",
+      "sessions": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        },
+        {
+          "dayOfWeek": 3,
+          "startTime": "10:00",
+          "endTime": "12:00"
+        }
+      ],
+      "examDate": "",
+      "examDay": 7,
+      "examTime": "10:00",
+      "location": "",
+      "prerequisites": "پیش نیاز: 6103779 احتمال 2",
       "notes": "",
       "grade": ""
     }

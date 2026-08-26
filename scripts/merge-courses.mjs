@@ -10,8 +10,9 @@
  * Files in gathered_data are ordered snapshots. Active-semester snapshots are
  * unioned because Report #212 hides courses already passed by each student.
  * Later snapshots override earlier ones for the same (code, group) key.
- * عمومی rows come only from the official EMS report. تخصصی rows prefer EMS,
- * while faculty-PDF rows missing from EMS are retained as supplemental rows.
+ * عمومی rows come only from the official EMS report. The semester metadata is
+ * the final authority for تخصصی rows: it replaces EMS تخصصی rows after being
+ * deduplicated by normalized course name and group.
  *
  * Usage: node scripts/merge-courses.mjs
  */
@@ -147,8 +148,9 @@ async function main() {
   const officialCourses = Array.from(officialRows.values()).map(expandCourse);
   const semesterMetadata = JSON.parse(await readFile(SEMESTER_METADATA_FILE, 'utf-8'));
 
-  // Older EMS snapshots are used only as metadata templates for PDF rows that
-  // lack a stable code or other details. They never reintroduce عمومی rows.
+  // Older EMS snapshots are used only as metadata templates for final faculty
+  // schedule rows that lack a stable code or other details. They never
+  // reintroduce تخصصی or عمومی rows by themselves.
   const templatesByName = new Map();
   for (const file of files) {
     const snapshot = JSON.parse(await readFile(join(GATHERED_DIR, file), 'utf-8'));
@@ -157,28 +159,22 @@ async function main() {
     }
   }
 
-  const pdfSpecializedCourses = semesterMetadata.courses.map((course, index) =>
+  const finalSpecializedCourses = semesterMetadata.courses.map((course, index) =>
     expandSpecializedCourse(course, index, templatesByName),
   );
-  const officialSpecialized = officialCourses.filter(course => !isGeneralCourse(course));
-  const officialSpecializedKeys = new Set(
-    officialSpecialized.map(course => `${course.courseCode}-${course.group}`),
-  );
-  const officialSpecializedNames = new Set(
-    officialSpecialized.map(course =>
-      `${normalizePersian(course.courseName).trim()}-${course.group}`
-    ),
-  );
-  const supplementalSpecialized = pdfSpecializedCourses.filter(course =>
-    !officialSpecializedKeys.has(`${course.courseCode}-${course.group}`)
-    && !officialSpecializedNames.has(`${normalizePersian(course.courseName).trim()}-${course.group}`)
-  );
-  const courses = [...officialCourses, ...supplementalSpecialized];
-  const specializedCount = courses.filter(course => !isGeneralCourse(course)).length;
-  const generalCount = courses.length - specializedCount;
+  const uniqueSpecialized = Array.from(new Map(
+    finalSpecializedCourses.map(course => [
+      `${normalizePersian(course.courseName).trim()}-${course.group}`,
+      course,
+    ]),
+  ).values());
+  const officialGeneral = officialCourses.filter(isGeneralCourse);
+  const courses = [...officialGeneral, ...uniqueSpecialized];
+  const specializedCount = uniqueSpecialized.length;
+  const generalCount = officialGeneral.length;
 
   console.log(`Combined ${activeFiles.length} active EMS snapshots: ${officialCourses.length} unique courses`);
-  console.log(`Retaining ${supplementalSpecialized.length} PDF-only specialized courses`);
+  console.log(`Using ${specializedCount} final, deduplicated faculty-schedule specialized courses`);
 
   const output = {
     semester: semesterMetadata.semester,
