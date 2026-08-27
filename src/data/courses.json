@@ -6961,17 +6961,17 @@
       "sessions": [
         {
           "dayOfWeek": 6,
-          "startTime": "10:00",
-          "endTime": "12:00"
+          "startTime": "13:00",
+          "endTime": "15:00"
         },
         {
           "dayOfWeek": 1,
-          "startTime": "10:00",
-          "endTime": "12:00"
+          "startTime": "13:00",
+          "endTime": "15:00"
         }
       ],
       "examDate": "",
-      "examDay": 7,
+      "examDay": 2,
       "examTime": "10:00",
       "location": "",
       "prerequisites": "",
