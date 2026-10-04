@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Course } from '@/types';
 import { dayName, WEEK_DAYS_ORDER, toEnglishDigits } from '@/utils/persian';
+import { CourseDetails } from '@/components/CourseDetails';
 
 interface Props {
   open: boolean;
@@ -178,6 +179,8 @@ function ManualCourseForm({
       </div>
 
       <div className="flex flex-col gap-4">
+        {editingCourse && <CourseDetails course={editingCourse} />}
+
         {/* Course name */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام درس *</label>

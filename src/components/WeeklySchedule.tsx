@@ -11,6 +11,7 @@ import { toPersianDigits, dayName } from '@/utils/persian';
 import { formatExamSchedule } from '@/utils/exams';
 import { getCourseIdentityLabel } from '@/utils/courses';
 import { slotFilterAtom } from '@/atoms';
+import { CourseDetails } from '@/components/CourseDetails';
 
 interface Props {
   hoveredCourse: Course | null;
@@ -330,7 +331,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
       {tappedCourse && (
         <div className="fixed inset-0 z-50 bg-black/30" onClick={() => setTappedCourse(null)}>
           <div
-            className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl p-5 pb-8 shadow-xl"
+            className="absolute bottom-0 left-0 right-0 max-h-[90dvh] overflow-y-auto bg-white dark:bg-gray-800 rounded-t-2xl p-5 pb-8 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drag handle */}
@@ -350,6 +351,9 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
                     امتحان: {toPersianDigits(formatExamSchedule(tappedCourse))}
                   </div>
                 )}
+              </div>
+              <div className="mt-3">
+                <CourseDetails course={tappedCourse} />
               </div>
             </div>
 
