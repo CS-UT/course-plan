@@ -4,7 +4,12 @@ export interface CourseSession {
   endTime: string;   // "HH:mm"
 }
 
+export type ScheduleEntryType = 'course' | 'tutorial' | 'other';
+
 export interface Course {
+  // Entries saved before types were introduced are regular courses.
+  entryType?: ScheduleEntryType;
+  relatedCourse?: { courseCode: string; group: number };
   courseCode: string;
   group: number;
   courseName: string;

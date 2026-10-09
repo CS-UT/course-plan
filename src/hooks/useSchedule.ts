@@ -2,6 +2,7 @@ import { useAtom } from 'jotai';
 import { schedulesAtom, currentScheduleIdAtom } from '@/atoms';
 import type { Course, SelectedCourse, Schedule } from '@/types';
 import { findTimeConflicts, findExamConflicts } from '@/utils/conflicts';
+import { isCreditCourse } from '@/utils/courses';
 
 const MAX_SCHEDULES = 5;
 
@@ -157,7 +158,7 @@ export function useSchedule() {
     return { added, skipped };
   }
 
-  const totalUnits = selectedCourses.reduce((sum, c) => sum + c.unitCount, 0);
+  const totalUnits = selectedCourses.reduce((sum, c) => sum + (isCreditCourse(c) ? c.unitCount : 0), 0);
 
   return {
     schedules,

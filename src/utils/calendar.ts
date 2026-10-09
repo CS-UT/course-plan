@@ -1,4 +1,4 @@
-import type { SelectedCourse } from '@/types';
+import type { SelectedCourse, Course, ScheduleEntryType } from '@/types';
 import { hasTimeConflict } from './conflicts';
 
 // Colors for different courses on the calendar
@@ -21,6 +21,20 @@ const HOVER_COLOR = { bg: '#f3f4f6', border: '#9ca3af', text: '#6b7280' };
 // 2023-12-30 is a Saturday (شنبه)
 const BASE_SATURDAY = '2023-12-30';
 
+export function getCalendarBounds(courses: Course[]) {
+  const sessions = courses.flatMap((course) => course.sessions);
+  const days = [6, 0, 1, 2, 3, 4, 5].filter((day) => day < 4 || day === 6 || sessions.some((session) => session.dayOfWeek === day));
+  const toHours = (time: string) => {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours + minutes / 60;
+  };
+  return {
+    days,
+    startHour: Math.floor(Math.min(7, ...sessions.map((session) => toHours(session.startTime)))),
+    endHour: Math.ceil(Math.max(20, ...sessions.map((session) => toHours(session.endTime)))),
+  };
+}
+
 function dayOffsetFromSaturday(dayOfWeek: number): number {
   // dayOfWeek: 6=شنبه(Saturday), 0=یکشنبه(Sunday), 1=دوشنبه(Monday),...
   // We need offset from Saturday
@@ -37,6 +51,7 @@ export interface CalendarEvent {
   borderColor: string;
   textColor: string;
   extendedProps: {
+    entryType?: ScheduleEntryType;
     courseCode: string;
     group: number;
     courseName: string;
@@ -106,6 +121,7 @@ export function coursesToEvents(
         borderColor: color.border,
         textColor: color.text,
         extendedProps: {
+          entryType: course.entryType,
           courseCode: course.courseCode,
           group: course.group,
           courseName: course.courseName,

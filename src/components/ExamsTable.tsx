@@ -4,7 +4,7 @@ import { useSchedule } from '@/hooks/useSchedule';
 import { toPersianDigits } from '@/utils/persian';
 import { hasExamConflict } from '@/utils/conflicts';
 import { compareExamSlots, formatExamSchedule } from '@/utils/exams';
-import { getCourseCodeLabel } from '@/utils/courses';
+import { getCourseCodeLabel, isCreditCourse } from '@/utils/courses';
 
 interface Props {
   onEditCourse: (course: Course) => void;
@@ -14,7 +14,7 @@ export function ExamsTable({ onEditCourse }: Props) {
   const { selectedCourses, removeCourse, totalUnits } = useSchedule();
 
   const sorted = useMemo(() => {
-    return [...selectedCourses].sort(compareExamSlots);
+    return selectedCourses.filter(isCreditCourse).sort(compareExamSlots);
   }, [selectedCourses]);
 
   const conflictingPairs = useMemo(() => {
@@ -30,7 +30,7 @@ export function ExamsTable({ onEditCourse }: Props) {
     return pairs;
   }, [selectedCourses]);
 
-  if (selectedCourses.length === 0) {
+  if (sorted.length === 0) {
     return (
       <div className="mt-3 text-sm text-gray-400 dark:text-gray-500 text-center py-6">
         هنوز درسی انتخاب نشده

@@ -9,6 +9,7 @@ import { slotFilterAtom } from '@/atoms';
 import { formatExamSchedule } from '@/utils/exams';
 import { getCourseIdentityLabel } from '@/utils/courses';
 import tutorNameMap from '@/data/tutor-name-map.json';
+import { ManualEntryButton } from './ManualEntryButton';
 
 interface Props {
   courses: Course[];
@@ -189,12 +190,7 @@ export function CourseSearch({ courses, onHoverCourse, onOpenManualEntry }: Prop
         className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400"
       />
 
-      <button
-        onClick={onOpenManualEntry}
-        className="w-full px-4 py-2 text-sm font-medium border border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:border-primary-400 dark:hover:border-primary-500 transition-colors cursor-pointer"
-      >
-        + افزودن درس دستی
-      </button>
+      <ManualEntryButton onClick={onOpenManualEntry} />
 
       <div className="text-xs text-gray-500 dark:text-gray-400 flex justify-between items-center">
         <span>{toPersianDigits(filtered.length)} درس</span>

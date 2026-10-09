@@ -20,6 +20,15 @@ export const tourSteps: TourStepDef[] = [
     device: 'desktop',
   },
   {
+    id: 'manual-entry',
+    targetSelector: '[data-tour="manual-entry"]',
+    title: 'افزودن دستی',
+    description: 'درس دلخواه، حل تمرین یا زمان‌هایی مثل مطالعه و ورزش را با نام و ساعت خودتان به برنامه اضافه کنید.',
+    side: 'left',
+    align: 'center',
+    device: 'desktop',
+  },
+  {
     id: 'mobile-add',
     targetSelector: '[data-tour="mobile-add-btn"]',
     title: 'افزودن درس',
