@@ -1,5 +1,6 @@
 import type { SelectedCourse, Course, ScheduleEntryType } from '@/types';
 import { hasTimeConflict } from './conflicts';
+import { isCreditCourse } from './courses';
 
 // Colors for different courses on the calendar
 const COURSE_COLORS = [
@@ -16,6 +17,33 @@ const COURSE_COLORS = [
 ];
 
 const HOVER_COLOR = { bg: '#f3f4f6', border: '#9ca3af', text: '#6b7280' };
+
+export type CalendarColor = (typeof COURSE_COLORS)[number];
+
+export function getCourseCalendarColor(
+  course: SelectedCourse,
+  courses: SelectedCourse[],
+  colorMap: Map<string, number>,
+): CalendarColor {
+  if (course.mode === 'hover') return HOVER_COLOR;
+
+  const relation = course.entryType === 'tutorial' ? course.relatedCourse : undefined;
+  const relatedCourse = relation
+    ? courses.find((candidate) =>
+      candidate.mode !== 'hover' && isCreditCourse(candidate)
+      && candidate.courseCode === relation.courseCode
+      && candidate.group === relation.group,
+    )
+    : undefined;
+  const colorSource = relatedCourse ?? course;
+  const colorKey = `${colorSource.courseCode}-${colorSource.group}`;
+  let colorIndex = colorMap.get(colorKey);
+  if (colorIndex === undefined) {
+    colorIndex = colorMap.size % COURSE_COLORS.length;
+    colorMap.set(colorKey, colorIndex);
+  }
+  return COURSE_COLORS[colorIndex];
+}
 
 // FullCalendar uses a base date for timeGridWeek. We use a fixed Saturday.
 // 2023-12-30 is a Saturday (شنبه)
@@ -52,6 +80,7 @@ export interface CalendarEvent {
   textColor: string;
   extendedProps: {
     entryType?: ScheduleEntryType;
+    color: CalendarColor;
     courseCode: string;
     group: number;
     courseName: string;
@@ -93,15 +122,7 @@ export function coursesToEvents(
   }
 
   for (const course of courses) {
-    const colorKey = `${course.courseCode}-${course.group}`;
-    let colorIndex = colorMap.get(colorKey);
-    if (colorIndex === undefined) {
-      colorIndex = colorMap.size % COURSE_COLORS.length;
-      colorMap.set(colorKey, colorIndex);
-    }
-
-    const isHover = course.mode === 'hover';
-    const color = isHover ? HOVER_COLOR : COURSE_COLORS[colorIndex];
+    const color = getCourseCalendarColor(course, courses, colorMap);
 
     for (let i = 0; i < course.sessions.length; i++) {
       const session = course.sessions[i];
@@ -117,11 +138,12 @@ export function coursesToEvents(
         title: course.courseName,
         start: `${year}-${month}-${day}T${session.startTime}:00`,
         end: `${year}-${month}-${day}T${session.endTime}:00`,
-        backgroundColor: color.bg,
-        borderColor: color.border,
+        backgroundColor: course.entryType === 'tutorial' ? 'transparent' : color.bg,
+        borderColor: course.entryType === 'tutorial' ? `${color.border}66` : color.border,
         textColor: color.text,
         extendedProps: {
           entryType: course.entryType,
+          color,
           courseCode: course.courseCode,
           group: course.group,
           courseName: course.courseName,
