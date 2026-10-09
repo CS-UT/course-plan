@@ -6,10 +6,10 @@ import type { DateSelectArg, EventClickArg, EventContentArg } from '@fullcalenda
 import { useAtom } from 'jotai';
 import type { Course, SelectedCourse } from '@/types';
 import { useSchedule } from '@/hooks/useSchedule';
-import { coursesToEvents, BASE_SATURDAY, COURSE_COLORS } from '@/utils/calendar';
+import { coursesToEvents, getCalendarBounds, BASE_SATURDAY, COURSE_COLORS } from '@/utils/calendar';
 import { toPersianDigits, dayName } from '@/utils/persian';
 import { formatExamSchedule } from '@/utils/exams';
-import { getCourseIdentityLabel } from '@/utils/courses';
+import { ENTRY_TYPE_LABELS, getCourseIdentityLabel, isCreditCourse } from '@/utils/courses';
 import { slotFilterAtom } from '@/atoms';
 import { CourseDetails } from '@/components/CourseDetails';
 
@@ -24,6 +24,8 @@ const DAY_HEADER_MAP: Record<string, string> = {
   Mon: 'دوشنبه',
   Tue: 'سه‌شنبه',
   Wed: 'چهارشنبه',
+  Thu: 'پنجشنبه',
+  Fri: 'جمعه',
 };
 
 const colorMap = new Map<string, number>();
@@ -130,6 +132,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
     () => coursesToEvents(allCourses, colorMap),
     [allCourses],
   );
+  const calendarBounds = getCalendarBounds(allCourses);
 
   function handleToggleRotation() {
     setRotated((r) => {
@@ -238,8 +241,8 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
             firstDay={6}
             headerToolbar={false}
             allDaySlot={false}
-            slotMinTime="07:00:00"
-            slotMaxTime="20:00:00"
+            slotMinTime={`${String(calendarBounds.startHour).padStart(2, '0')}:00:00`}
+            slotMaxTime={`${String(calendarBounds.endHour).padStart(2, '0')}:00:00`}
             slotDuration="01:00:00"
             slotLabelFormat={{
               hour: '2-digit',
@@ -251,7 +254,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
               const dayKey = arg.date.toLocaleDateString('en-US', { weekday: 'short' });
               return DAY_HEADER_MAP[dayKey] ?? dayKey;
             }}
-            hiddenDays={[4, 5]}
+            hiddenDays={[4, 5].filter((day) => !calendarBounds.days.includes(day))}
             slotEventOverlap={false}
             selectable
             selectMirror
@@ -282,9 +285,11 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
             {tooltip.content.courseName}
           </div>
           <div className="text-gray-600 dark:text-gray-300 space-y-0.5">
-            <div>استاد: {tooltip.content.professor}</div>
-            <div>{toPersianDigits(getCourseIdentityLabel(tooltip.content.courseCode, tooltip.content.group))}</div>
-            <div>واحد: {toPersianDigits(tooltip.content.unitCount)}</div>
+            {isCreditCourse(tooltip.content) ? <>
+              {tooltip.content.professor && <div>استاد: {tooltip.content.professor}</div>}
+              <div>{toPersianDigits(getCourseIdentityLabel(tooltip.content.courseCode, tooltip.content.group))}</div>
+              <div>واحد: {toPersianDigits(tooltip.content.unitCount)}</div>
+            </> : <div>{ENTRY_TYPE_LABELS[tooltip.content.entryType as 'tutorial' | 'other']}</div>}
             {tooltip.content.location && <div>محل: {tooltip.content.location}</div>}
             {tooltip.content.prerequisites && <div>{tooltip.content.prerequisites}</div>}
             {formatExamSchedule(tooltip.content) && (
@@ -344,8 +349,10 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-300 mt-1 space-y-0.5">
                 {tappedCourse.professor && <div>استاد: {tappedCourse.professor}</div>}
-                <div>{toPersianDigits(getCourseIdentityLabel(tappedCourse.courseCode, tappedCourse.group))}</div>
-                <div>واحد: {toPersianDigits(tappedCourse.unitCount)}</div>
+                {isCreditCourse(tappedCourse) ? <>
+                  <div>{toPersianDigits(getCourseIdentityLabel(tappedCourse.courseCode, tappedCourse.group))}</div>
+                  <div>واحد: {toPersianDigits(tappedCourse.unitCount)}</div>
+                </> : <div>{ENTRY_TYPE_LABELS[tappedCourse.entryType as 'tutorial' | 'other']}</div>}
                 {formatExamSchedule(tappedCourse) && (
                   <div>
                     امتحان: {toPersianDigits(formatExamSchedule(tappedCourse))}
@@ -368,7 +375,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/30 hover:bg-primary-100 dark:hover:bg-primary-900/50 rounded-xl transition-colors cursor-pointer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                ویرایش درس
+                ویرایش
               </button>
               <button
                 onClick={() => {
@@ -378,7 +385,7 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-danger-600 dark:text-danger-400 bg-danger-50 dark:bg-danger-500/10 hover:bg-danger-100 dark:hover:bg-danger-500/20 rounded-xl transition-colors cursor-pointer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                حذف درس
+                حذف از برنامه
               </button>
               <button
                 onClick={() => setTappedCourse(null)}
@@ -404,15 +411,13 @@ const DAYS: { dow: number; label: string }[] = [
   { dow: 1, label: 'دوشنبه' },
   { dow: 2, label: 'سه‌شنبه' },
   { dow: 3, label: 'چهارشنبه' },
+  { dow: 4, label: 'پنجشنبه' },
+  { dow: 5, label: 'جمعه' },
 ];
 
-const SLOT_START = 7;  // 07:00
-const SLOT_END = 20;   // 20:00
-const TOTAL_SLOTS = SLOT_END - SLOT_START; // 13 hours
-
-function timeToFraction(time: string): number {
+function timeToFraction(time: string, startHour: number, totalSlots: number): number {
   const [h, m] = time.split(':').map(Number);
-  return (h - SLOT_START + m / 60) / TOTAL_SLOTS;
+  return (h - startHour + m / 60) / totalSlots;
 }
 
 interface TransposedEvent {
@@ -488,7 +493,8 @@ function buildTransposedEvents(
   cMap: Map<string, number>,
 ): Map<number, TransposedEvent[]> {
   const byDay = new Map<number, TransposedEvent[]>();
-  for (const d of DAYS) byDay.set(d.dow, []);
+  const { days, startHour, endHour } = getCalendarBounds(courses);
+  for (const day of days) byDay.set(day, []);
 
   for (const course of courses) {
     const colorKey = `${course.courseCode}-${course.group}`;
@@ -501,8 +507,8 @@ function buildTransposedEvents(
     const color = isHover ? HOVER_COLOR : COURSE_COLORS[colorIndex];
 
     for (const session of course.sessions) {
-      const start = timeToFraction(session.startTime);
-      const end = timeToFraction(session.endTime);
+      const start = timeToFraction(session.startTime, startHour, endHour - startHour);
+      const end = timeToFraction(session.endTime, startHour, endHour - startHour);
       const evt: TransposedEvent = {
         courseCode: course.courseCode,
         group: course.group,
@@ -557,13 +563,14 @@ function TransposedCalendar({
   );
 
   const hours = useMemo(() => {
+    const { startHour, endHour } = getCalendarBounds(courses);
     const arr: number[] = [];
-    for (let h = SLOT_START; h < SLOT_END; h++) arr.push(h);
+    for (let h = startHour; h < endHour; h++) arr.push(h);
     return arr;
-  }, []);
+  }, [courses]);
 
   // CSS grid: 1 day-label column + N hour columns
-  const gridCols = `70px repeat(${TOTAL_SLOTS}, 1fr)`;
+  const gridCols = `70px repeat(${hours.length}, 1fr)`;
 
   return (
     <div className="transposed-cal overflow-x-auto" dir="rtl">
@@ -577,7 +584,7 @@ function TransposedCalendar({
         ))}
 
         {/* Day rows */}
-        {DAYS.map(({ dow, label }) => {
+        {DAYS.filter(({ dow }) => byDay.has(dow)).map(({ dow, label }) => {
           const dayEvents = byDay.get(dow) ?? [];
           const maxLanes = dayEvents.length > 0
             ? Math.max(...dayEvents.map((e) => e.totalLanes))
@@ -626,13 +633,13 @@ function TransposedCalendar({
                         onEditCourse(course);
                       }
                     }}
-                    title={`${evt.courseName} — ${evt.professor}`}
+                    title={evt.professor ? `${evt.courseName} — ${evt.professor}` : evt.courseName}
                   >
                     {evt.hasConflict && (
                       <span className="conflict-badge" title="تداخل زمانی">⚠</span>
                     )}
                     <span className="transposed-cal-event-name">{evt.courseName}</span>
-                    <span className="transposed-cal-event-prof">{evt.professor}</span>
+                    {evt.professor && <span className="transposed-cal-event-prof">{evt.professor}</span>}
                     {/* Desktop-only hover overlay with edit/delete */}
                     {!evt.isHover && !isTouchDevice && (
                       <div className="absolute inset-0 bg-black/0 group-hover/evt:bg-black/40 transition-colors rounded flex items-center justify-center gap-1.5 opacity-0 pointer-events-none group-hover/evt:opacity-100 group-hover/evt:pointer-events-auto">
@@ -683,7 +690,7 @@ function renderEventContent(eventInfo: EventContentArg) {
         <span className="conflict-badge" title="تداخل زمانی">⚠</span>
       )}
       <div className="font-bold text-xs truncate">{courseName}</div>
-      <div className="text-[11px] truncate opacity-80">{professor}</div>
+      {professor && <div className="text-[11px] truncate opacity-80">{professor}</div>}
     </div>
   );
 }

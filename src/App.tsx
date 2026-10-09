@@ -199,6 +199,7 @@ function App() {
         onClose={handleModalClose}
         onSubmit={handleEditSubmit}
         editingCourse={editingCourse}
+        selectedCourses={schedule.selectedCourses}
       />
 
     </div>
@@ -234,7 +235,10 @@ function MobileCourseSearch({ courses, onHoverCourse, onOpenManualEntry }: { cou
               </div>
             </div>
             <div className="px-4">
-              <CourseSearch courses={courses} onHoverCourse={onHoverCourse} onOpenManualEntry={onOpenManualEntry} />
+              <CourseSearch courses={courses} onHoverCourse={onHoverCourse} onOpenManualEntry={() => {
+                setOpen(false);
+                onOpenManualEntry();
+              }} />
             </div>
           </div>
         </div>

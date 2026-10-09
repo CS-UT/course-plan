@@ -1,6 +1,7 @@
 import moment from 'moment-jalaali';
 import type { SelectedCourse } from '@/types';
 import { getCourseExamLabel } from '@/utils/exams';
+import { isCreditCourse } from '@/utils/courses';
 
 // Semester 14051 = نیمسال اول ۱۴۰۵-۱۴۰۶
 // Classes: 4 Mehr 1405 through the start of final exams on 24 Dey 1405.
@@ -78,7 +79,7 @@ export function generateICS(courses: SelectedCourse[]): string {
       const dtend = formatICalDateLocal(firstDate, session.endTime);
 
       const description = [
-        `استاد: ${course.professor}`,
+        course.professor ? `استاد: ${course.professor}` : '',
         course.location ? `محل: ${course.location}` : '',
         examLabel ? `امتحان: ${examLabel} ساعت ${course.examTime}` : '',
         course.notes ? `توضیحات: ${course.notes}` : '',
@@ -89,7 +90,7 @@ export function generateICS(courses: SelectedCourse[]): string {
         `DTSTART;TZID=Asia/Tehran:${dtstart}`,
         `DTEND;TZID=Asia/Tehran:${dtend}`,
         `RRULE:FREQ=WEEKLY;BYDAY=${icalDay};UNTIL=${untilDate}`,
-        `SUMMARY:${escapeICalText(course.courseName)} (گروه ${course.group})`,
+        `SUMMARY:${escapeICalText(course.courseName)}${isCreditCourse(course) ? ` (گروه ${course.group})` : ''}`,
         `DESCRIPTION:${escapeICalText(description)}`,
         course.location ? `LOCATION:${escapeICalText(course.location)}` : '',
         `UID:${course.courseCode}-${course.group}-${i}@plan.csut.ir`,

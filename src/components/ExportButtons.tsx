@@ -5,6 +5,7 @@ import { downloadICS } from '@/utils/googleCalendar';
 import coursesData from '@/data/courses.json';
 import type { CoursesData } from '@/types';
 import { toPersianDigits } from '@/utils/persian';
+import { resolveScheduleEntry } from '@/utils/scheduleImport';
 
 const allCourses = (coursesData as CoursesData).courses;
 
@@ -108,7 +109,7 @@ export function ExportButtons() {
 
   function addToGoogleCalendar() {
     if (selectedCourses.length === 0) {
-      alert('ابتدا درس‌هایی را به برنامه اضافه کنید.');
+      alert('ابتدا موردی را به برنامه اضافه کنید.');
       return;
     }
     downloadICS(selectedCourses);
@@ -117,9 +118,9 @@ export function ExportButtons() {
   function exportSchedule() {
     const courses = selectedCourses
       .filter((c) => c.mode !== 'hover')
-      .map((c) => ({ courseCode: c.courseCode, group: c.group }));
+      .map((c) => ({ ...c, mode: undefined }));
     if (courses.length === 0) {
-      alert('ابتدا درس‌هایی را به برنامه اضافه کنید.');
+      alert('ابتدا موردی را به برنامه اضافه کنید.');
       return;
     }
     const json = JSON.stringify({ courses }, null, 2);
@@ -153,13 +154,7 @@ export function ExportButtons() {
         const notFound: string[] = [];
 
         for (const entry of data.courses) {
-          if (typeof entry.courseCode !== 'string' || typeof entry.group !== 'number') {
-            alert('فرمت فایل نامعتبر است.');
-            return;
-          }
-          const found = allCourses.find(
-            (c) => c.courseCode === entry.courseCode && c.group === entry.group,
-          );
+          const found = resolveScheduleEntry(entry, allCourses);
           if (found) {
             coursesToImport.push(found);
           } else {
@@ -175,8 +170,8 @@ export function ExportButtons() {
         const { added, skipped } = importCourses(coursesToImport);
 
         const parts: string[] = [];
-        if (added > 0) parts.push(`${toPersianDigits(added)} درس اضافه شد`);
-        if (skipped > 0) parts.push(`${toPersianDigits(skipped)} درس تکراری رد شد`);
+        if (added > 0) parts.push(`${toPersianDigits(added)} مورد اضافه شد`);
+        if (skipped > 0) parts.push(`${toPersianDigits(skipped)} مورد تکراری رد شد`);
         if (notFound.length > 0) parts.push(`${toPersianDigits(notFound.length)} درس در کاتالوگ یافت نشد`);
         alert(parts.join('\n'));
       } catch {

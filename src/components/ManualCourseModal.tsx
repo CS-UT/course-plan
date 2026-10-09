@@ -1,374 +1,228 @@
-import { useState } from 'react';
-import type { Course } from '@/types';
-import { dayName, WEEK_DAYS_ORDER, toEnglishDigits } from '@/utils/persian';
+import { useEffect, useRef, useState } from 'react';
+import type { Course, CourseSession, ScheduleEntryType } from '@/types';
+import { dayName, WEEK_DAYS_ORDER, toEnglishDigits, toPersianDigits } from '@/utils/persian';
+import { ENTRY_TYPE_LABELS, isCreditCourse, isInternalCourseCode } from '@/utils/courses';
 import { CourseDetails } from '@/components/CourseDetails';
+import { FormSelect } from '@/components/FormSelect';
+import { TimeSelect } from '@/components/TimeSelect';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onSubmit: (course: Course) => void;
   editingCourse?: Course | null;
+  selectedCourses: Course[];
 }
 
-interface SessionInput {
-  dayOfWeek: string;
-  startHour: string;
-  startMinute: string;
-  endHour: string;
-  endMinute: string;
-}
-
-const HOURS = Array.from({ length: 14 }, (_, i) => String(i + 6).padStart(2, '0'));
-const MINUTES = ['00', '15', '30', '45'];
-
-const emptySession = (): SessionInput => ({
-  dayOfWeek: '6',
-  startHour: '08',
-  startMinute: '00',
-  endHour: '10',
-  endMinute: '00',
-});
-
-function courseToSessions(course: Course): SessionInput[] {
-  return course.sessions.map((s) => {
-    const [startH, startM] = s.startTime.split(':');
-    const [endH, endM] = s.endTime.split(':');
-    return {
-      dayOfWeek: String(s.dayOfWeek),
-      startHour: startH,
-      startMinute: startM,
-      endHour: endH,
-      endMinute: endM,
-    };
-  });
-}
-
+const emptySession = (): CourseSession => ({ dayOfWeek: 6, startTime: '08:00', endTime: '10:00' });
+const courseKey = (course: { courseCode: string; group: number }) => JSON.stringify([course.courseCode, course.group]);
 const inputClass =
-  'w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-400 focus:border-transparent';
+  'w-full min-w-0 px-3 py-2.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 dark:[color-scheme:dark] focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent';
+const labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5';
 
-const selectClass =
-  'px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-400';
-
-export function ManualCourseModal({ open, onClose, onSubmit, editingCourse }: Props) {
+export function ManualCourseModal({ open, onClose, onSubmit, editingCourse, selectedCourses }: Props) {
   if (!open) return null;
-
-  // Key on editingCourse identity so React remounts the form with fresh state
-  const formKey = editingCourse
-    ? `edit-${editingCourse.courseCode}-${editingCourse.group}`
-    : 'new';
-
   return (
-    <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4" onClick={onClose}>
-      <div
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md max-h-[90vh] overflow-y-auto p-5"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <ManualCourseForm
-          key={formKey}
-          onClose={onClose}
-          onSubmit={onSubmit}
-          editingCourse={editingCourse}
-        />
-      </div>
+    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={onClose}>
+      <ManualCourseForm key={editingCourse ? courseKey(editingCourse) : 'new'} onClose={onClose} onSubmit={onSubmit} editingCourse={editingCourse} selectedCourses={selectedCourses} />
     </div>
   );
 }
 
-function ManualCourseForm({
-  onClose,
-  onSubmit,
-  editingCourse,
-}: {
-  onClose: () => void;
-  onSubmit: (course: Course) => void;
-  editingCourse?: Course | null;
-}) {
+function ManualCourseForm({ onClose, onSubmit, editingCourse, selectedCourses }: Omit<Props, 'open'>) {
   const isEditing = !!editingCourse;
-
+  const [entryType, setEntryType] = useState<ScheduleEntryType>(editingCourse?.entryType ?? 'course');
+  const isCourse = entryType === 'course';
+  const [relatedCourseKey, setRelatedCourseKey] = useState(editingCourse?.relatedCourse ? courseKey(editingCourse.relatedCourse) : '');
+  const availableCourses = selectedCourses.filter((course) => isCreditCourse(course) && (!editingCourse || courseKey(course) !== courseKey(editingCourse)));
+  const relatedCourse = availableCourses.find((course) => courseKey(course) === relatedCourseKey);
   const [courseCode, setCourseCode] = useState(() => {
-    if (!editingCourse) return '';
-    // Show the code for editing, but hide auto-generated MANUAL-* codes
-    return editingCourse.courseCode.startsWith('MANUAL-') ? '' : editingCourse.courseCode;
+    const code = editingCourse?.courseCode ?? '';
+    return isInternalCourseCode(code) ? '' : code;
   });
   const [courseName, setCourseName] = useState(editingCourse?.courseName ?? '');
   const [professor, setProfessor] = useState(editingCourse?.professor ?? '');
-  const [unitCount, setUnitCount] = useState(editingCourse ? String(editingCourse.unitCount) : '3');
+  const [unitCount, setUnitCount] = useState(editingCourse && isCreditCourse(editingCourse) ? String(editingCourse.unitCount) : '3');
   const [examDate, setExamDate] = useState(editingCourse?.examDate ?? '');
-  const [examTimeHour, setExamTimeHour] = useState(() => {
-    if (!editingCourse?.examTime) return '';
-    return editingCourse.examTime.split(':')[0] || '';
-  });
-  const [examTimeMinute, setExamTimeMinute] = useState(() => {
-    if (!editingCourse?.examTime) return '00';
-    return editingCourse.examTime.split(':')[1] || '00';
-  });
-  const [sessions, setSessions] = useState<SessionInput[]>(
-    editingCourse ? courseToSessions(editingCourse) : [emptySession()],
-  );
+  const [examTime, setExamTime] = useState(editingCourse?.examTime ?? '');
+  const [sessions, setSessions] = useState<CourseSession[]>(editingCourse?.sessions.length ? editingCourse.sessions.map((session) => ({ ...session })) : [emptySession()]);
   const [error, setError] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
 
-  function updateSession(index: number, field: keyof SessionInput, value: string) {
-    setSessions((prev) =>
-      prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)),
-    );
-  }
-
-  function addSession() {
-    if (sessions.length >= 14) return;
-    setSessions((prev) => [...prev, emptySession()]);
-  }
-
-  function removeSession(index: number) {
-    if (sessions.length <= 1) return;
-    setSessions((prev) => prev.filter((_, i) => i !== index));
-  }
-
-  function handleSubmit() {
-    if (!courseName.trim()) {
-      setError('نام درس الزامی است');
-      return;
-    }
-    const units = parseInt(unitCount);
-    if (!units || units < 1) {
-      setError('تعداد واحد الزامی است');
-      return;
-    }
-    for (const s of sessions) {
-      const startTime = `${s.startHour}:${s.startMinute}`;
-      const endTime = `${s.endHour}:${s.endMinute}`;
-      if (startTime >= endTime) {
-        setError('ساعت شروع باید قبل از ساعت پایان باشد');
-        return;
+  useEffect(() => {
+    const previousFocus = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    formRef.current?.querySelector<HTMLInputElement>('#manual-name')?.focus();
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') onClose();
+      if (event.key !== 'Tab') return;
+      const controls = formRef.current?.querySelectorAll<HTMLElement>('button, input, select');
+      if (!controls?.length) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     }
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    };
+  }, [onClose]);
 
-    const examTime = examTimeHour ? `${examTimeHour}:${examTimeMinute}` : '';
+  function updateSession(index: number, updates: Partial<CourseSession>) {
+    setSessions((previous) => previous.map((session, i) => i === index ? { ...session, ...updates } : session));
+    setError('');
+  }
 
+  function selectRelatedCourse(key: string) {
+    setRelatedCourseKey(key);
+    const course = availableCourses.find((candidate) => courseKey(candidate) === key);
+    if (course) setCourseName(`حل تمرین ${course.courseName}`);
+    setError('');
+  }
+
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!courseName.trim()) {
+      setError(isCourse ? 'نام درس الزامی است' : 'نام الزامی است');
+      return;
+    }
+    const units = isCourse ? Number(toEnglishDigits(unitCount)) : 0;
+    if (isCourse && (!Number.isInteger(units) || units < 1 || units > 6)) {
+      setError('تعداد واحد باید عددی بین ۱ تا ۶ باشد');
+      return;
+    }
+    if (sessions.some((session) => !session.startTime || !session.endTime || session.startTime >= session.endTime)) {
+      setError('ساعت شروع باید قبل از ساعت پایان باشد');
+      return;
+    }
+    const generatedCode = () => `MANUAL-${crypto.randomUUID()}`;
+    const savedCode = editingCourse?.courseCode;
+    const internalCode = savedCode && isInternalCourseCode(savedCode);
     const course: Course = {
-      courseCode: courseCode.trim() || editingCourse?.courseCode || `MANUAL-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      entryType,
+      relatedCourse: entryType === 'tutorial' && relatedCourseKey ? relatedCourse ? { courseCode: relatedCourse.courseCode, group: relatedCourse.group } : editingCourse?.relatedCourse : undefined,
+      courseCode: isCourse ? courseCode.trim() || savedCode || generatedCode() : internalCode ? savedCode! : generatedCode(),
       group: editingCourse?.group ?? 1,
       courseName: courseName.trim(),
       unitCount: units,
       gender: editingCourse?.gender ?? 'mixed',
-      professor: professor.trim(),
-      sessions: sessions.map((s) => ({
-        dayOfWeek: Number(s.dayOfWeek),
-        startTime: `${s.startHour}:${s.startMinute}`,
-        endTime: `${s.endHour}:${s.endMinute}`,
-      })),
-      examDate: toEnglishDigits(examDate.trim()),
-      examDay: examDate.trim() ? undefined : editingCourse?.examDay,
-      examTime,
-      location: editingCourse?.location ?? '',
-      prerequisites: editingCourse?.prerequisites ?? '',
-      notes: editingCourse?.notes ?? '',
-      grade: editingCourse?.grade ?? '',
+      professor: isCourse ? professor.trim() : '',
+      sessions,
+      examDate: isCourse ? toEnglishDigits(examDate.trim()) : '',
+      examDay: isCourse && !examDate.trim() ? editingCourse?.examDay : undefined,
+      examTime: isCourse ? examTime : '',
+      location: isCourse ? editingCourse?.location ?? '' : '',
+      prerequisites: isCourse ? editingCourse?.prerequisites ?? '' : '',
+      notes: isCourse ? editingCourse?.notes ?? '' : '',
+      grade: isCourse ? editingCourse?.grade ?? '' : '',
     };
-
+    if (selectedCourses.some((selected) => courseKey(selected) === courseKey(course) && (!editingCourse || courseKey(selected) !== courseKey(editingCourse)))) {
+      setError('درسی با این کد و گروه در برنامه وجود دارد');
+      return;
+    }
     onSubmit(course);
     onClose();
   }
 
   return (
-    <>
+    <form ref={formRef} onSubmit={handleSubmit} onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="manual-entry-title" className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md max-h-[90dvh] overflow-y-auto p-5">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-bold text-lg text-gray-900 dark:text-gray-100">{isEditing ? 'ویرایش درس' : 'افزودن درس دستی'}</h2>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer p-1.5 -m-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <h2 id="manual-entry-title" className="font-bold text-lg text-gray-900 dark:text-gray-100">{isEditing ? 'ویرایش برنامه' : 'افزودن به برنامه'}</h2>
+        <button type="button" onClick={onClose} aria-label="بستن" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer p-2 -m-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="m18 6-12 12M6 6l12 12" /></svg>
         </button>
       </div>
-
       <div className="flex flex-col gap-4">
-        {editingCourse && <CourseDetails course={editingCourse} />}
-
-        {/* Course name */}
+        <fieldset>
+          <legend className={labelClass}>نوع مورد</legend>
+          <div className="grid grid-cols-3 gap-1 rounded-xl bg-gray-100 dark:bg-gray-900/50 p-1">
+            {(Object.keys(ENTRY_TYPE_LABELS) as ScheduleEntryType[]).map((type) => (
+              <label key={type} className={`relative cursor-pointer rounded-lg px-2 py-2.5 text-center text-sm font-medium transition-colors has-focus-visible:ring-2 has-focus-visible:ring-primary-400 ${entryType === type ? 'bg-white dark:bg-gray-700 text-primary-700 dark:text-primary-300 shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700/50'}`}>
+                <input type="radio" name="entryType" value={type} checked={entryType === type} className="sr-only" onChange={() => { setEntryType(type); setError(''); }} />
+                {ENTRY_TYPE_LABELS[type]}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        {entryType === 'tutorial' && (
+          <div>
+            <label htmlFor="manual-related-course" className={labelClass}>درس مرتبط (اختیاری)</label>
+            <FormSelect id="manual-related-course" value={relatedCourseKey} onChange={(event) => selectRelatedCourse(event.target.value)} disabled={!availableCourses.length && !relatedCourseKey}>
+              <option value="">{availableCourses.length || relatedCourseKey ? 'بدون انتخاب درس' : 'ابتدا یک درس به برنامه اضافه کنید'}</option>
+              {relatedCourseKey && !relatedCourse && <option value={relatedCourseKey}>درس مرتبط قبلی (در این برنامه نیست)</option>}
+              {availableCourses.map((course) => <option key={courseKey(course)} value={courseKey(course)}>{course.courseName} — گروه {toPersianDigits(course.group)}</option>)}
+            </FormSelect>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5">{availableCourses.length ? 'با انتخاب درس، نام حل تمرین پر می‌شود و قابل تغییر است.' : relatedCourseKey ? 'درس مرتبط قبلی در این برنامه نیست. نام را می‌توانید دستی تغییر دهید.' : 'برای اتصال حل تمرین به یک درس، ابتدا آن درس را به برنامه اضافه کنید.'}</p>
+          </div>
+        )}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام درس *</label>
-          <input
-            type="text"
-            value={courseName}
-            onChange={(e) => setCourseName(e.target.value)}
-            className={inputClass}
-            placeholder="مثلا: ریاضی عمومی ۱"
-          />
+          <label htmlFor="manual-name" className={labelClass}>{isCourse ? 'نام درس' : entryType === 'tutorial' ? 'نام حل تمرین' : 'نام'} *</label>
+          <input id="manual-name" type="text" required value={courseName} onChange={(event) => { setCourseName(event.target.value); setError(''); }} className={inputClass} placeholder={isCourse ? 'مثلاً: ریاضی عمومی ۱' : entryType === 'tutorial' ? 'مثلاً: حل تمرین ریاضی عمومی ۱' : 'مثلاً: مطالعه یا ورزش'} />
         </div>
-
-        {/* Course code */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">کد درس (اختیاری)</label>
-          <input
-            type="text"
-            value={courseCode}
-            onChange={(e) => setCourseCode(e.target.value)}
-            className={inputClass}
-            placeholder="مثلا: ۱۱۱۴۰۸۵"
-            dir="ltr"
-          />
-        </div>
-
-        {/* Units */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">تعداد واحد *</label>
-          <input
-            type="number"
-            min={1}
-            max={6}
-            value={unitCount}
-            onChange={(e) => setUnitCount(e.target.value)}
-            className={inputClass}
-          />
-        </div>
-
-        {/* Sessions */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">جلسات *</label>
+        {isCourse && (
+          <>
+            {editingCourse && <CourseDetails course={editingCourse} />}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="manual-code" className={labelClass}>کد درس (اختیاری)</label>
+                <input id="manual-code" type="text" value={courseCode} onChange={(event) => setCourseCode(event.target.value)} className={inputClass} placeholder="مثلاً: ۱۱۱۴۰۸۵" dir="ltr" />
+              </div>
+              <div>
+                <label htmlFor="manual-units" className={labelClass}>تعداد واحد *</label>
+                <input id="manual-units" type="number" required min={1} max={6} step={1} value={unitCount} onChange={(event) => setUnitCount(event.target.value)} className={inputClass} />
+              </div>
+            </div>
+          </>
+        )}
+        <fieldset>
+          <legend className={labelClass}>روز و ساعت *</legend>
           <div className="flex flex-col gap-2">
-            {sessions.map((session, i) => (
-              <div key={i} className="flex flex-col gap-1.5 border border-gray-200 dark:border-gray-600 rounded-lg p-2">
-                <div className="flex items-center gap-2">
-                  <select
-                    value={session.dayOfWeek}
-                    onChange={(e) => updateSession(i, 'dayOfWeek', e.target.value)}
-                    className={selectClass + ' flex-shrink-0'}
-                  >
-                    {WEEK_DAYS_ORDER.map((d) => (
-                      <option key={d} value={d}>{dayName(d)}</option>
-                    ))}
-                  </select>
-                  {sessions.length > 1 && (
-                    <button
-                      onClick={() => removeSession(i)}
-                      className="text-gray-400 hover:text-danger-500 active:text-danger-600 cursor-pointer mr-auto p-1 -m-0.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    </button>
-                  )}
+            {sessions.map((session, index) => (
+              <div key={index} className="border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900/20 rounded-xl p-3">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <label htmlFor={`manual-day-${index}`} className="text-xs text-gray-600 dark:text-gray-400">بازه {toPersianDigits(index + 1)}</label>
+                  {sessions.length > 1 && <button type="button" onClick={() => { setSessions((previous) => previous.filter((_, i) => i !== index)); setError(''); }} aria-label={`حذف بازه ${toPersianDigits(index + 1)}`} className="text-xs text-danger-600 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-500/10 px-2 py-1 rounded-md cursor-pointer">حذف</button>}
                 </div>
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <div className="flex items-center gap-0.5" dir="ltr">
-                    <select
-                      value={session.startHour}
-                      onChange={(e) => updateSession(i, 'startHour', e.target.value)}
-                      className={selectClass}
-                    >
-                      {HOURS.map((h) => (
-                        <option key={h} value={h}>{h}</option>
-                      ))}
-                    </select>
-                    <span className="text-gray-400 text-sm">:</span>
-                    <select
-                      value={session.startMinute}
-                      onChange={(e) => updateSession(i, 'startMinute', e.target.value)}
-                      className={selectClass}
-                    >
-                      {MINUTES.map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <span className="text-gray-400 text-sm">تا</span>
-                  <div className="flex items-center gap-0.5" dir="ltr">
-                    <select
-                      value={session.endHour}
-                      onChange={(e) => updateSession(i, 'endHour', e.target.value)}
-                      className={selectClass}
-                    >
-                      {HOURS.map((h) => (
-                        <option key={h} value={h}>{h}</option>
-                      ))}
-                    </select>
-                    <span className="text-gray-400 text-sm">:</span>
-                    <select
-                      value={session.endMinute}
-                      onChange={(e) => updateSession(i, 'endMinute', e.target.value)}
-                      className={selectClass}
-                    >
-                      {MINUTES.map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
-                    </select>
-                  </div>
+                <FormSelect id={`manual-day-${index}`} value={session.dayOfWeek} onChange={(event) => updateSession(index, { dayOfWeek: Number(event.target.value) })}>
+                  {[...WEEK_DAYS_ORDER, 4, 5].map((day) => <option key={day} value={day}>{dayName(day)}</option>)}
+                </FormSelect>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                  <TimeSelect id={`manual-start-${index}`} label="از ساعت" value={session.startTime} onChange={(value) => updateSession(index, { startTime: value })} />
+                  <TimeSelect id={`manual-end-${index}`} label="تا ساعت" value={session.endTime} onChange={(value) => updateSession(index, { endTime: value })} />
                 </div>
               </div>
             ))}
           </div>
-          {sessions.length < 14 && (
-            <button
-              onClick={addSession}
-              className="mt-2 text-xs text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-medium cursor-pointer"
-            >
-              + افزودن جلسه
-            </button>
-          )}
-        </div>
-
-        {/* Professor */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نام استاد (اختیاری)</label>
-          <input
-            type="text"
-            value={professor}
-            onChange={(e) => setProfessor(e.target.value)}
-            className={inputClass}
-          />
-        </div>
-
-        {/* Exam date + time */}
-        <div className="flex gap-3">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">تاریخ امتحان (اختیاری)</label>
-            <input
-              type="text"
-              value={examDate}
-              onChange={(e) => setExamDate(e.target.value)}
-              className={inputClass}
-              placeholder="۱۴۰۵/۰۴/۲۰"
-              dir="ltr"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ساعت</label>
-            <div className="flex items-center gap-0.5" dir="ltr">
-              <select
-                value={examTimeHour}
-                onChange={(e) => setExamTimeHour(e.target.value)}
-                className={selectClass}
-              >
-                <option value="">—</option>
-                {HOURS.map((h) => (
-                  <option key={h} value={h}>{h}</option>
-                ))}
-              </select>
-              <span className="text-gray-400 text-sm">:</span>
-              <select
-                value={examTimeMinute}
-                onChange={(e) => setExamTimeMinute(e.target.value)}
-                className={selectClass}
-              >
-                {MINUTES.map((m) => (
-                  <option key={m} value={m}>{m}</option>
-                ))}
-              </select>
+          {sessions.length < 14 && <button type="button" onClick={() => { setSessions((previous) => [...previous, emptySession()]); setError(''); }} className="mt-2 px-2 py-1.5 text-sm text-primary-700 dark:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg font-medium cursor-pointer">+ افزودن بازه زمانی</button>}
+        </fieldset>
+        {isCourse && (
+          <>
+            <div>
+              <label htmlFor="manual-professor" className={labelClass}>نام استاد (اختیاری)</label>
+              <input id="manual-professor" type="text" value={professor} onChange={(event) => setProfessor(event.target.value)} className={inputClass} />
             </div>
-          </div>
-        </div>
-        <p className="text-xs text-gray-400 dark:text-gray-500 -mt-2">
-          بدون تاریخ امتحان، تداخل امتحان بررسی نمی‌شود
-        </p>
-
-        {/* Error */}
-        {error && (
-          <p className="text-xs text-danger-600 dark:text-danger-400">{error}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="manual-exam-date" className={labelClass}>تاریخ امتحان (اختیاری)</label>
+                <input id="manual-exam-date" type="text" value={examDate} onChange={(event) => setExamDate(event.target.value)} className={inputClass} placeholder="۱۴۰۵/۱۰/۲۴" dir="ltr" />
+              </div>
+              <TimeSelect id="manual-exam-time" label="ساعت امتحان (اختیاری)" value={examTime} onChange={setExamTime} optional />
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 -mt-2">بدون تاریخ امتحان، تداخل امتحان بررسی نمی‌شود</p>
+          </>
         )}
-
-        {/* Submit */}
-        <button
-          onClick={handleSubmit}
-          className="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors cursor-pointer"
-        >
-          {isEditing ? 'ذخیره تغییرات' : 'افزودن به برنامه'}
-        </button>
+        {error && <p role="alert" className="text-sm text-danger-600 dark:text-danger-400">{error}</p>}
+        <button type="submit" className="w-full py-3 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white font-medium rounded-xl transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500">{isEditing ? 'ذخیره تغییرات' : 'افزودن به برنامه'}</button>
       </div>
-    </>
+    </form>
   );
 }
