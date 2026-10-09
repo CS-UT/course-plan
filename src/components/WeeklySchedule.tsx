@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -6,7 +7,8 @@ import type { DateSelectArg, EventClickArg, EventContentArg } from '@fullcalenda
 import { useAtom } from 'jotai';
 import type { Course, SelectedCourse } from '@/types';
 import { useSchedule } from '@/hooks/useSchedule';
-import { coursesToEvents, getCalendarBounds, BASE_SATURDAY, COURSE_COLORS } from '@/utils/calendar';
+import { coursesToEvents, getCalendarBounds, getCourseCalendarColor, BASE_SATURDAY } from '@/utils/calendar';
+import type { CalendarColor } from '@/utils/calendar';
 import { toPersianDigits, dayName } from '@/utils/persian';
 import { formatExamSchedule } from '@/utils/exams';
 import { ENTRY_TYPE_LABELS, getCourseIdentityLabel, isCreditCourse } from '@/utils/courses';
@@ -265,9 +267,10 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
             eventMouseEnter={handleMouseEnter}
             eventMouseLeave={handleMouseLeave}
             eventContent={renderEventContent}
-            eventClassNames={(arg) =>
-              arg.event.extendedProps.hasConflict ? ['fc-event--conflict'] : []
-            }
+            eventClassNames={(arg) => [
+              ...(arg.event.extendedProps.hasConflict ? ['fc-event--conflict'] : []),
+              ...(arg.event.extendedProps.entryType === 'tutorial' ? ['fc-event--tutorial'] : []),
+            ]}
             height="auto"
             expandRows
           />
@@ -403,8 +406,6 @@ export function WeeklySchedule({ hoveredCourse, onEditCourse }: Props) {
 
 /* ─── Transposed Calendar (days=rows, hours=columns, native RTL) ─── */
 
-const HOVER_COLOR = { bg: '#f3f4f6', border: '#9ca3af', text: '#6b7280' };
-
 const DAYS: { dow: number; label: string }[] = [
   { dow: 6, label: 'شنبه' },
   { dow: 0, label: 'یکشنبه' },
@@ -421,6 +422,7 @@ function timeToFraction(time: string, startHour: number, totalSlots: number): nu
 }
 
 interface TransposedEvent {
+  entryType?: Course['entryType'];
   courseCode: string;
   group: number;
   courseName: string;
@@ -435,7 +437,7 @@ interface TransposedEvent {
   startFraction: number; // 0..1 within the hour axis
   endFraction: number;   // 0..1
   widthFraction: number; // 0..1
-  color: { bg: string; border: string; text: string };
+  color: CalendarColor;
   isHover: boolean;
   hasConflict: boolean;
   // Layout fields set after overlap detection
@@ -497,19 +499,14 @@ function buildTransposedEvents(
   for (const day of days) byDay.set(day, []);
 
   for (const course of courses) {
-    const colorKey = `${course.courseCode}-${course.group}`;
-    let colorIndex = cMap.get(colorKey);
-    if (colorIndex === undefined) {
-      colorIndex = cMap.size % COURSE_COLORS.length;
-      cMap.set(colorKey, colorIndex);
-    }
     const isHover = course.mode === 'hover';
-    const color = isHover ? HOVER_COLOR : COURSE_COLORS[colorIndex];
+    const color = getCourseCalendarColor(course, courses, cMap);
 
     for (const session of course.sessions) {
       const start = timeToFraction(session.startTime, startHour, endHour - startHour);
       const end = timeToFraction(session.endTime, startHour, endHour - startHour);
       const evt: TransposedEvent = {
+        entryType: course.entryType,
         courseCode: course.courseCode,
         group: course.group,
         courseName: course.courseName,
@@ -542,8 +539,6 @@ function buildTransposedEvents(
   return byDay;
 }
 
-const transposedColorMap = new Map<string, number>();
-
 function TransposedCalendar({
   courses,
   onRemoveCourse,
@@ -558,7 +553,7 @@ function TransposedCalendar({
   onTapCourse: (course: SelectedCourse) => void;
 }) {
   const byDay = useMemo(
-    () => buildTransposedEvents(courses, transposedColorMap),
+    () => buildTransposedEvents(courses, colorMap),
     [courses],
   );
 
@@ -604,21 +599,23 @@ function TransposedCalendar({
               </div>
               {/* Events */}
               {byDay.get(dow)?.map((evt, i) => {
+                const isTutorial = evt.entryType === 'tutorial';
                 const laneHeight = 100 / evt.totalLanes;
                 const topPct = evt.lane * laneHeight;
                 return (
                   <div
                     key={`${evt.courseCode}-${evt.group}-${i}`}
-                    className={`transposed-cal-event group/evt${evt.hasConflict ? ' transposed-cal-event--conflict' : ''}${!evt.isHover ? ' cursor-pointer active:opacity-80' : ''}`}
+                    className={`transposed-cal-event group/evt${isTutorial ? ' calendar-tutorial-surface' : ''}${evt.hasConflict ? ' transposed-cal-event--conflict' : ''}${!evt.isHover ? ' cursor-pointer active:opacity-80' : ''}`}
                     style={{
+                      ...(isTutorial ? getTutorialStyle(evt.color) : {}),
                       right: `${evt.startFraction * 100}%`,
                       width: `${evt.widthFraction * 100}%`,
                       top: evt.totalLanes > 1 ? `${topPct}%` : '3px',
                       bottom: evt.totalLanes > 1 ? undefined : '3px',
                       height: evt.totalLanes > 1 ? `calc(${laneHeight}% - 2px)` : undefined,
-                      backgroundColor: evt.color.bg,
-                      borderColor: evt.color.border,
-                      color: evt.color.text,
+                      backgroundColor: isTutorial ? undefined : evt.color.bg,
+                      borderColor: isTutorial ? `${evt.color.border}66` : evt.color.border,
+                      color: isTutorial ? undefined : evt.color.text,
                       opacity: evt.isHover ? 0.7 : 1,
                     }}
                     onClick={() => {
@@ -639,6 +636,7 @@ function TransposedCalendar({
                       <span className="conflict-badge" title="تداخل زمانی">⚠</span>
                     )}
                     <span className="transposed-cal-event-name">{evt.courseName}</span>
+                    {isTutorial && <span className="calendar-tutorial-badge">حل تمرین</span>}
                     {evt.professor && <span className="transposed-cal-event-prof">{evt.professor}</span>}
                     {/* Desktop-only hover overlay with edit/delete */}
                     {!evt.isHover && !isTouchDevice && (
@@ -683,14 +681,28 @@ function TransposedCalendar({
 /* ─── Standard FullCalendar event renderer ─── */
 
 function renderEventContent(eventInfo: EventContentArg) {
-  const { courseName, professor, hasConflict } = eventInfo.event.extendedProps;
+  const { courseName, professor, hasConflict, entryType, color } = eventInfo.event.extendedProps;
+  const isTutorial = entryType === 'tutorial';
   return (
-    <div className="flex flex-col h-full justify-center text-center leading-tight p-0.5 relative group/fc">
+    <div
+      className={`flex flex-col h-full justify-center text-center leading-tight p-0.5 relative group/fc${isTutorial ? ' calendar-tutorial-surface' : ''}`}
+      style={isTutorial ? getTutorialStyle(color) : undefined}
+    >
       {hasConflict && (
         <span className="conflict-badge" title="تداخل زمانی">⚠</span>
       )}
       <div className="font-bold text-xs truncate">{courseName}</div>
+      {isTutorial && <span className="calendar-tutorial-badge">حل تمرین</span>}
       {professor && <div className="text-[11px] truncate opacity-80">{professor}</div>}
     </div>
   );
+}
+
+function getTutorialStyle(color: CalendarColor): CSSProperties {
+  return {
+    '--tutorial-stripe': `${color.border}1a`,
+    '--tutorial-stripe-dark': `${color.border}2e`,
+    '--tutorial-ink': color.text,
+    '--tutorial-ink-dark': color.bg,
+  } as CSSProperties;
 }
